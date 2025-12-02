@@ -5,7 +5,8 @@ on:
     branches: [main, develop]
     paths:
       - 'php-fpm-nginx/**'
-      - 'php-fpm/**'
+      # NOTE: php-fpm/** changes trigger php-fpm-nginx via repository_dispatch
+      # from build-php-fpm.yml, not via push trigger, to avoid race conditions
       - '.github/workflows/build-php-fpm-nginx.yml'
   pull_request:
     branches: [main]
