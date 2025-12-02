@@ -92,7 +92,7 @@ detect_framework() {
 
     if [ -f "$workdir/artisan" ]; then
         echo "laravel"
-    elif [ -f "$workdir/bin/console" ] && [ -d "$workdir/symfony.lock" ]; then
+    elif [ -f "$workdir/bin/console" ] && [ -f "$workdir/symfony.lock" ]; then
         echo "symfony"
     elif [ -f "$workdir/wp-config.php" ] || [ -f "$workdir/wp-config-sample.php" ]; then
         echo "wordpress"

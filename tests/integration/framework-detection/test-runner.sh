@@ -11,6 +11,16 @@ TESTS_PASSED=0
 TESTS_FAILED=0
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# Source the entrypoint library directly (not the full entrypoint which runs lifecycle checks)
+ENTRYPOINT_LIB="$TEST_DIR/../../../common/lib/entrypoint-lib.sh"
+if [ -f "$ENTRYPOINT_LIB" ]; then
+    # shellcheck source=/dev/null
+    . "$ENTRYPOINT_LIB"
+else
+    echo "ERROR: entrypoint-lib.sh not found at $ENTRYPOINT_LIB"
+    exit 1
+fi
+
 # Test result functions
 pass() {
     echo -e "${GREEN}✓${NC} $1"
@@ -37,9 +47,8 @@ test_laravel_detection() {
     mkdir -p "$TEMP_DIR/var/www/html"
     touch "$TEMP_DIR/var/www/html/artisan"
 
-    # Run detection
-    cd "$TEMP_DIR/var/www/html"
-    RESULT=$("$TEST_DIR/../../../php-fpm-nginx/common/docker-entrypoint.sh" detect_framework 2>/dev/null || echo "error")
+    # Run detection using the sourced function
+    RESULT=$(detect_framework "$TEMP_DIR/var/www/html" 2>/dev/null || echo "error")
 
     # Cleanup
     rm -rf "$TEMP_DIR"
@@ -60,18 +69,19 @@ test_symfony_detection() {
     mkdir -p "$TEMP_DIR/var/www/html/bin"
     mkdir -p "$TEMP_DIR/var/www/html/var/cache"
     touch "$TEMP_DIR/var/www/html/bin/console"
+    # Create symfony.lock file
+    touch "$TEMP_DIR/var/www/html/symfony.lock"
 
-    # Run detection
-    cd "$TEMP_DIR/var/www/html"
-    RESULT=$("$TEST_DIR/../../../php-fpm-nginx/common/docker-entrypoint.sh" detect_framework 2>/dev/null || echo "error")
+    # Run detection using the sourced function
+    RESULT=$(detect_framework "$TEMP_DIR/var/www/html" 2>/dev/null || echo "error")
 
     # Cleanup
     rm -rf "$TEMP_DIR"
 
     if [ "$RESULT" = "symfony" ]; then
-        pass "Symfony detection with bin/console and var/cache"
+        pass "Symfony detection with bin/console and symfony.lock"
     else
-        fail "Symfony detection with bin/console and var/cache" "symfony" "$RESULT"
+        fail "Symfony detection with bin/console and symfony.lock" "symfony" "$RESULT"
     fi
 }
 
@@ -84,9 +94,8 @@ test_wordpress_detection() {
     mkdir -p "$TEMP_DIR/var/www/html"
     touch "$TEMP_DIR/var/www/html/wp-config.php"
 
-    # Run detection
-    cd "$TEMP_DIR/var/www/html"
-    RESULT=$("$TEST_DIR/../../../php-fpm-nginx/common/docker-entrypoint.sh" detect_framework 2>/dev/null || echo "error")
+    # Run detection using the sourced function
+    RESULT=$(detect_framework "$TEMP_DIR/var/www/html" 2>/dev/null || echo "error")
 
     # Cleanup
     rm -rf "$TEMP_DIR"
@@ -107,9 +116,8 @@ test_generic_detection() {
     mkdir -p "$TEMP_DIR/var/www/html"
     touch "$TEMP_DIR/var/www/html/index.php"
 
-    # Run detection
-    cd "$TEMP_DIR/var/www/html"
-    RESULT=$("$TEST_DIR/../../../php-fpm-nginx/common/docker-entrypoint.sh" detect_framework 2>/dev/null || echo "error")
+    # Run detection using the sourced function
+    RESULT=$(detect_framework "$TEMP_DIR/var/www/html" 2>/dev/null || echo "error")
 
     # Cleanup
     rm -rf "$TEMP_DIR"
@@ -131,9 +139,8 @@ test_detection_priority() {
     touch "$TEMP_DIR/var/www/html/artisan"
     touch "$TEMP_DIR/var/www/html/index.php"
 
-    # Run detection
-    cd "$TEMP_DIR/var/www/html"
-    RESULT=$("$TEST_DIR/../../../php-fpm-nginx/common/docker-entrypoint.sh" detect_framework 2>/dev/null || echo "error")
+    # Run detection using the sourced function
+    RESULT=$(detect_framework "$TEMP_DIR/var/www/html" 2>/dev/null || echo "error")
 
     # Cleanup
     rm -rf "$TEMP_DIR"

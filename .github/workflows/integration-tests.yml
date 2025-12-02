@@ -85,9 +85,10 @@ jobs:
 
       - name: Build images for scanning
         run: |
-          docker build -t phpeek-scan:alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-          docker build -t phpeek-scan:bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
-          docker build -t phpeek-scan:trixie -f php-fpm-nginx/8.3/debian/trixie/Dockerfile .
+          # Build only the root stage (not rootless which requires base images that may not exist yet)
+          docker build --target root -t phpeek-scan:alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
+          docker build --target root -t phpeek-scan:bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
+          docker build --target root -t phpeek-scan:trixie -f php-fpm-nginx/8.3/debian/trixie/Dockerfile .
 
       - name: Run Trivy vulnerability scanner (Alpine)
         uses: aquasecurity/trivy-action@master
