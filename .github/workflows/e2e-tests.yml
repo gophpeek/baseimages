@@ -64,6 +64,7 @@ on:
           - 'security'
           - 'env-config'
           - 'phpeek-pm'
+          - 'rootless'
 
 env:
   REGISTRY: ghcr.io/phpeek/baseimages
@@ -169,11 +170,106 @@ jobs:
         run: |
           tests/e2e/run-e2e-tests.sh "$IMAGE" phpeek-pm
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Rootless Container Tests
+  # ─────────────────────────────────────────────────────────────────────────────
+  rootless-test:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php_version: ['8.3', '8.4']
+        os_variant: ['alpine']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Download PHPeek PM binaries
+        run: |
+          mkdir -p phpeek-pm/binaries
+          PHPEEK_PM_VERSION="1.2.0"
+          echo "Downloading PHPeek PM v${PHPEEK_PM_VERSION}..."
+          curl -sL "https://github.com/gophpeek/phpeek-pm/releases/download/v${PHPEEK_PM_VERSION}/phpeek-pm-linux-amd64" \
+            -o phpeek-pm/binaries/phpeek-pm-linux-amd64
+          curl -sL "https://github.com/gophpeek/phpeek-pm/releases/download/v${PHPEEK_PM_VERSION}/phpeek-pm-linux-arm64" \
+            -o phpeek-pm/binaries/phpeek-pm-linux-arm64
+          chmod +x phpeek-pm/binaries/*
+          ls -la phpeek-pm/binaries/
+
+      - name: Determine Dockerfile path
+        id: dockerfile
+        run: |
+          case "${{ matrix.os_variant }}" in
+            alpine)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+            bookworm)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+            trixie)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Build dependency images (php-base and php-fpm rootless)
+        run: |
+          # Build php-base rootless first
+          case "${{ matrix.os_variant }}" in
+            alpine)
+              docker build --target rootless \
+                -f php-base/${{ matrix.php_version }}/alpine/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-base:${{ matrix.php_version }}-alpine-rootless .
+              docker build --target rootless \
+                -f php-fpm/${{ matrix.php_version }}/alpine/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-fpm:${{ matrix.php_version }}-alpine-rootless .
+              ;;
+            bookworm)
+              docker build --target rootless \
+                -f php-base/${{ matrix.php_version }}/debian/bookworm/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-base:${{ matrix.php_version }}-bookworm-rootless .
+              docker build --target rootless \
+                -f php-fpm/${{ matrix.php_version }}/debian/bookworm/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-fpm:${{ matrix.php_version }}-bookworm-rootless .
+              ;;
+            trixie)
+              docker build --target rootless \
+                -f php-base/${{ matrix.php_version }}/debian/trixie/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-base:${{ matrix.php_version }}-trixie-rootless .
+              docker build --target rootless \
+                -f php-fpm/${{ matrix.php_version }}/debian/trixie/Dockerfile \
+                -t ghcr.io/phpeek/baseimages/php-fpm:${{ matrix.php_version }}-trixie-rootless .
+              ;;
+          esac
+
+      - name: Build rootless test image
+        run: |
+          docker build \
+            --target rootless \
+            -f ${{ steps.dockerfile.outputs.path }} \
+            -t test-rootless:${{ matrix.php_version }}-${{ matrix.os_variant }} \
+            .
+
+      - name: Run rootless E2E test
+        env:
+          IMAGE: test-rootless:${{ matrix.php_version }}-${{ matrix.os_variant }}
+        run: |
+          chmod +x tests/e2e/run-e2e-tests.sh
+          chmod +x tests/e2e/scenarios/*.sh
+          chmod +x tests/e2e/lib/*.sh
+          tests/e2e/run-e2e-tests.sh "$IMAGE" rootless
+
       - name: Upload test logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: advanced-test-logs
+          name: rootless-test-logs-${{ matrix.php_version }}-${{ matrix.os_variant }}
           path: /tmp/e2e-*.log
           retention-days: 7
 
@@ -316,14 +412,15 @@ jobs:
   # Summary job
   summary:
     if: always()
-    needs: [smoke-test, advanced-tests, comprehensive]
+    needs: [smoke-test, advanced-tests, comprehensive, rootless-test]
     runs-on: ubuntu-latest
     steps:
       - name: Check results
         run: |
           if [ "${{ needs.smoke-test.result }}" == "failure" ] || \
              [ "${{ needs.advanced-tests.result }}" == "failure" ] || \
-             [ "${{ needs.comprehensive.result }}" == "failure" ]; then
+             [ "${{ needs.comprehensive.result }}" == "failure" ] || \
+             [ "${{ needs.rootless-test.result }}" == "failure" ]; then
             echo "::error::E2E tests failed"
             exit 1
           fi
