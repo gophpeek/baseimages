@@ -1,4 +1,4 @@
-FROM nginx:1.27-bookworm
+FROM nginx:1.27
 
 LABEL maintainer="Sylvester Damgaard <sn@cbox.dk>"
 LABEL org.opencontainers.image.source="https://github.com/phpeek/baseimages"
@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy nginx configuration
-COPY nginx/debian/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/debian/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/debian/trixie/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/debian/trixie/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy entrypoint and health check scripts
 COPY nginx/common/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

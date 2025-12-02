@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy nginx configuration
-COPY nginx/debian/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/debian/conf.d/default.conf /etc/nginx/conf.d/default.conf
+COPY nginx/debian/bookworm/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/debian/bookworm/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 # Copy entrypoint and health check scripts
 COPY nginx/common/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
