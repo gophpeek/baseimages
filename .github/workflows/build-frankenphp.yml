@@ -39,8 +39,8 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        # FrankenPHP: Debian/Ubuntu + Alpine, with bookworm/trixie
-        os_variant: ['alpine', 'bookworm', 'trixie', 'ubuntu']
+        # FrankenPHP: Only bookworm variant currently supported
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -55,17 +55,8 @@ jobs:
         run: |
           # Map os_variant to Dockerfile path
           case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./frankenphp/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
             bookworm)
               echo "path=./frankenphp/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./frankenphp/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-            ubuntu)
-              echo "path=./frankenphp/${{ matrix.php_version }}/ubuntu/Dockerfile" >> $GITHUB_OUTPUT
               ;;
           esac
 
