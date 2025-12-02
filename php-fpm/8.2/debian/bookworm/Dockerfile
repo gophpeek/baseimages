@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cron \
     libpng16-16 libjpeg62-turbo libfreetype6 \
     libwebp7 libavif16 libmagickwand-6.q16-7 \
+    libvips42 libvips-tools \
     libpq5 libicu72 libzip4 \
     libxml2 libxslt1.1 libldap-2.5-0 \
     libbz2-1.0 libonig5 libreadline8 libgmp10 \
@@ -95,6 +96,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cron \
     libpng16-16 libjpeg62-turbo libfreetype6 \
     libwebp7 libavif16 libmagickwand-6.q16-7 \
+    libvips42 libvips-tools \
     libpq5 libicu72 libzip4 \
     libxml2 libxslt1.1 libldap-2.5-0 \
     libbz2-1.0 libonig5 libreadline8 libgmp10 \

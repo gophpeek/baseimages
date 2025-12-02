@@ -32,6 +32,7 @@ RUN apk add --no-cache \
     ghostscript \
     # SVG support for ImageMagick
     librsvg \
+    vips vips-tools \
     libxml2 libxslt libsodium oniguruma \
     c-ares openldap bzip2 gmp readline gettext \
     exiftool chromium nss freetype harfbuzz ca-certificates ttf-freefont
@@ -104,6 +105,7 @@ RUN apk add --no-cache \
     ghostscript \
     # SVG support for ImageMagick
     librsvg \
+    vips vips-tools \
     libxml2 libxslt libsodium oniguruma \
     c-ares openldap bzip2 gmp readline gettext \
     exiftool chromium nss freetype harfbuzz ca-certificates ttf-freefont
