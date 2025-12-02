@@ -46,8 +46,8 @@ processes:
     health_check:
       type: tcp
       address: "127.0.0.1:9000"
-      period: 30
-      timeout: 5
+      period: 5
+      timeout: 3
       failure_threshold: 3
 
   # ─────────────────────────────────────────────────────────────────────────
@@ -66,8 +66,8 @@ processes:
     health_check:
       type: http
       url: "http://127.0.0.1:80/health"
-      period: 30
-      timeout: 5
+      period: 5
+      timeout: 3
       failure_threshold: 3
       expected_status: 200
 
