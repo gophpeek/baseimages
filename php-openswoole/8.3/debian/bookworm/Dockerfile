@@ -2,7 +2,7 @@
 # PHPeek OpenSwoole Image - Debian 8.3 (Bookworm)
 # ============================================================================
 
-FROM ghcr.io/gophpeek/baseimages/php-base:8.3-debian
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-bookworm
 
 LABEL org.opencontainers.image.title="PHPeek OpenSwoole 8.3 Debian"
 LABEL org.opencontainers.image.description="PHP with OpenSwoole, all extensions, Composer, Node.js, and PHPeek PM"

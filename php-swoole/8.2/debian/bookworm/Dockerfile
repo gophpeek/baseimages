@@ -5,7 +5,7 @@
 # Used with Laravel Octane, Hyperf, and other Swoole-based frameworks
 # ============================================================================
 
-FROM ghcr.io/gophpeek/baseimages/php-base:8.2-debian
+FROM ghcr.io/gophpeek/baseimages/php-base:8.2-bookworm
 
 LABEL org.opencontainers.image.title="PHPeek Swoole 8.2 Debian"
 LABEL org.opencontainers.image.description="PHP with Swoole, all extensions, Composer, Node.js, and PHPeek PM"
