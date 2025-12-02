@@ -362,6 +362,7 @@ generate_runtime_configs() {
 
     # SSL configuration
     [ -n "${SSL_MODE}" ] && [ "${SSL_MODE}" != "off" ] && generate_ssl_config
+    return 0
 }
 
 ###########################################
@@ -460,6 +461,7 @@ EOF
     [ "$SSL_MODE" = "full" ] && cat > /etc/nginx/conf.d/http-redirect.conf <<EOF
 server { listen ${NGINX_HTTP_PORT:-80}; server_name _; return 301 https://\$host\$request_uri; }
 EOF
+    return 0
 }
 
 ###########################################
@@ -529,6 +531,7 @@ preflight_checks() {
     validate_phpeek_pm_local
 
     [ $warnings -gt 0 ] && log_info "Preflight completed with $warnings warnings"
+    return 0
 }
 
 ###########################################
