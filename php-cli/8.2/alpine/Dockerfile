@@ -5,8 +5,8 @@
 # ============================================================================
 
 # Import both variants from php-base
-FROM ghcr.io/phpeek/baseimages/php-base:8.2-alpine AS base-root
-FROM ghcr.io/phpeek/baseimages/php-base:8.2-alpine-rootless AS base-rootless
+FROM ghcr.io/gophpeek/baseimages/php-base:8.2-alpine AS base-root
+FROM ghcr.io/gophpeek/baseimages/php-base:8.2-alpine-rootless AS base-rootless
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOT VARIANT (default) - Runs as root, PUID/PGID mapping at runtime

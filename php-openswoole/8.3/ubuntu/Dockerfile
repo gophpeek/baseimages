@@ -2,7 +2,7 @@
 # PHPeek OpenSwoole Image - Ubuntu 8.3 (24.04 Noble)
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.3-ubuntu
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-ubuntu
 
 LABEL org.opencontainers.image.title="PHPeek OpenSwoole 8.3 Ubuntu"
 LABEL org.opencontainers.image.description="PHP with OpenSwoole, all extensions, Composer, Node.js, and PHPeek PM"

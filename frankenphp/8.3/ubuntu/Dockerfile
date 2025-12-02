@@ -5,7 +5,7 @@
 # Supports HTTP/3, automatic HTTPS, and worker mode for performance
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.3-ubuntu
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-ubuntu
 
 LABEL org.opencontainers.image.title="PHPeek FrankenPHP 8.3 Ubuntu"
 LABEL org.opencontainers.image.description="FrankenPHP with all extensions, Composer, Node.js, and PHPeek PM"

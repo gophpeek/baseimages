@@ -7,7 +7,7 @@
 # NOTE: Ubuntu uses Ondrej PPA which may have php-openswoole package
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.4-ubuntu
+FROM ghcr.io/gophpeek/baseimages/php-base:8.4-ubuntu
 
 LABEL org.opencontainers.image.title="PHPeek OpenSwoole 8.4 Ubuntu"
 LABEL org.opencontainers.image.description="PHP with OpenSwoole, all extensions, Composer, Node.js, and PHPeek PM"

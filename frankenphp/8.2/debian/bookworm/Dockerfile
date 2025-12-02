@@ -5,7 +5,7 @@
 # Supports HTTP/3, automatic HTTPS, and worker mode for performance
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.2-debian
+FROM ghcr.io/gophpeek/baseimages/php-base:8.2-debian
 
 LABEL org.opencontainers.image.title="PHPeek FrankenPHP 8.2 Debian"
 LABEL org.opencontainers.image.description="FrankenPHP with all extensions, Composer, Node.js, and PHPeek PM"

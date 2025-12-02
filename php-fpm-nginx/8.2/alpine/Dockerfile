@@ -8,7 +8,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOT VARIANT (default) - Runs as root, PUID/PGID mapping at runtime
 # ═══════════════════════════════════════════════════════════════════════════
-FROM ghcr.io/phpeek/baseimages/php-fpm:8.2-alpine AS root
+FROM ghcr.io/gophpeek/baseimages/php-fpm:8.2-alpine AS root
 
 LABEL org.opencontainers.image.title="PHPeek PHP-FPM + Nginx 8.2 Alpine"
 LABEL org.opencontainers.image.description="PHP-FPM + Nginx with all extensions, Composer, Node.js, and PHPeek PM"
@@ -57,7 +57,7 @@ CMD ["phpeek-pm"]
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOTLESS VARIANT - Runs entirely as www-data, no root privileges
 # ═══════════════════════════════════════════════════════════════════════════
-FROM ghcr.io/phpeek/baseimages/php-fpm:8.2-alpine-rootless AS rootless
+FROM ghcr.io/gophpeek/baseimages/php-fpm:8.2-alpine-rootless AS rootless
 
 LABEL org.opencontainers.image.title="PHPeek PHP-FPM + Nginx 8.2 Alpine (Rootless)"
 LABEL org.opencontainers.image.description="PHP-FPM + Nginx with all extensions, Composer, Node.js, and PHPeek PM - Rootless"

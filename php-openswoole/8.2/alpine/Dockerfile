@@ -4,7 +4,7 @@
 # Extends php-base with OpenSwoole extension for async/coroutine PHP
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.2-alpine
+FROM ghcr.io/gophpeek/baseimages/php-base:8.2-alpine
 
 LABEL org.opencontainers.image.title="PHPeek OpenSwoole 8.2 Alpine"
 LABEL org.opencontainers.image.description="PHP with OpenSwoole, all extensions, Composer, Node.js, and PHPeek PM"

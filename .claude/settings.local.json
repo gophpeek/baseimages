@@ -56,7 +56,10 @@
       "Bash(for variant in alpine debian ubuntu)",
       "mcp__serena__list_memories",
       "WebFetch(domain:pptr.dev)",
-      "WebFetch(domain:stackoverflow.com)"
+      "WebFetch(domain:stackoverflow.com)",
+      "mcp__serena__get_current_config",
+      "mcp__serena__write_memory",
+      "mcp__serena__read_memory"
     ],
     "deny": [],
     "ask": []

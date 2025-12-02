@@ -6,8 +6,8 @@
 # ============================================================================
 
 # Import both variants from php-base for extension copying
-FROM ghcr.io/phpeek/baseimages/php-base:8.3-trixie AS base-root
-FROM ghcr.io/phpeek/baseimages/php-base:8.3-trixie-rootless AS base-rootless
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-trixie AS base-root
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-trixie-rootless AS base-rootless
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOT VARIANT (default) - Runs as root, PUID/PGID mapping at runtime

@@ -24,14 +24,14 @@ fi
 # Test result functions
 pass() {
     echo -e "${GREEN}✓${NC} $1"
-    ((TESTS_PASSED++))
+    TESTS_PASSED=$((TESTS_PASSED + 1))
 }
 
 fail() {
     echo -e "${RED}✗${NC} $1"
     echo -e "  ${RED}Expected:${NC} $2"
     echo -e "  ${RED}Got:${NC} $3"
-    ((TESTS_FAILED++))
+    TESTS_FAILED=$((TESTS_FAILED + 1))
 }
 
 info() {

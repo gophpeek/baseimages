@@ -8,7 +8,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOT VARIANT (default) - Runs as root, PUID/PGID mapping at runtime
 # ═══════════════════════════════════════════════════════════════════════════
-FROM ghcr.io/phpeek/baseimages/php-fpm:8.4-bookworm AS root
+FROM ghcr.io/gophpeek/baseimages/php-fpm:8.4-bookworm AS root
 
 LABEL org.opencontainers.image.title="PHPeek PHP-FPM + Nginx 8.4 Bookworm"
 LABEL org.opencontainers.image.description="PHP-FPM + Nginx with all extensions, Composer, Node.js, and PHPeek PM"
@@ -59,7 +59,7 @@ CMD ["phpeek-pm"]
 # ═══════════════════════════════════════════════════════════════════════════
 # ROOTLESS VARIANT - Runs entirely as www-data, no root privileges
 # ═══════════════════════════════════════════════════════════════════════════
-FROM ghcr.io/phpeek/baseimages/php-fpm:8.4-bookworm-rootless AS rootless
+FROM ghcr.io/gophpeek/baseimages/php-fpm:8.4-bookworm-rootless AS rootless
 
 LABEL org.opencontainers.image.title="PHPeek PHP-FPM + Nginx 8.4 Bookworm (Rootless)"
 LABEL org.opencontainers.image.description="PHP-FPM + Nginx with all extensions, Composer, Node.js, and PHPeek PM - Rootless"

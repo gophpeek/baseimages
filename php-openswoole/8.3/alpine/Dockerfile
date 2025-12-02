@@ -2,7 +2,7 @@
 # PHPeek OpenSwoole Image - Alpine 8.3
 # ============================================================================
 
-FROM ghcr.io/phpeek/baseimages/php-base:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-base:8.3-alpine
 
 LABEL org.opencontainers.image.title="PHPeek OpenSwoole 8.3 Alpine"
 LABEL org.opencontainers.image.description="PHP with OpenSwoole, all extensions, Composer, Node.js, and PHPeek PM"
