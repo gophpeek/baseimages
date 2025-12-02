@@ -26,8 +26,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng16-16t64 libjpeg62-turbo libfreetype6 \
     libwebp7 libavif16 libmagickwand-7.q16-10 \
     libvips42t64 libvips-tools \
-    libpq5 libicu76 libzip4t64 \
-    libxml2 libxslt1.1 libldap-2.5-0 \
+    libpq5 libicu76 libzip5 \
+    libxml2 libxslt1.1 libldap2 \
     libbz2-1.0 libonig5 libreadline8t64 libgmp10 \
     libimage-exiftool-perl \
     chromium fonts-liberation libnss3 \
@@ -97,8 +97,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng16-16t64 libjpeg62-turbo libfreetype6 \
     libwebp7 libavif16 libmagickwand-7.q16-10 \
     libvips42t64 libvips-tools \
-    libpq5 libicu76 libzip4t64 \
-    libxml2 libxslt1.1 libldap-2.5-0 \
+    libpq5 libicu76 libzip5 \
+    libxml2 libxslt1.1 libldap2 \
     libbz2-1.0 libonig5 libreadline8t64 libgmp10 \
     libimage-exiftool-perl \
     chromium fonts-liberation libnss3 \

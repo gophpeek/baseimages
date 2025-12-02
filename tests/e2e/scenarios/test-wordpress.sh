@@ -13,30 +13,12 @@ PROJECT_NAME="e2e-wordpress"
 CONTAINER_NAME="e2e-wordpress-app"
 BASE_URL="http://localhost:8092"
 
-# Global to track the script's intended exit code
-SCRIPT_EXIT_CODE=0
-
-# Cleanup on exit - completely isolated from strict modes
-cleanup_and_exit() {
-    # Capture desired exit code FIRST before any commands
-    local desired_exit="${SCRIPT_EXIT_CODE:-0}"
-
-    # Disable all strict modes
-    set +e
-    set +u
-    set +o pipefail
-
-    # Run cleanup in a fully isolated subshell
-    (
-        set +e +u +o pipefail 2>/dev/null
-        cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME" 2>/dev/null
-        true
-    ) 2>/dev/null || true
-
-    # Force the exact exit code we want
-    exit "$desired_exit"
+# Simple cleanup function - called explicitly, not via trap
+# Always returns 0 regardless of docker compose result
+do_cleanup() {
+    cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"
+    return 0
 }
-trap cleanup_and_exit EXIT
 
 log_section "WordPress E2E Test"
 
@@ -93,6 +75,18 @@ log_section "PHP Configuration Tests"
 # Check memory limit (WordPress needs more)
 assert_exec_contains "$CONTAINER_NAME" "php -r 'echo ini_get(\"memory_limit\");'" "256M" "Memory limit is 256M"
 
-print_summary
+# Store test results before any cleanup that might affect shell state
+FINAL_PASSED=$TESTS_PASSED
+FINAL_FAILED=$TESTS_FAILED
 
+# Print summary (doesn't affect exit code when used with ||)
+print_summary || true
+
+# Always cleanup, ignoring any errors
+do_cleanup || true
+
+# Exit based on test results
+if [ "$FINAL_FAILED" -gt 0 ]; then
+    exit 1
+fi
 exit 0

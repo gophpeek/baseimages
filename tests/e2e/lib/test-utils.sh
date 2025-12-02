@@ -1,8 +1,9 @@
 #!/bin/bash
 # E2E Test Utilities for PHPeek Base Images
 # Shared functions for all E2E test scenarios
-
-set -euo pipefail
+#
+# NOTE: This is a library file - do NOT set -euo pipefail here
+# The sourcing script should set its own shell options
 
 # Check for jq (optional but recommended for JSON parsing)
 if command -v jq &> /dev/null; then
@@ -255,20 +256,23 @@ assert_dir_exists() {
 }
 
 # Cleanup function for docker compose
-# Note: This function is designed to be safe in EXIT traps with set -euo pipefail
-# It disables all strict modes and runs cleanup in a subshell to prevent any errors
-# from affecting the trap exit code
+# Note: This function is designed to be completely safe and never affect exit codes
+# It always returns 0 regardless of what happens inside
 cleanup_compose() {
     local compose_file="${1:-}"
     local project="${2:-e2e-test}"
 
-    # Run in a subshell with all strict modes disabled to ensure cleanup completes
-    # even if docker compose fails for any reason
-    (
-        set +euo pipefail 2>/dev/null || true
-        echo -e "${BLUE:-}[INFO]${NC:-} Cleaning up $project..."
+    # Log the cleanup attempt
+    echo -e "${BLUE:-}[INFO]${NC:-} Cleaning up $project..."
+
+    # Run docker compose down, ignoring all errors
+    # Use command grouping with explicit return to ensure we never propagate errors
+    {
         docker compose -f "$compose_file" -p "$project" down -v --remove-orphans 2>/dev/null
-    ) || true
+    } || true
+
+    # Always succeed
+    return 0
 }
 
 # Start docker compose stack
