@@ -11,6 +11,13 @@
       "8.2": "8.2.27",
       "8.3": "8.3.15",
       "8.4": "8.4.2"
+    },
+    "preview": {
+      "8.5": {
+        "status": "alpha",
+        "version": null,
+        "note": "Expected GA: November 2025"
+      }
     }
   },
   "node": {

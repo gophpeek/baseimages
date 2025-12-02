@@ -1,0 +1,26 @@
+# Rootless E2E Test Fixture
+# Tests rootless container mode with unprivileged port 8080
+
+services:
+  app:
+    image: ${IMAGE:-ghcr.io/phpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless}
+    container_name: e2e-rootless-app
+    ports:
+      # Rootless uses port 8080 internally, map to 8095 for testing
+      - "8095:8080"
+    volumes:
+      - ./public:/var/www/html:ro
+    environment:
+      # These should be ignored in rootless mode
+      PUID: "1000"
+      PGID: "1000"
+    healthcheck:
+      # Health check uses port 8080 in rootless mode
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health.php"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    # Explicitly set user to match rootless image default
+    # (already set in Dockerfile, but explicit for testing)
+    user: "www-data:www-data"

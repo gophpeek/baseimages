@@ -52,6 +52,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get build lifecycle state
+        id: lifecycle
+        run: |
+          chmod +x ./scripts/get-build-state.sh
+          BUILD_STATE=$(./scripts/get-build-state.sh ${{ matrix.php_version }} ${{ matrix.os_variant }})
+          echo "LIFECYCLE=$(echo "$BUILD_STATE" | jq -r '.lifecycle')" >> $GITHUB_OUTPUT
+          echo "PHP_EOL=$(echo "$BUILD_STATE" | jq -r '.php_eol')" >> $GITHUB_OUTPUT
+          echo "REMOVAL_DATE=$(echo "$BUILD_STATE" | jq -r '.removal_date // empty')" >> $GITHUB_OUTPUT
+          echo "PREVIEW_STATUS=$(echo "$BUILD_STATE" | jq -r '.status // empty')" >> $GITHUB_OUTPUT
+          echo "TAGS_SUFFIX=$(echo "$BUILD_STATE" | jq -r '.tags_suffix // empty')" >> $GITHUB_OUTPUT
+          # Output lifecycle info for debugging
+          echo "Build state for PHP ${{ matrix.php_version }} ${{ matrix.os_variant }}:"
+          echo "$BUILD_STATE" | jq .
+
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
@@ -146,15 +160,15 @@ jobs:
           docker stop test-multi && docker rm test-multi
 
   # ─────────────────────────────────────────────────────────────────────────────
-  # Development Images (with Xdebug)
+  # Rootless Images
   # ─────────────────────────────────────────────────────────────────────────────
-  build-dev-matrix:
+  build-rootless-matrix:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine-dev', 'debian-dev', 'ubuntu-dev']
+        os_variant: ['alpine', 'bookworm', 'trixie']
 
     permissions:
       contents: read
@@ -164,6 +178,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Get build lifecycle state
+        id: lifecycle
+        run: |
+          chmod +x ./scripts/get-build-state.sh
+          BUILD_STATE=$(./scripts/get-build-state.sh ${{ matrix.php_version }} ${{ matrix.os_variant }})
+          echo "LIFECYCLE=$(echo "$BUILD_STATE" | jq -r '.lifecycle')" >> $GITHUB_OUTPUT
+          echo "PHP_EOL=$(echo "$BUILD_STATE" | jq -r '.php_eol')" >> $GITHUB_OUTPUT
+          echo "REMOVAL_DATE=$(echo "$BUILD_STATE" | jq -r '.removal_date // empty')" >> $GITHUB_OUTPUT
+          echo "PREVIEW_STATUS=$(echo "$BUILD_STATE" | jq -r '.status // empty')" >> $GITHUB_OUTPUT
+          echo "TAGS_SUFFIX=$(echo "$BUILD_STATE" | jq -r '.tags_suffix // empty')" >> $GITHUB_OUTPUT
+          # Output lifecycle info for debugging
+          echo "Build state for PHP ${{ matrix.php_version }} ${{ matrix.os_variant }} (rootless):"
+          echo "$BUILD_STATE" | jq .
+
+      - name: Determine Dockerfile path
+        id: dockerfile
+        run: |
+          # Map os_variant to Dockerfile path
+          case "${{ matrix.os_variant }}" in
+            alpine)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+            bookworm)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+            trixie)
+              echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
+              ;;
+          esac
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -180,53 +224,72 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for dev images
+      - name: Extract metadata for rootless images
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Dev tags: 8.4-alpine-dev, 8.4-debian-dev, etc.
-            type=raw,value=${{ matrix.php_version }}-${{ matrix.os_variant }},enable={{is_default_branch}}
-            # Immutable SHA tags
-            type=sha,prefix=${{ matrix.php_version }}-${{ matrix.os_variant }}-,enable={{is_default_branch}}
+            # Rolling version tags (recommended for most users)
+            type=raw,value=${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless,enable={{is_default_branch}}
+            # Convenience tags (8.3-rootless -> 8.3-alpine-rootless)
+            type=raw,value=${{ matrix.php_version }}-rootless,enable=${{ matrix.os_variant == 'alpine' && github.ref == 'refs/heads/main' }}
+            # Immutable SHA tags for reproducibility
+            type=sha,prefix=${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless-,enable={{is_default_branch}}
             # Branch tags
-            type=ref,event=branch,suffix=-${{ matrix.php_version }}-${{ matrix.os_variant }}
-            type=ref,event=pr,suffix=-${{ matrix.php_version }}-${{ matrix.os_variant }}
+            type=ref,event=branch,suffix=-${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless
+            type=ref,event=pr,suffix=-${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless
 
-      - name: Build and push dev Docker image
+      - name: Build and push rootless Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./php-fpm-nginx/${{ matrix.php_version }}/${{ matrix.os_variant }}/Dockerfile
+          file: ${{ steps.dockerfile.outputs.path }}
+          target: rootless
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=php-fpm-nginx-${{ matrix.php_version }}-${{ matrix.os_variant }}
-          cache-to: type=gha,mode=max,scope=php-fpm-nginx-${{ matrix.php_version }}-${{ matrix.os_variant }}
+          cache-from: type=gha,scope=php-fpm-nginx-${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless
+          cache-to: type=gha,mode=max,scope=php-fpm-nginx-${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless
           build-args: |
             BUILD_DATE=${{ github.event.repository.updated_at }}
             VCS_REF=${{ github.sha }}
 
-      - name: Test dev image (verify Xdebug)
+      - name: Run Trivy vulnerability scanner
+        if: github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless
+          format: 'sarif'
+          output: 'trivy-results-rootless.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        if: github.event_name != 'pull_request'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results-rootless.sarif'
+
+      - name: Test rootless image
         if: github.event_name != 'pull_request'
         run: |
-          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php_version }}-${{ matrix.os_variant }}"
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless"
           docker pull $IMAGE
-          docker run -d --name test-dev -p 8081:80 $IMAGE
+          # Rootless uses port 8080 instead of 80
+          docker run -d --name test-rootless -p 8082:8080 $IMAGE
           sleep 10
-          # Verify Xdebug is installed
-          docker exec test-dev php -m | grep -i xdebug || exit 1
-          # Verify PHP version
-          docker exec test-dev php -v | grep "PHP ${{ matrix.php_version }}" || exit 1
-          docker exec test-dev phpeek-pm --version || exit 1
-          docker exec test-dev composer --version || exit 1
-          docker exec test-dev node --version || exit 1
-          docker stop test-dev && docker rm test-dev
+          # Verify running as non-root (www-data = uid 82 on Alpine, 33 on Debian)
+          docker exec test-rootless id -u | grep -E "^(33|82)$"
+          curl -f http://localhost:8082/health || exit 1
+          docker exec test-rootless php -v | grep "PHP ${{ matrix.php_version }}" || exit 1
+          docker exec test-rootless phpeek-pm --version || exit 1
+          docker exec test-rootless composer --version || exit 1
+          docker exec test-rootless node --version || exit 1
+          docker stop test-rootless && docker rm test-rootless
 
   notify-security-updates:
-    needs: [build-matrix, build-dev-matrix]
+    needs: [build-matrix, build-rootless-matrix]
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule'
 
@@ -236,5 +299,5 @@ jobs:
           echo "✅ Weekly security rebuild completed"
           echo "🔒 All images rebuilt with latest security patches"
           echo "📦 PHP versions: 8.2, 8.3, 8.4"
-          echo "🐧 OS variants: Alpine, Debian, Ubuntu"
-          echo "🛠️ Dev variants: Alpine-dev, Debian-dev, Ubuntu-dev (with Xdebug)"
+          echo "🐧 OS variants: Alpine, Debian Bookworm, Debian Trixie"
+          echo "🔐 Rootless variants: Available for all OS variants"

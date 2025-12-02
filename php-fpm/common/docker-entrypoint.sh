@@ -16,6 +16,9 @@ else
     log_info()  { echo "[INFO] $1"; }
     log_warn()  { echo "[WARN] $1"; }
     log_error() { echo "[ERROR] $1" >&2; }
+    is_rootless() {
+        [ "${PHPEEK_ROOTLESS:-false}" = "true" ]
+    }
 fi
 
 # Validate PHP-FPM configuration
@@ -30,6 +33,12 @@ validate_fpm_config() {
 
 # Setup proper permissions
 setup_fpm_permissions() {
+    # Skip permission setup in rootless mode
+    if is_rootless; then
+        log_info "Rootless mode - skipping permission setup"
+        return 0
+    fi
+
     log_info "Setting up permissions..."
 
     # Ensure www-data can write to necessary directories
@@ -69,6 +78,16 @@ graceful_shutdown() {
 
 # Setup signal handlers
 trap graceful_shutdown SIGTERM SIGINT SIGQUIT
+
+# ============================================================================
+# Lifecycle Warning (deprecation/preview notices)
+# ============================================================================
+LIFECYCLE_CHECK="${PHPEEK_LIB_PATH:-/usr/local/lib/phpeek}/lifecycle-check.sh"
+if [ -f "$LIFECYCLE_CHECK" ]; then
+    # shellcheck source=/dev/null
+    . "$LIFECYCLE_CHECK"
+    phpeek_lifecycle_check
+fi
 
 # Display environment information
 log_info "Starting PHP-FPM..."

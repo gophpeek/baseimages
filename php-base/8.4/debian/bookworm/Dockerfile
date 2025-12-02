@@ -191,6 +191,29 @@ COPY php-base/common/php.ini /usr/local/etc/php/conf.d/99-phpeek.ini
 COPY php-base/common/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
 
 # ============================================================================
+# PHPeek Shared Libraries (entrypoint helpers, lifecycle checks)
+# ============================================================================
+RUN mkdir -p /usr/local/lib/phpeek
+COPY common/lib/entrypoint-lib.sh /usr/local/lib/phpeek/
+COPY common/lib/lifecycle-check.sh /usr/local/lib/phpeek/
+RUN chmod +x /usr/local/lib/phpeek/*.sh
+
+# ============================================================================
+# Lifecycle State (set at build time via CI)
+# ============================================================================
+ARG PHPEEK_LIFECYCLE=stable
+ARG PHPEEK_PHP_VERSION=8.4
+ARG PHPEEK_PHP_EOL=
+ARG PHPEEK_REMOVAL_DATE=
+ARG PHPEEK_PREVIEW_STATUS=
+
+ENV PHPEEK_LIFECYCLE=${PHPEEK_LIFECYCLE} \
+    PHPEEK_PHP_VERSION=${PHPEEK_PHP_VERSION} \
+    PHPEEK_PHP_EOL=${PHPEEK_PHP_EOL} \
+    PHPEEK_REMOVAL_DATE=${PHPEEK_REMOVAL_DATE} \
+    PHPEEK_PREVIEW_STATUS=${PHPEEK_PREVIEW_STATUS}
+
+# ============================================================================
 # Working Directory Setup
 # ============================================================================
 RUN mkdir -p /var/www/html && \

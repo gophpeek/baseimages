@@ -16,6 +16,9 @@ else
     log_info()  { echo "[INFO] $1"; }
     log_warn()  { echo "[WARN] $1"; }
     log_error() { echo "[ERROR] $1" >&2; }
+    is_rootless() {
+        [ "${PHPEEK_ROOTLESS:-false}" = "true" ]
+    }
 fi
 
 # Handle signals for graceful shutdown (use shared or fallback)
@@ -27,6 +30,16 @@ if ! command -v _default_cleanup >/dev/null 2>&1; then
     trap graceful_shutdown SIGTERM SIGINT SIGQUIT
 else
     setup_signal_handlers
+fi
+
+# ============================================================================
+# Lifecycle Warning (deprecation/preview notices)
+# ============================================================================
+LIFECYCLE_CHECK="${PHPEEK_LIB_PATH:-/usr/local/lib/phpeek}/lifecycle-check.sh"
+if [ -f "$LIFECYCLE_CHECK" ]; then
+    # shellcheck source=/dev/null
+    . "$LIFECYCLE_CHECK"
+    phpeek_lifecycle_check
 fi
 
 # Display environment information
@@ -49,8 +62,8 @@ if command -v phpeek-pm >/dev/null 2>&1; then
     log_info "PHPeek PM $(phpeek-pm --version 2>/dev/null | head -n1)"
 fi
 
-# Setup proper permissions
-if [ -d /var/www/html ]; then
+# Setup proper permissions (skip in rootless mode)
+if [ -d /var/www/html ] && ! is_rootless; then
     chown -R www-data:www-data /var/www/html 2>/dev/null || true
 fi
 

@@ -62,6 +62,20 @@ jobs:
           echo "NODE_VERSION=$(jq -r '.node.version' versions.json)" >> $GITHUB_OUTPUT
           echo "PHPEEK_PM_VERSION=$(jq -r '.tools.phpeek_pm' versions.json)" >> $GITHUB_OUTPUT
 
+      - name: Get build lifecycle state
+        id: lifecycle
+        run: |
+          chmod +x ./scripts/get-build-state.sh
+          BUILD_STATE=$(./scripts/get-build-state.sh ${{ matrix.php_version }} ${{ matrix.os_variant }})
+          echo "LIFECYCLE=$(echo "$BUILD_STATE" | jq -r '.lifecycle')" >> $GITHUB_OUTPUT
+          echo "PHP_EOL=$(echo "$BUILD_STATE" | jq -r '.php_eol')" >> $GITHUB_OUTPUT
+          echo "REMOVAL_DATE=$(echo "$BUILD_STATE" | jq -r '.removal_date // empty')" >> $GITHUB_OUTPUT
+          echo "PREVIEW_STATUS=$(echo "$BUILD_STATE" | jq -r '.status // empty')" >> $GITHUB_OUTPUT
+          echo "TAGS_SUFFIX=$(echo "$BUILD_STATE" | jq -r '.tags_suffix // empty')" >> $GITHUB_OUTPUT
+          # Output lifecycle info for debugging
+          echo "Build state for PHP ${{ matrix.php_version }} ${{ matrix.os_variant }}:"
+          echo "$BUILD_STATE" | jq .
+
       - name: Download and verify PHPeek PM binaries
         run: |
           mkdir -p phpeek-pm/binaries
@@ -145,6 +159,11 @@ jobs:
             MSGPACK_VERSION=${{ steps.versions.outputs.MSGPACK_VERSION }}
             VIPS_VERSION=${{ steps.versions.outputs.VIPS_VERSION }}
             NODE_VERSION=${{ steps.versions.outputs.NODE_VERSION }}
+            PHPEEK_LIFECYCLE=${{ steps.lifecycle.outputs.LIFECYCLE }}
+            PHPEEK_PHP_VERSION=${{ matrix.php_version }}
+            PHPEEK_PHP_EOL=${{ steps.lifecycle.outputs.PHP_EOL }}
+            PHPEEK_REMOVAL_DATE=${{ steps.lifecycle.outputs.REMOVAL_DATE }}
+            PHPEEK_PREVIEW_STATUS=${{ steps.lifecycle.outputs.PREVIEW_STATUS }}
 
       - name: Test image
         if: github.event_name != 'pull_request'
@@ -188,6 +207,20 @@ jobs:
           echo "VIPS_VERSION=$(jq -r '.extensions.vips' versions.json)" >> $GITHUB_OUTPUT
           echo "NODE_VERSION=$(jq -r '.node.version' versions.json)" >> $GITHUB_OUTPUT
           echo "PHPEEK_PM_VERSION=$(jq -r '.tools.phpeek_pm' versions.json)" >> $GITHUB_OUTPUT
+
+      - name: Get build lifecycle state
+        id: lifecycle
+        run: |
+          chmod +x ./scripts/get-build-state.sh
+          BUILD_STATE=$(./scripts/get-build-state.sh ${{ matrix.php_version }} ${{ matrix.os_variant }})
+          echo "LIFECYCLE=$(echo "$BUILD_STATE" | jq -r '.lifecycle')" >> $GITHUB_OUTPUT
+          echo "PHP_EOL=$(echo "$BUILD_STATE" | jq -r '.php_eol')" >> $GITHUB_OUTPUT
+          echo "REMOVAL_DATE=$(echo "$BUILD_STATE" | jq -r '.removal_date // empty')" >> $GITHUB_OUTPUT
+          echo "PREVIEW_STATUS=$(echo "$BUILD_STATE" | jq -r '.status // empty')" >> $GITHUB_OUTPUT
+          echo "TAGS_SUFFIX=$(echo "$BUILD_STATE" | jq -r '.tags_suffix // empty')" >> $GITHUB_OUTPUT
+          # Output lifecycle info for debugging
+          echo "Build state for PHP ${{ matrix.php_version }} ${{ matrix.os_variant }} (rootless):"
+          echo "$BUILD_STATE" | jq .
 
       - name: Download and verify PHPeek PM binaries
         run: |
@@ -273,6 +306,11 @@ jobs:
             MSGPACK_VERSION=${{ steps.versions.outputs.MSGPACK_VERSION }}
             VIPS_VERSION=${{ steps.versions.outputs.VIPS_VERSION }}
             NODE_VERSION=${{ steps.versions.outputs.NODE_VERSION }}
+            PHPEEK_LIFECYCLE=${{ steps.lifecycle.outputs.LIFECYCLE }}
+            PHPEEK_PHP_VERSION=${{ matrix.php_version }}
+            PHPEEK_PHP_EOL=${{ steps.lifecycle.outputs.PHP_EOL }}
+            PHPEEK_REMOVAL_DATE=${{ steps.lifecycle.outputs.REMOVAL_DATE }}
+            PHPEEK_PREVIEW_STATUS=${{ steps.lifecycle.outputs.PREVIEW_STATUS }}
 
       - name: Test rootless image
         if: github.event_name != 'pull_request'

@@ -8,6 +8,16 @@ set -e
 # ╚═══════════════════════════════════════════════════════════════════════════╝
 # shellcheck shell=bash
 
+###########################################
+# Lifecycle Warning (deprecation/preview)
+###########################################
+LIFECYCLE_CHECK="/usr/local/lib/phpeek/lifecycle-check.sh"
+if [ -f "$LIFECYCLE_CHECK" ]; then
+    # shellcheck source=/dev/null
+    . "$LIFECYCLE_CHECK"
+    phpeek_lifecycle_check
+fi
+
 # Source shared library
 LIB_PATH="${PHPEEK_LIB_PATH:-/usr/local/lib/phpeek/entrypoint-lib.sh}"
 if [ -f "$LIB_PATH" ]; then
@@ -35,6 +45,9 @@ else
             true|TRUE|1|yes|YES) return 0 ;;
             *) return 1 ;;
         esac
+    }
+    is_rootless() {
+        [ "${PHPEEK_ROOTLESS:-false}" = "true" ]
     }
 fi
 
@@ -92,6 +105,12 @@ sanitize_nginx_value() {
 # PUID/PGID Runtime User Mapping
 ###########################################
 setup_user_permissions_extended() {
+    # Skip PUID/PGID mapping in rootless mode
+    if is_rootless; then
+        log_info "Rootless mode - skipping PUID/PGID user mapping"
+        return 0
+    fi
+
     local target_uid="${PUID:-}"
     local target_gid="${PGID:-}"
     local app_user="${APP_USER:-www-data}"
@@ -494,8 +513,8 @@ preflight_checks() {
             }
         fi
 
-        # Auto-fix permissions if running as root
-        if [ "$(id -u)" = "0" ]; then
+        # Auto-fix permissions if running as root (skip in rootless mode)
+        if [ "$(id -u)" = "0" ] && ! is_rootless; then
             log_info "Auto-fixing Laravel directory permissions..."
             for dir in storage bootstrap/cache; do
                 [ -d "$workdir/$dir" ] && {
