@@ -46,12 +46,12 @@ test_laravel_container() {
     touch tests/integration/framework-detection/fixtures/laravel/artisan
     echo "<?php echo 'Laravel Test';" > tests/integration/framework-detection/fixtures/laravel/index.php
 
-    # Run container
-    docker run --rm \
+    # Run container with timeout to prevent hangs
+    timeout 30 docker run --rm \
         -v "$(pwd)/tests/integration/framework-detection/fixtures/laravel:/var/www/html" \
         --entrypoint /bin/sh \
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine \
-        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/laravel-test.log 2>&1
+        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/laravel-test.log 2>&1 || true
 
     RESULT=$(cat /tmp/laravel-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
@@ -68,7 +68,7 @@ test_laravel_container() {
 
 # Test Symfony container
 test_symfony_container() {
-    info "Testing Symfony detection in Debian container..."
+    info "Testing Symfony detection in Bookworm container..."
 
     # Create test Symfony structure
     mkdir -p tests/integration/framework-detection/fixtures/symfony/bin
@@ -76,12 +76,12 @@ test_symfony_container() {
     touch tests/integration/framework-detection/fixtures/symfony/bin/console
     echo "<?php echo 'Symfony Test';" > tests/integration/framework-detection/fixtures/symfony/index.php
 
-    # Run container
-    docker run --rm \
+    # Run container with timeout to prevent hangs
+    timeout 30 docker run --rm \
         -v "$(pwd)/tests/integration/framework-detection/fixtures/symfony:/var/www/html" \
         --entrypoint /bin/sh \
-        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian \
-        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/symfony-test.log 2>&1
+        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm \
+        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/symfony-test.log 2>&1 || true
 
     RESULT=$(cat /tmp/symfony-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
@@ -90,27 +90,27 @@ test_symfony_container() {
     rm -f /tmp/symfony-test.log
 
     if [ "$RESULT" = "symfony" ]; then
-        pass "Symfony detected in Debian container"
+        pass "Symfony detected in Bookworm container"
     else
-        fail "Symfony detection in Debian container" "Got: $RESULT"
+        fail "Symfony detection in Bookworm container" "Got: $RESULT"
     fi
 }
 
 # Test WordPress container
 test_wordpress_container() {
-    info "Testing WordPress detection in Ubuntu container..."
+    info "Testing WordPress detection in Trixie container..."
 
     # Create test WordPress structure
     mkdir -p tests/integration/framework-detection/fixtures/wordpress
     touch tests/integration/framework-detection/fixtures/wordpress/wp-config.php
     echo "<?php echo 'WordPress Test';" > tests/integration/framework-detection/fixtures/wordpress/index.php
 
-    # Run container
-    docker run --rm \
+    # Run container with timeout to prevent hangs
+    timeout 30 docker run --rm \
         -v "$(pwd)/tests/integration/framework-detection/fixtures/wordpress:/var/www/html" \
         --entrypoint /bin/sh \
-        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-ubuntu \
-        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/wordpress-test.log 2>&1
+        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-trixie \
+        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/wordpress-test.log 2>&1 || true
 
     RESULT=$(cat /tmp/wordpress-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
@@ -119,9 +119,9 @@ test_wordpress_container() {
     rm -f /tmp/wordpress-test.log
 
     if [ "$RESULT" = "wordpress" ]; then
-        pass "WordPress detected in Ubuntu container"
+        pass "WordPress detected in Trixie container"
     else
-        fail "WordPress detection in Ubuntu container" "Got: $RESULT"
+        fail "WordPress detection in Trixie container" "Got: $RESULT"
     fi
 }
 
@@ -133,12 +133,12 @@ test_generic_container() {
     mkdir -p tests/integration/framework-detection/fixtures/generic
     echo "<?php phpinfo();" > tests/integration/framework-detection/fixtures/generic/index.php
 
-    # Run container
-    docker run --rm \
+    # Run container with timeout to prevent hangs
+    timeout 30 docker run --rm \
         -v "$(pwd)/tests/integration/framework-detection/fixtures/generic:/var/www/html" \
         --entrypoint /bin/sh \
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine \
-        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/generic-test.log 2>&1
+        -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/generic-test.log 2>&1 || true
 
     RESULT=$(cat /tmp/generic-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
