@@ -105,3 +105,5 @@ assert_http_code "$BASE_URL/api/test" 200 "API endpoint returns 200"
 assert_http_contains "$BASE_URL/api/test" '"message":"API endpoint working"' "API response correct"
 
 print_summary
+
+exit 0

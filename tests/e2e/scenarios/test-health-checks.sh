@@ -117,3 +117,5 @@ rm -f "$FIXTURE_DIR/docker-compose.override.yml"
 docker compose -f "$FIXTURE_DIR/docker-compose.yml" -p "$PROJECT_NAME" down -v --remove-orphans 2>/dev/null || true
 
 print_summary
+
+exit 0

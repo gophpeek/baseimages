@@ -41,3 +41,5 @@ assert_http_code "$BASE_URL/cron" 200 "Cron endpoint"
 assert_http_contains "$BASE_URL/cron" '"env":"true"' "Scheduler env"
 
 print_summary
+
+exit 0

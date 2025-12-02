@@ -184,3 +184,5 @@ else
 fi
 
 print_summary
+
+exit 0

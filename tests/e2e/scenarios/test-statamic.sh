@@ -39,3 +39,5 @@ assert_http_code "$BASE_URL/queue" 200
 assert_http_contains "$BASE_URL/queue" '"queue_env":"true"'
 
 print_summary
+
+exit 0

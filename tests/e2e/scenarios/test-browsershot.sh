@@ -227,3 +227,5 @@ log_section "Directory Tests"
 assert_dir_exists "$CONTAINER_NAME" "/var/www/html/storage" "Storage directory exists"
 
 print_summary
+
+exit 0

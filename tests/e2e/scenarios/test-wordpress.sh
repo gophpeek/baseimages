@@ -72,3 +72,5 @@ log_section "PHP Configuration Tests"
 assert_exec_contains "$CONTAINER_NAME" "php -r 'echo ini_get(\"memory_limit\");'" "256M" "Memory limit is 256M"
 
 print_summary
+
+exit 0

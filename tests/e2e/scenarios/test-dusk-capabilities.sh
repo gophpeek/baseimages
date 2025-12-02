@@ -342,3 +342,5 @@ log_info "  3. Configure DuskTestCase.php to use system Chromium"
 log_info "  4. php artisan dusk"
 
 print_summary
+
+exit 0

@@ -418,3 +418,5 @@ for TOOL in identify mogrify; do
 done
 
 print_summary
+
+exit 0

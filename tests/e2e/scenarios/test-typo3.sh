@@ -39,3 +39,5 @@ assert_http_code "$BASE_URL/scheduler" 200
 assert_http_contains "$BASE_URL/scheduler" '"env":"true"'
 
 print_summary
+
+exit 0

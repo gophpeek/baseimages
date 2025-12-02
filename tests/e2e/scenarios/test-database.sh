@@ -165,3 +165,5 @@ if [ -n "$SQLITE_VERSION" ]; then
 fi
 
 print_summary
+
+exit 0
