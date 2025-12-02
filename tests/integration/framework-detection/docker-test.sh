@@ -55,6 +55,10 @@ test_laravel_container() {
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine \
         -c ". /usr/local/lib/phpeek/entrypoint-lib.sh && detect_framework" > /tmp/laravel-test.log 2>&1 || true
 
+    # Debug: show full log content
+    echo "DEBUG: Laravel test log content:"
+    cat /tmp/laravel-test.log 2>/dev/null || echo "(empty or missing)"
+
     RESULT=$(cat /tmp/laravel-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
     # Cleanup - use sudo because container may create files owned by root
@@ -89,6 +93,10 @@ test_symfony_container() {
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm \
         -c ". /usr/local/lib/phpeek/entrypoint-lib.sh && detect_framework" > /tmp/symfony-test.log 2>&1 || true
 
+    # Debug: show full log content
+    echo "DEBUG: Symfony test log content:"
+    cat /tmp/symfony-test.log 2>/dev/null || echo "(empty or missing)"
+
     RESULT=$(cat /tmp/symfony-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
     # Cleanup - use sudo because container may create files owned by root
@@ -120,6 +128,10 @@ test_wordpress_container() {
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-trixie \
         -c ". /usr/local/lib/phpeek/entrypoint-lib.sh && detect_framework" > /tmp/wordpress-test.log 2>&1 || true
 
+    # Debug: show full log content
+    echo "DEBUG: WordPress test log content:"
+    cat /tmp/wordpress-test.log 2>/dev/null || echo "(empty or missing)"
+
     RESULT=$(cat /tmp/wordpress-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
     # Cleanup - use sudo because container may create files owned by root
@@ -149,6 +161,10 @@ test_generic_container() {
         --entrypoint /bin/sh \
         ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine \
         -c ". /usr/local/lib/phpeek/entrypoint-lib.sh && detect_framework" > /tmp/generic-test.log 2>&1 || true
+
+    # Debug: show full log content
+    echo "DEBUG: Generic test log content:"
+    cat /tmp/generic-test.log 2>/dev/null || echo "(empty or missing)"
 
     RESULT=$(cat /tmp/generic-test.log | grep -o "laravel\|symfony\|wordpress\|generic" || echo "error")
 
