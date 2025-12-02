@@ -59,6 +59,9 @@ COPY --from=base-root /usr/local/bin/phpeek-pm /usr/local/bin/phpeek-pm
 # Copy ImageMagick policy from base image (Trixie uses ImageMagick-7)
 COPY --from=base-root /etc/ImageMagick-7/policy.xml /etc/ImageMagick-7/policy.xml
 
+# Copy PHPeek shared libraries from base image
+COPY --from=base-root /usr/local/lib/phpeek/ /usr/local/lib/phpeek/
+
 # Copy FPM-specific configurations
 COPY php-fpm/common/fpm-pool.conf /usr/local/etc/php-fpm.d/zz-custom.conf
 COPY php-fpm/common/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -130,6 +133,9 @@ COPY --from=base-rootless /usr/local/bin/phpeek-pm /usr/local/bin/phpeek-pm
 
 # Copy ImageMagick policy from base image (Trixie uses ImageMagick-7)
 COPY --from=base-rootless /etc/ImageMagick-7/policy.xml /etc/ImageMagick-7/policy.xml
+
+# Copy PHPeek shared libraries from base image
+COPY --from=base-rootless /usr/local/lib/phpeek/ /usr/local/lib/phpeek/
 
 # Copy FPM-specific configurations
 COPY php-fpm/common/fpm-pool.conf /usr/local/etc/php-fpm.d/zz-custom.conf
