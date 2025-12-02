@@ -12,7 +12,7 @@ FIXTURE_DIR="$E2E_ROOT/fixtures/env-config"
 PROJECT_NAME="e2e-env-config"
 
 # Cleanup on exit
-trap 'ec=$?; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
+trap 'ec=$?; set +e; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
 
 log_section "Environment Variable Configuration E2E Test"
 

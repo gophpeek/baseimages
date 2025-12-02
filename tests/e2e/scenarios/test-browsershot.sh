@@ -14,7 +14,7 @@ CONTAINER_NAME="e2e-browsershot"
 BASE_URL="http://localhost:8095"
 
 # Cleanup on exit
-trap 'ec=$?; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
+trap 'ec=$?; set +e; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
 
 log_section "Browsershot/Puppeteer E2E Test"
 

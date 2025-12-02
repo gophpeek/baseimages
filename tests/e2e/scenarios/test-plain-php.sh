@@ -16,7 +16,7 @@ BASE_URL="http://localhost:8090"
 # Cleanup on exit with proper exit code preservation
 # Note: The trap must explicitly exit with the saved code to prevent bash from using
 # the exit code of the last trap command instead of the intended script exit code
-trap 'ec=$?; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
+trap 'ec=$?; set +e; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
 
 log_section "Plain PHP E2E Test"
 

@@ -12,7 +12,7 @@ FIXTURE_DIR="$E2E_ROOT/fixtures/database"
 PROJECT_NAME="e2e-database"
 
 # Cleanup on exit
-trap 'ec=$?; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
+trap 'ec=$?; set +e; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
 
 log_section "Database Connectivity E2E Test"
 

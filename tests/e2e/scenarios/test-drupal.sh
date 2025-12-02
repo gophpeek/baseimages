@@ -12,7 +12,7 @@ PROJECT_NAME="e2e-drupal"
 CONTAINER_NAME="e2e-drupal-app"
 BASE_URL="http://localhost:8097"
 
-trap 'ec=$?; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
+trap 'ec=$?; set +e; cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME"; exit $ec' EXIT
 
 log_section "Drupal E2E Test"
 
