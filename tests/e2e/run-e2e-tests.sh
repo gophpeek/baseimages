@@ -98,15 +98,9 @@ run_scenario() {
     log_info "Running scenario: $scenario_name"
 
     if [ "$VERBOSE" = "true" ]; then
-        echo "[RUNNER DEBUG] Running: bash $scenario_file"
-        bash "$scenario_file"
-        local scenario_exit_code=$?
-        echo "[RUNNER DEBUG] Scenario exit code: $scenario_exit_code"
-        if [ "$scenario_exit_code" -eq 0 ]; then
-            echo "[RUNNER DEBUG] Returning 0 (success)"
+        if bash "$scenario_file"; then
             return 0
         else
-            echo "[RUNNER DEBUG] Returning 1 (failure)"
             return 1
         fi
     else
@@ -135,9 +129,11 @@ log_info "Found $TOTAL_SCENARIOS scenario(s) to run"
 for scenario in "${SCENARIOS[@]}"; do
     echo ""
     if run_scenario "$scenario"; then
-        ((PASSED_SCENARIOS++))
+        # Note: Using || true to prevent set -e from triggering when counter is 0
+        # ((x++)) returns 1 (failure) when x starts at 0 due to bash arithmetic rules
+        ((PASSED_SCENARIOS++)) || true
     else
-        ((FAILED_SCENARIOS++))
+        ((FAILED_SCENARIOS++)) || true
     fi
 done
 
