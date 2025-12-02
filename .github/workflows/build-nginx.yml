@@ -38,20 +38,19 @@ jobs:
         id: dockerfile
         run: |
           # Map os_variant to Dockerfile path
+          # Context is always repo root because Dockerfiles reference paths like nginx/common/
           case "${{ matrix.os_variant }}" in
             alpine)
               echo "path=./nginx/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "context=./nginx/alpine" >> $GITHUB_OUTPUT
               ;;
             bookworm)
               echo "path=./nginx/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "context=./nginx/debian/bookworm" >> $GITHUB_OUTPUT
               ;;
             trixie)
               echo "path=./nginx/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "context=./nginx/debian/trixie" >> $GITHUB_OUTPUT
               ;;
           esac
+          echo "context=." >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
