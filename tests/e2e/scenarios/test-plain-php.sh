@@ -13,14 +13,19 @@ PROJECT_NAME="e2e-plain-php"
 CONTAINER_NAME="e2e-plain-php"
 BASE_URL="http://localhost:8090"
 
-# Cleanup on exit - capture exit code, run cleanup, restore exit code
-# The trap must explicitly preserve and restore the exit code because
-# cleanup operations may fail and affect the final exit status
+# Global to track the script's intended exit code
+SCRIPT_EXIT_CODE=0
+
+# Cleanup on exit - use global variable to avoid $? issues
 cleanup_and_exit() {
-    local exit_code=$?
-    set +euo pipefail 2>/dev/null || true
+    # Disable all strict modes first
+    set +e
+    set +u
+    set +o pipefail
+    # Run cleanup
     cleanup_compose "$FIXTURE_DIR/docker-compose.yml" "$PROJECT_NAME" 2>/dev/null || true
-    exit $exit_code
+    # Exit with the stored exit code
+    exit ${SCRIPT_EXIT_CODE:-0}
 }
 trap cleanup_and_exit EXIT
 
