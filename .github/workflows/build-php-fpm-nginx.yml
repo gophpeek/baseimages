@@ -5,6 +5,7 @@ on:
     branches: [main, develop]
     paths:
       - 'php-fpm-nginx/**'
+      - 'common/**'
       # NOTE: php-fpm/** changes trigger php-fpm-nginx via repository_dispatch
       # from build-php-fpm.yml, not via push trigger, to avoid race conditions
       - '.github/workflows/build-php-fpm-nginx.yml'
@@ -12,6 +13,7 @@ on:
     branches: [main]
     paths:
       - 'php-fpm-nginx/**'
+      - 'common/**'
   workflow_dispatch:
     inputs:
       php_version:

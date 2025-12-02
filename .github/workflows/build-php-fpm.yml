@@ -6,6 +6,7 @@ on:
     paths:
       - 'php-fpm/**'
       - 'php-base/**'
+      - 'common/**'
       - '.github/workflows/build-php-fpm.yml'
     tags:
       - 'fpm-*'
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - 'php-fpm/**'
+      - 'common/**'
   workflow_dispatch:
     inputs:
       php_version:

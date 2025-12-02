@@ -5,6 +5,7 @@ on:
     branches: [main, develop]
     paths:
       - 'php-base/**'
+      - 'common/**'
       - 'versions.json'
       - '.github/workflows/build-php-base.yml'
     tags:
@@ -13,6 +14,7 @@ on:
     branches: [main]
     paths:
       - 'php-base/**'
+      - 'common/**'
       - 'versions.json'
   workflow_dispatch:
     inputs:
