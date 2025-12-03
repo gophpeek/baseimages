@@ -86,8 +86,10 @@ RUN mkdir -p /etc/nginx/conf.d /var/log/nginx /run/nginx /var/lib/nginx/tmp && \
 # but we need it inside http block for server directives to work
 # Remove Alpine's default 404 server to prevent conflicts with our default_server
 # Comment out user directive since we run as non-root (www-data can't switch users)
+# Move PID file to /run/nginx/ which we own (Alpine default is /run/nginx.pid in root-owned /run/)
 RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || true && \
     sed -i 's/^user www-data;/# user www-data;/' /etc/nginx/nginx.conf && \
+    sed -i 's|pid /run/nginx.pid;|pid /run/nginx/nginx.pid;|' /etc/nginx/nginx.conf && \
     sed -i '/^include \/etc\/nginx\/conf\.d\/\*\.conf;/d' /etc/nginx/nginx.conf && \
     sed -i '/include \/etc\/nginx\/http\.d\/\*\.conf;/i\    include /etc/nginx/conf.d/*.conf;' /etc/nginx/nginx.conf && \
     rm -f /etc/nginx/http.d/default.conf
