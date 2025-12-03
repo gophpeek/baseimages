@@ -5,8 +5,8 @@ on:
     branches: [main, develop]
     paths:
       - 'php-fpm/**'
-      - 'php-base/**'
-      - 'common/**'
+      # NOTE: common/** and php-base/** changes trigger php-fpm via repository_dispatch
+      # from build-php-base.yml, not via push trigger, to avoid race conditions
       - '.github/workflows/build-php-fpm.yml'
     tags:
       - 'fpm-*'
@@ -14,7 +14,6 @@ on:
     branches: [main]
     paths:
       - 'php-fpm/**'
-      - 'common/**'
   workflow_dispatch:
     inputs:
       php_version:
@@ -241,6 +240,8 @@ jobs:
     needs: [build-matrix, build-rootless-matrix]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Trigger php-fpm-nginx build
         uses: peter-evans/repository-dispatch@v2

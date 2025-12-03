@@ -95,7 +95,8 @@ COPY php-fpm-nginx/common/default.conf.template /etc/nginx/conf.d/default.conf.t
 
 # Copy PHPeek PM configuration
 RUN mkdir -p /etc/phpeek-pm && chown -R www-data:www-data /etc/phpeek-pm
-COPY php-fpm-nginx/common/phpeek-pm.yaml /etc/phpeek-pm/phpeek-pm.yaml
+# Copy PHPeek PM configuration (rootless version with port 8080 health check)
+COPY php-fpm-nginx/common/phpeek-pm-rootless.yaml /etc/phpeek-pm/phpeek-pm.yaml
 
 # Copy entrypoint and healthcheck (overrides php-fpm versions)
 COPY php-fpm-nginx/common/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

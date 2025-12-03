@@ -5,15 +5,14 @@ on:
     branches: [main, develop]
     paths:
       - 'php-fpm-nginx/**'
-      - 'common/**'
-      # NOTE: php-fpm/** changes trigger php-fpm-nginx via repository_dispatch
-      # from build-php-fpm.yml, not via push trigger, to avoid race conditions
+      # NOTE: common/** changes trigger php-fpm-nginx via repository_dispatch cascade:
+      # common/** → php-base → php-fpm → php-fpm-nginx (via repository_dispatch)
+      # php-fpm/** changes also trigger via repository_dispatch from build-php-fpm.yml
       - '.github/workflows/build-php-fpm-nginx.yml'
   pull_request:
     branches: [main]
     paths:
       - 'php-fpm-nginx/**'
-      - 'common/**'
   workflow_dispatch:
     inputs:
       php_version:
@@ -155,7 +154,10 @@ jobs:
           docker pull $IMAGE
           docker run -d --name test-multi -p 8080:80 $IMAGE
           sleep 10
-          curl -f http://localhost:8080/health || exit 1
+          echo "=== Container logs ===" && docker logs test-multi || true
+          echo "=== Container status ===" && docker ps -a --filter name=test-multi || true
+          # Health check from inside container (nginx /health blocks external IPs)
+          docker exec test-multi curl -sf http://127.0.0.1/health || { echo "=== Health check failed, container logs ===" && docker logs test-multi && exit 1; }
           docker exec test-multi php -v | grep "PHP ${{ matrix.php_version }}" || exit 1
           docker exec test-multi phpeek-pm --version || exit 1
           docker exec test-multi composer --version || exit 1
@@ -282,9 +284,12 @@ jobs:
           # Rootless uses port 8080 instead of 80
           docker run -d --name test-rootless -p 8082:8080 $IMAGE
           sleep 10
+          echo "=== Container logs ===" && docker logs test-rootless || true
+          echo "=== Container status ===" && docker ps -a --filter name=test-rootless || true
           # Verify running as non-root (www-data = uid 82 on Alpine, 33 on Debian)
           docker exec test-rootless id -u | grep -E "^(33|82)$"
-          curl -f http://localhost:8082/health || exit 1
+          # Health check from inside container (nginx /health blocks external IPs)
+          docker exec test-rootless curl -sf http://127.0.0.1:8080/health || { echo "=== Health check failed, container logs ===" && docker logs test-rootless && exit 1; }
           docker exec test-rootless php -v | grep "PHP ${{ matrix.php_version }}" || exit 1
           docker exec test-rootless phpeek-pm --version || exit 1
           docker exec test-rootless composer --version || exit 1

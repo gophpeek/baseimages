@@ -333,6 +333,8 @@ jobs:
     needs: [build-matrix, build-rootless-matrix]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Trigger php-cli build
         uses: peter-evans/repository-dispatch@v2
