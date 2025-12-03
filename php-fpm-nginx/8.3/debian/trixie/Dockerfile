@@ -25,7 +25,9 @@ RUN mkdir -p /etc/nginx/conf.d /var/log/nginx /run/nginx && \
     chown -R www-data:www-data /var/log/nginx /run/nginx
 
 # Debian nginx uses www-data by default, but let's ensure it
-RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || true
+# Also remove the default site that conflicts with our configuration
+RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || true && \
+    rm -f /etc/nginx/sites-enabled/default
 
 # Copy Nginx configuration
 COPY php-fpm-nginx/common/default.conf /etc/nginx/conf.d/default.conf
@@ -79,7 +81,11 @@ RUN mkdir -p /etc/nginx/conf.d /var/log/nginx /run/nginx && \
     chown -R www-data:www-data /var/log/nginx /run/nginx /etc/nginx
 
 # Debian nginx uses www-data by default, but let's ensure it
-RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || true
+# Remove default site that conflicts with our configuration
+# Comment out user directive since we run as non-root (www-data can't switch users)
+RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || true && \
+    sed -i 's/^user www-data;/# user www-data;/' /etc/nginx/nginx.conf && \
+    rm -f /etc/nginx/sites-enabled/default
 
 # Copy Nginx configuration (rootless version with port 8080)
 # Use --chown to set ownership atomically (avoids cache layer issues)
