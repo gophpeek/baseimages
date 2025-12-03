@@ -85,6 +85,9 @@ RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf 2>/dev/null || 
 COPY php-fpm-nginx/common/default-rootless.conf /etc/nginx/conf.d/default.conf
 COPY php-fpm-nginx/common/default.conf.template /etc/nginx/conf.d/default.conf.template
 
+# Fix ownership of nginx config files for www-data (COPY runs as root)
+RUN chown -R www-data:www-data /etc/nginx/conf.d
+
 # Copy PHPeek PM configuration (rootless version with port 8080 health check)
 RUN mkdir -p /etc/phpeek-pm && chown -R www-data:www-data /etc/phpeek-pm
 COPY php-fpm-nginx/common/phpeek-pm-rootless.yaml /etc/phpeek-pm/phpeek-pm.yaml
