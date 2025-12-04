@@ -12,72 +12,72 @@ Step-by-step guides for popular PHP frameworks and development workflows.
 
 ### Framework-Specific Guides
 
-- **[Laravel Complete Guide](laravel-guide)** ⭐ Most Popular
+- **[Laravel Complete Guide](laravel-guide.md)** ⭐ Most Popular
   - Full Laravel setup with MySQL, Redis, and Scheduler
   - Development environment with Xdebug and MailHog
   - Production deployment configuration
   - Common mistakes and solutions
 
-- **[Symfony Complete Guide](symfony-guide)**
+- **[Symfony Complete Guide](symfony-guide.md)**
   - Complete Symfony setup with PostgreSQL and Redis
   - Cache pools and session configuration
   - Doctrine migrations and database management
   - Production optimization
 
-- **[WordPress Complete Guide](wordpress-guide)**
+- **[WordPress Complete Guide](wordpress-guide.md)**
   - WordPress installation with MySQL
   - WP-CLI usage and plugin development
   - Redis Object Cache setup
   - Production deployment and optimization
 
-- **[Magento Guide](magento-guide)** ✨ New
+- **[Magento Guide](magento-guide.md)** ✨ New
   - MySQL, Redis, and OpenSearch stack
   - Cron and queue configuration
   - Production storage layout
 
-- **[Drupal Guide](drupal-guide)** ✨ New
+- **[Drupal Guide](drupal-guide.md)** ✨ New
   - PostgreSQL or MySQL setup
   - Redis cache + Drush cron
   - File storage best practices
 
-- **[TYPO3 Guide](typo3-guide)** ✨ New
+- **[TYPO3 Guide](typo3-guide.md)** ✨ New
   - Composer-based install flow
   - Redis caching + scheduler
   - Persistent volumes for fileadmin
 
-- **[Statamic Guide](statamic-guide)** ✨ New
+- **[Statamic Guide](statamic-guide.md)** ✨ New
   - Laravel-based Statamic stack
   - Queue + scheduler toggles
   - Asset + Glide configuration
 
 ### Workflow Guides
 
-- **[Development Workflow](development-workflow)**
+- **[Development Workflow](development-workflow.md)**
   - Local development with hot-reload
   - Xdebug setup and debugging tips
   - Testing and quality assurance
   - Git workflow integration
 
-- **[Image Processing Guide](image-processing)** 🖼️ New
+- **[Image Processing Guide](image-processing.md)** 🖼️ New
   - GD, ImageMagick, and libvips comparison
   - HEIC/HEIF conversion (iPhone photos)
   - PDF generation and SVG rendering
   - Browsershot setup for screenshots/PDFs
   - Laravel integration (Intervention, Spatie Media)
 
-- **[Production Deployment](production-deployment)**
+- **[Production Deployment](production-deployment.md)**
   - Security hardening checklist
   - Performance optimization
   - Monitoring and logging
   - CI/CD integration
   - Zero-downtime deployments
 
-- **[PHPeek vs ServerSideUp](phpeek-vs-serversideup)** ✨ New
+- **[PHPeek vs ServerSideUp](phpeek-vs-serversideup.md)** ✨ New
   - DX, docs, and feature scorecard
   - Actionable follow-ups to widen the gap
   - Talking points for stakeholders
 
-- **[Health Checks & CI Templates](healthchecks-ci)** ✨ New
+- **[Health Checks & CI Templates](healthchecks-ci.md)** ✨ New
   - Docker Compose health-check override file
   - GitHub Actions workflow for `php artisan test`
   - Deployment-ready verification checklist
@@ -96,7 +96,7 @@ Step-by-step guides for popular PHP frameworks and development workflows.
 
 Before starting these guides, you should:
 
-1. Complete the [5-Minute Quickstart](../getting-started/quickstart)
+1. Complete the [5-Minute Quickstart](../getting-started/quickstart.md)
 2. Have Docker and Docker Compose installed
 3. Have your framework application ready (or create a new one)
 
@@ -113,9 +113,9 @@ All framework guides follow these principles:
 
 ## Need Help?
 
-- **Quick answers**: Check [Common Issues](../troubleshooting/common-issues)
-- **Debugging**: Use our [Debugging Guide](../troubleshooting/debugging-guide)
-- **Migration**: See our [Migration Guide](../troubleshooting/migration-guide)
+- **Quick answers**: Check [Common Issues](../troubleshooting/common-issues.md)
+- **Debugging**: Use our [Debugging Guide](../troubleshooting/debugging-guide.md)
+- **Migration**: See our [Migration Guide](../troubleshooting/migration-guide.md)
 - **Community**: Join [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions)
 
 ---

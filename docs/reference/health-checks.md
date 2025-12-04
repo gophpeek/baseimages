@@ -421,4 +421,4 @@ healthcheck:
 
 ---
 
-**Need more help?** [Common Issues](../troubleshooting/common-issues) | [PHPeek PM Integration](../phpeek-pm-integration)
+**Need more help?** [Common Issues](../troubleshooting/common-issues.md) | [PHPeek PM Integration](../phpeek-pm-integration.md)

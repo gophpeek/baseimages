@@ -16,90 +16,73 @@ All images are published to GitHub Container Registry:
 ghcr.io/gophpeek/baseimages/{image-type}:{tag}
 ```
 
+## Image Tiers
+
+All images come in three tiers to match your needs:
+
+| Tier | Tag Suffix | Size (Alpine) | Best For |
+|------|------------|---------------|----------|
+| **Slim** | `-slim` | ~120MB | APIs, microservices |
+| **Standard** | (none) | ~250MB | Most apps (DEFAULT) |
+| **Full** | `-full` | ~700MB | Browsershot, Dusk, PDF |
+
 ## Multi-Service Images (PHP-FPM + Nginx)
 
 Single container with both PHP-FPM and Nginx - perfect for simple deployments.
 
-### Production Images
+### Standard Tier (Default)
 
 | Image Tag | PHP | OS | Size | Architecture |
 |-----------|-----|----|----- |--------------|
-| `php-fpm-nginx:8.4-alpine` | 8.4 | Alpine | ~70MB | amd64, arm64 |
-| `php-fpm-nginx:8.3-alpine` | 8.3 | Alpine | ~70MB | amd64, arm64 |
-| `php-fpm-nginx:8.2-alpine` | 8.2 | Alpine | ~70MB | amd64, arm64 |
-| `php-fpm-nginx:8.4-debian` | 8.4 | Debian Bookworm | ~150MB | amd64, arm64 |
-| `php-fpm-nginx:8.3-debian` | 8.3 | Debian Bookworm | ~150MB | amd64, arm64 |
-| `php-fpm-nginx:8.2-debian` | 8.2 | Debian Bookworm | ~150MB | amd64, arm64 |
+| `php-fpm-nginx:8.4-alpine` | 8.4 | Alpine | ~250MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-alpine` | 8.3 | Alpine | ~250MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-alpine` | 8.2 | Alpine | ~250MB | amd64, arm64 |
 
-### Development Images (with Xdebug)
+### Slim Tier
 
-| Image Tag | PHP | OS | Includes |
-|-----------|-----|----|----- |
-| `php-fpm-nginx:8.4-alpine-dev` | 8.4 | Alpine | Xdebug 3.4, dev settings |
-| `php-fpm-nginx:8.3-alpine-dev` | 8.3 | Alpine | Xdebug 3.3, dev settings |
-| `php-fpm-nginx:8.2-alpine-dev` | 8.2 | Alpine | Xdebug 3.3, dev settings |
-| `php-fpm-nginx:8.4-debian-dev` | 8.4 | Debian | Xdebug 3.4, dev settings |
-| `php-fpm-nginx:8.3-debian-dev` | 8.3 | Debian | Xdebug 3.3, dev settings |
-| `php-fpm-nginx:8.2-debian-dev` | 8.2 | Debian | Xdebug 3.3, dev settings |
+Optimized for APIs and microservices with minimal footprint:
 
-## Single-Process Images
+| Image Tag | PHP | OS | Size | Architecture |
+|-----------|-----|----|----- |--------------|
+| `php-fpm-nginx:8.4-alpine-slim` | 8.4 | Alpine | ~120MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-alpine-slim` | 8.3 | Alpine | ~120MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-alpine-slim` | 8.2 | Alpine | ~120MB | amd64, arm64 |
 
-### PHP-FPM (Full Edition)
+### Full Tier
 
-| Image Tag | PHP | OS | Size |
-|-----------|-----|----|----- |
-| `php-fpm:8.4-alpine` | 8.4 | Alpine | ~50MB |
-| `php-fpm:8.3-alpine` | 8.3 | Alpine | ~50MB |
-| `php-fpm:8.2-alpine` | 8.2 | Alpine | ~50MB |
-| `php-fpm:8.4-debian` | 8.4 | Debian | ~120MB |
-| `php-fpm:8.3-debian` | 8.3 | Debian | ~120MB |
-| `php-fpm:8.2-debian` | 8.2 | Debian | ~120MB |
+Includes Chromium for Browsershot, Dusk, and PDF generation:
 
-### PHP-FPM (Minimal Edition)
+| Image Tag | PHP | OS | Size | Architecture |
+|-----------|-----|----|----- |--------------|
+| `php-fpm-nginx:8.4-alpine-full` | 8.4 | Alpine | ~700MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-alpine-full` | 8.3 | Alpine | ~700MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-alpine-full` | 8.2 | Alpine | ~700MB | amd64, arm64 |
 
-Optimized for Laravel with ~30% smaller size:
+### Rootless Variants
 
-| Image Tag | PHP | OS | Size |
-|-----------|-----|----|----- |
-| `php-fpm:8.4-alpine-minimal` | 8.4 | Alpine | ~35MB |
-| `php-fpm:8.3-alpine-minimal` | 8.3 | Alpine | ~35MB |
-| `php-fpm:8.2-alpine-minimal` | 8.2 | Alpine | ~35MB |
-| `php-fpm:8.4-debian-minimal` | 8.4 | Debian | ~85MB |
-| `php-fpm:8.3-debian-minimal` | 8.3 | Debian | ~85MB |
-| `php-fpm:8.2-debian-minimal` | 8.2 | Debian | ~85MB |
+All tiers support rootless execution (runs as `www-data` user):
 
-### PHP-FPM Development Images
+| Image Tag | Tier | Description |
+|-----------|------|-------------|
+| `php-fpm-nginx:8.4-alpine-rootless` | Standard | Default + rootless |
+| `php-fpm-nginx:8.4-alpine-slim-rootless` | Slim | Slim + rootless |
+| `php-fpm-nginx:8.4-alpine-full-rootless` | Full | Full + rootless |
 
-| Image Tag | PHP | OS | Includes |
-|-----------|-----|----|----- |
-| `php-fpm:8.4-alpine-dev` | 8.4 | Alpine | Xdebug 3.4 |
-| `php-fpm:8.3-alpine-dev` | 8.3 | Alpine | Xdebug 3.3 |
-| `php-fpm:8.2-alpine-dev` | 8.2 | Alpine | Xdebug 3.3 |
-| `php-fpm:8.4-debian-dev` | 8.4 | Debian | Xdebug 3.4 |
-| `php-fpm:8.3-debian-dev` | 8.3 | Debian | Xdebug 3.3 |
-| `php-fpm:8.2-debian-dev` | 8.2 | Debian | Xdebug 3.3 |
+## Tag Format
 
-### PHP-CLI
+```
+{type}:{php_version}-{os}[-tier][-rootless]
 
-| Image Tag | PHP | OS | Size |
-|-----------|-----|----|----- |
-| `php-cli:8.4-alpine` | 8.4 | Alpine | ~45MB |
-| `php-cli:8.3-alpine` | 8.3 | Alpine | ~45MB |
-| `php-cli:8.2-alpine` | 8.2 | Alpine | ~45MB |
-| `php-cli:8.4-debian` | 8.4 | Debian | ~110MB |
-| `php-cli:8.3-debian` | 8.3 | Debian | ~110MB |
-| `php-cli:8.2-debian` | 8.2 | Debian | ~110MB |
+Examples:
+php-fpm-nginx:8.4-alpine              # Standard tier (default)
+php-fpm-nginx:8.4-alpine-slim         # Slim tier
+php-fpm-nginx:8.4-alpine-full         # Full tier
+php-fpm-nginx:8.4-alpine-rootless     # Standard + rootless
+php-fpm-nginx:8.4-alpine-slim-rootless  # Slim + rootless
+php-fpm-nginx:8.4-alpine-full-rootless  # Full + rootless
+```
 
-### Nginx
-
-| Image Tag | OS | Size |
-|-----------|----|----- |
-| `nginx:alpine` | Alpine | ~25MB |
-| `nginx:debian` | Debian | ~60MB |
-
-## Tag Conventions
-
-### Rolling Tags (Recommended)
+## Rolling Tags (Recommended)
 
 Rolling tags receive weekly security updates:
 
@@ -108,25 +91,13 @@ Rolling tags receive weekly security updates:
 image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```
 
-### Immutable SHA Tags
+## Immutable SHA Tags
 
 For reproducible builds, use SHA-pinned tags:
 
 ```yaml
 # Locked to specific build
 image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine@sha256:abc123...
-```
-
-### Tag Format
-
-```
-{type}:{php_version}-{os}[-variant]
-
-Examples:
-php-fpm-nginx:8.4-alpine         # Production, Alpine
-php-fpm-nginx:8.4-alpine-dev     # Development, Alpine
-php-fpm:8.4-alpine-minimal       # Minimal edition, Alpine
-php-cli:8.4-debian               # CLI, Debian
 ```
 
 ## Architecture Support
@@ -147,38 +118,26 @@ docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 
 ## OS Variant Comparison
 
-| Feature | Alpine | Debian |
-|---------|--------|--------|
-| **Base Size** | ~5MB | ~125MB |
-| **Package Manager** | apk | apt |
-| **libc** | musl | glibc |
-| **Security Updates** | Weekly | Weekly |
-| **Compatibility** | Good | Excellent |
-| **Best For** | Production, size | Compatibility |
+| Feature | Alpine |
+|---------|--------|
+| **Base Size** | ~5MB |
+| **Package Manager** | apk |
+| **libc** | musl |
+| **Security Updates** | Weekly |
+| **Compatibility** | Good |
+| **Best For** | Production, size |
 
-### When to Choose
+## Tier Comparison
 
-**Alpine** (Recommended for most):
-- Smallest image size
-- Fastest pull times
-- Works for 99% of PHP applications
-
-**Debian**:
-- Maximum compatibility with native extensions
-- Required for some enterprise software
-- glibc-dependent packages
-
-## Edition Comparison
-
-| Feature | Full Edition | Minimal Edition |
-|---------|--------------|-----------------|
-| **Extensions** | 40+ | 17 essential |
-| **Image Size** | Baseline | ~30% smaller |
-| **OPcache** | Enabled | Disabled (explicit) |
-| **MongoDB** | Included | Not included |
-| **ImageMagick** | Included | Not included |
-| **SOAP/LDAP/IMAP** | Included | Not included |
-| **Best For** | Enterprise, legacy | Laravel, modern PHP |
+| Feature | Slim | Standard | Full |
+|---------|------|----------|------|
+| **Size (Alpine)** | ~120MB | ~250MB | ~700MB |
+| **Core Extensions** | ✅ 25+ | ✅ 25+ | ✅ 25+ |
+| **ImageMagick** | ❌ | ✅ | ✅ |
+| **vips** | ❌ | ✅ | ✅ |
+| **Node.js 22** | ❌ | ✅ | ✅ |
+| **Chromium** | ❌ | ❌ | ✅ |
+| **Best For** | APIs, microservices | Most apps | Browser automation |
 
 ## Version Support
 
@@ -187,8 +146,6 @@ docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 | PHP 8.4 | Active | November 2028 |
 | PHP 8.3 | Active | November 2027 |
 | PHP 8.2 | Active | December 2026 |
-| PHP 8.1 | Security Only | December 2025 |
-| PHP 8.0 | EOL | Not supported |
 
 **Recommendation**: Use PHP 8.4 for new projects, PHP 8.3 for production stability.
 
@@ -197,8 +154,14 @@ docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ### Docker CLI
 
 ```bash
-# Pull latest PHP 8.4 Alpine
+# Pull standard tier (most Laravel/PHP apps)
 docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# Pull slim tier (APIs, microservices)
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+
+# Pull full tier (Browsershot, Dusk)
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
 
 # Run with volume mount
 docker run -p 8000:80 -v $(pwd):/var/www/html \
@@ -208,21 +171,42 @@ docker run -p 8000:80 -v $(pwd):/var/www/html \
 ### Docker Compose
 
 ```yaml
-version: '3.8'
-
 services:
+  # Standard tier - most Laravel apps
   app:
     image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
     ports:
       - "8000:80"
     volumes:
       - ./:/var/www/html
+
+  # Slim tier - API service
+  api:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    ports:
+      - "8001:80"
+
+  # Full tier - PDF generation service
+  pdf:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    environment:
+      PHP_MEMORY_LIMIT: "1G"
 ```
 
 ### Dockerfile
 
 ```dockerfile
+# Standard tier for most apps
 FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+COPY --chown=www-data:www-data . /var/www/html
+
+RUN composer install --no-dev --optimize-autoloader
+```
+
+```dockerfile
+# Full tier for Browsershot
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
 
 COPY --chown=www-data:www-data . /var/www/html
 
@@ -248,4 +232,4 @@ docker-compose up -d --pull always
 
 ---
 
-**Need help choosing?** See [Choosing a Variant](../getting-started/choosing-variant) | [Editions Comparison](editions-comparison)
+**Need help choosing?** See [Choosing a Variant](../getting-started/choosing-variant.md) | [Image Tiers Comparison](editions-comparison.md)

@@ -131,4 +131,4 @@ jobs:
 3. Run `docker compose up -d --wait` locally once to ensure health checks succeed before enabling CI.
 4. Extend the workflow with additional commands (Pest, Dusk, static analysis) as needed.
 
-Need more automation? Combine this with the [Production Deployment](production-deployment) checklist to promote healthy builds straight into staging.
+Need more automation? Combine this with the [Production Deployment](production-deployment.md) checklist to promote healthy builds straight into staging.

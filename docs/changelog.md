@@ -18,6 +18,47 @@ All notable changes to PHPeek base images.
 
 ---
 
+## [2024.12] - December 2024
+
+### Added
+- **3-Tier Image System** - Slim, Standard, Full tiers for different use cases
+  - **Slim** (~120MB): Core extensions, APIs/microservices
+  - **Standard** (~250MB): + ImageMagick, vips, Node.js 22 (DEFAULT)
+  - **Full** (~700MB): + Chromium for Browsershot/Dusk
+- **gRPC extension** - Added to all tiers
+- **Rootless variants** - All tiers support `-rootless` suffix
+- New tag format: `{type}:{php-version}-{os}[-tier][-rootless]`
+
+### Changed
+- Renamed "Minimal" edition to "Slim" tier
+- Renamed "Full" edition to "Standard" tier (now the default)
+- New "Full" tier includes Chromium (previously separate)
+- Tag format changed from `-minimal` suffix to `-slim` suffix
+- Standard tier is now the default (no suffix)
+
+### Migration Guide
+
+**Tag format changes:**
+```yaml
+# OLD (2024.11)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine           # Full edition
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-minimal   # Minimal edition
+
+# NEW (2024.12)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine           # Standard tier (default)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim      # Slim tier
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full      # Full tier (with Chromium)
+```
+
+**Tier selection guide:**
+| Old Tag | New Tag | When to Use |
+|---------|---------|-------------|
+| `8.4-alpine` | `8.4-alpine` | Most apps (Standard is default) |
+| `8.4-alpine-minimal` | `8.4-alpine-slim` | APIs, microservices |
+| N/A | `8.4-alpine-full` | Browsershot, Dusk, PDF |
+
+---
+
 ## [2024.11] - November 2024
 
 ### Added
@@ -57,7 +98,7 @@ All notable changes to PHPeek base images.
 ## [2024.09] - September 2024
 
 ### Added
-- Minimal edition (`-minimal` suffix)
+- Minimal edition (`-minimal` suffix) - now Slim tier
 - Development edition (`-dev` suffix) with Xdebug
 - Framework auto-detection (Laravel, Symfony, WordPress)
 - Automatic permission fixes
@@ -69,6 +110,29 @@ All notable changes to PHPeek base images.
 ---
 
 ## Upgrade Guide
+
+### From 2024.11 to 2024.12 (Tier System)
+
+**Step 1: Identify your current usage**
+
+| If you used... | You need... |
+|----------------|-------------|
+| `8.4-alpine` (Full edition) | `8.4-alpine` (Standard tier) - same tag! |
+| `8.4-alpine-minimal` | `8.4-alpine-slim` |
+| Browsershot/Dusk | `8.4-alpine-full` |
+
+**Step 2: Update your docker-compose.yml**
+
+```yaml
+# Most apps - no change needed!
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# For Browsershot/Dusk users - use Full tier
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+
+# For API/microservices - use Slim tier
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+```
 
 ### From bash-based entrypoint to PHPeek PM
 

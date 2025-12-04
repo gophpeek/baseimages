@@ -131,7 +131,7 @@ define('DISALLOW_FILE_EDIT', true);
 define('WP_AUTO_UPDATE_CORE', 'minor');
 ```
 
-See [Production Deployment](production-deployment) for full guide.
+See [Production Deployment](production-deployment.md) for full guide.
 
 ---
 
@@ -178,7 +178,7 @@ docker compose exec wordpress wp --allow-root cache flush
 
 | Topic | Guide |
 |-------|-------|
-| Production deploy | [Production Deployment](production-deployment) |
-| Performance tuning | [Performance Tuning](../advanced/performance-tuning) |
-| Add extensions | [Extending Images](../advanced/extending-images) |
-| All env vars | [Environment Variables](../reference/environment-variables) |
+| Production deploy | [Production Deployment](production-deployment.md) |
+| Performance tuning | [Performance Tuning](../advanced/performance-tuning.md) |
+| Add extensions | [Extending Images](../advanced/extending-images.md) |
+| All env vars | [Environment Variables](../reference/environment-variables.md) |

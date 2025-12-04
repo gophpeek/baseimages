@@ -728,11 +728,11 @@ services:
 
 ## Related Documentation
 
-- [Environment Variables](../reference/environment-variables) - Configuration options
-- [Configuration Options](../reference/configuration-options) - Detailed config
-- [Production Deployment](../guides/production-deployment) - Production setup
-- [Security Hardening](security-hardening) - Security optimizations
+- [Environment Variables](../reference/environment-variables.md) - Configuration options
+- [Configuration Options](../reference/configuration-options.md) - Detailed config
+- [Production Deployment](../guides/production-deployment.md) - Production setup
+- [Security Hardening](security-hardening.md) - Security optimizations
 
 ---
 
-**Questions?** Check [common issues](../troubleshooting/common-issues) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).
+**Questions?** Check [common issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).

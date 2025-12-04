@@ -90,7 +90,7 @@ services:
 
 **Run `php -m` to see all enabled extensions in your container.**
 
-See [Available Extensions](/docs/reference/available-extensions) for the complete list.
+See [Available Extensions](../reference/available-extensions.md) for the complete list.
 
 ## Configuration
 
@@ -359,4 +359,4 @@ GitHub Issues: [github.com/gophpeek/baseimages/issues](https://github.com/gophpe
 2. Create a feature branch
 3. Submit a pull request
 
-See [Contributing Guide](/docs/contributing) for details.
+See [Contributing Guide](../contributing.md) for details.

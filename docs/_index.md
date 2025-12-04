@@ -12,9 +12,30 @@ Welcome to the comprehensive documentation for PHPeek base images! This document
 
 **New to PHPeek?** Start with these guides:
 
-1. **[5-Minute Quickstart](getting-started/quickstart)** - Get running in 5 minutes
-2. **[Complete Laravel Guide](guides/laravel-guide)** - Full Laravel setup (most popular)
-3. **[Extending Images](advanced/extending-images)** - Customize for your needs
+1. **[5-Minute Quickstart](getting-started/quickstart.md)** - Get running in 5 minutes
+2. **[Complete Laravel Guide](guides/laravel-guide.md)** - Full Laravel setup (most popular)
+3. **[Extending Images](advanced/extending-images.md)** - Customize for your needs
+
+## Quick Tier Selection
+
+PHPeek images come in three tiers:
+
+| Tier | Tag | Size | Best For |
+|------|-----|------|----------|
+| **Slim** | `-slim` | ~120MB | APIs, microservices |
+| **Standard** | (none) | ~250MB | Most apps (DEFAULT) |
+| **Full** | `-full` | ~700MB | Browsershot, Dusk, PDF |
+
+```yaml
+# Standard tier (DEFAULT) - Most Laravel/PHP apps
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# Slim tier - APIs, microservices
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+
+# Full tier - Browsershot, Dusk, PDF generation
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+```
 
 ## 📚 Documentation Structure
 
@@ -22,36 +43,36 @@ Welcome to the comprehensive documentation for PHPeek base images! This document
 
 Perfect for beginners and those evaluating PHPeek.
 
-- **[5-Minute Quickstart](getting-started/quickstart)** ⭐ Start here!
-- [Introduction](getting-started/introduction) - Why PHPeek? Comparisons
-- [Installation](getting-started/installation) - All installation methods
-- [Choosing a Variant](getting-started/choosing-variant) - Alpine vs Debian
+- **[5-Minute Quickstart](getting-started/quickstart.md)** ⭐ Start here!
+- [Introduction](getting-started/introduction.md) - Why PHPeek? Comparisons
+- [Installation](getting-started/installation.md) - All installation methods
+- [Choosing a Variant](getting-started/choosing-variant.md) - Slim vs Standard vs Full
 
 ### Framework Guides
 
 Step-by-step guides for popular PHP frameworks.
 
-- **[Laravel Complete Guide](guides/laravel-guide)** ⭐ Most popular
+- **[Laravel Complete Guide](guides/laravel-guide.md)** ⭐ Most popular
   - Full setup with MySQL, Redis, Scheduler
   - Development and production configurations
   - Common mistakes and solutions
 
-- [Symfony Complete Guide](guides/symfony-guide)
+- [Symfony Complete Guide](guides/symfony-guide.md)
   - Complete Symfony setup with database
   - Cache and session configuration
   - Production deployment
 
-- [WordPress Complete Guide](guides/wordpress-guide)
+- [WordPress Complete Guide](guides/wordpress-guide.md)
   - WordPress with MySQL setup
   - Plugin and theme development
   - Production optimization
 
-- [Development Workflow](guides/development-workflow)
+- [Development Workflow](guides/development-workflow.md)
   - Local development with Xdebug
   - Hot-reload setup
   - Debugging tips
 
-- [Production Deployment](guides/production-deployment)
+- [Production Deployment](guides/production-deployment.md)
   - Security hardening
   - Performance optimization
   - Deployment strategies
@@ -60,28 +81,28 @@ Step-by-step guides for popular PHP frameworks.
 
 Deep dives for experienced users customizing PHPeek.
 
-- **[Extending Images](advanced/extending-images)** ⭐ Most requested
+- **[Extending Images](advanced/extending-images.md)** ⭐ Most requested
   - Add custom PHP extensions
   - Install system packages
   - Custom configurations
   - Initialization scripts
 
-- [Custom Extensions](advanced/custom-extensions)
+- [Custom Extensions](advanced/custom-extensions.md)
   - PECL extension examples
   - Compiling from source
   - Version pinning
 
-- [Custom Initialization](advanced/custom-initialization)
+- [Custom Initialization](advanced/custom-initialization.md)
   - Startup script patterns
   - Wait for dependencies
   - Database migrations
 
-- [Performance Tuning](advanced/performance-tuning)
+- [Performance Tuning](advanced/performance-tuning.md)
   - PHP-FPM optimization
   - OPcache configuration
   - Nginx tuning
 
-- [Security Hardening](advanced/security-hardening)
+- [Security Hardening](advanced/security-hardening.md)
   - Security best practices
   - CVE management
   - Secrets management
@@ -90,32 +111,32 @@ Deep dives for experienced users customizing PHPeek.
 
 Complete technical reference materials.
 
-- **[Quick Reference](reference/quick-reference)** ⭐ Copy-paste snippets
+- **[Quick Reference](reference/quick-reference.md)** ⭐ Copy-paste snippets
   - Minimal setups for all frameworks
   - Common environment variables
   - Quick commands
 
-- [Environment Variables](reference/environment-variables)
+- [Environment Variables](reference/environment-variables.md)
   - Complete env var list
   - Laravel-specific variables
   - Symfony-specific variables
 
-- [Configuration Options](reference/configuration-options)
+- [Configuration Options](reference/configuration-options.md)
   - PHP.ini customization
   - PHP-FPM pool configuration
   - Nginx server blocks
 
-- [Available Extensions](reference/available-extensions)
+- [Available Extensions](reference/available-extensions.md)
   - Complete extension list (40+)
   - Extension usage examples
   - Version information
 
-- [Health Checks](reference/health-checks)
+- [Health Checks](reference/health-checks.md)
   - Health check internals
   - Monitoring integration
   - Custom health checks
 
-- [Multi-Service vs Separate](reference/multi-service-vs-separate)
+- [Multi-Service vs Separate](reference/multi-service-vs-separate.md)
   - Architecture decision guide
   - When to use each
   - Trade-offs explained
@@ -124,72 +145,72 @@ Complete technical reference materials.
 
 Solutions to common issues and systematic debugging.
 
-- [Common Issues](troubleshooting/common-issues)
+- [Common Issues](troubleshooting/common-issues.md)
   - FAQ-style solutions
   - Copy-paste fixes
   - Quick diagnostics
 
-- [Debugging Guide](troubleshooting/debugging-guide)
+- [Debugging Guide](troubleshooting/debugging-guide.md)
   - Systematic debugging process
   - Log analysis
   - Performance profiling
 
-- [Migration Guide](troubleshooting/migration-guide)
+- [Migration Guide](troubleshooting/migration-guide.md)
   - From ServerSideUp images
   - From Bitnami images
   - From custom images
 
-- **[Changelog](changelog)** - What's new in each release
+- **[Changelog](changelog.md)** - What's new in each release
 
 ## 🔍 Find What You Need
 
 ### By Role
 
 **Junior Developer / First Time User:**
-1. [5-Minute Quickstart](getting-started/quickstart)
-2. [Laravel Guide](guides/laravel-guide) or your framework
-3. [Common Issues](troubleshooting/common-issues)
+1. [5-Minute Quickstart](getting-started/quickstart.md)
+2. [Laravel Guide](guides/laravel-guide.md) or your framework
+3. [Common Issues](troubleshooting/common-issues.md)
 
 **Experienced Developer:**
-1. [Extending Images](advanced/extending-images)
-2. [Custom Extensions](advanced/custom-extensions)
-3. [Performance Tuning](advanced/performance-tuning)
+1. [Extending Images](advanced/extending-images.md)
+2. [Custom Extensions](advanced/custom-extensions.md)
+3. [Performance Tuning](advanced/performance-tuning.md)
 
 **DevOps / SRE:**
-1. [Production Deployment](guides/production-deployment)
-2. [Security Hardening](advanced/security-hardening)
-3. [Health Checks](reference/health-checks)
+1. [Production Deployment](guides/production-deployment.md)
+2. [Security Hardening](advanced/security-hardening.md)
+3. [Health Checks](reference/health-checks.md)
 
 **Team Lead / Architect:**
-1. [Multi-Service vs Separate](reference/multi-service-vs-separate)
-2. [Introduction](getting-started/introduction) (comparisons)
-3. [Choosing a Variant](getting-started/choosing-variant)
+1. [Multi-Service vs Separate](reference/multi-service-vs-separate.md)
+2. [Introduction](getting-started/introduction.md) (comparisons)
+3. [Choosing a Variant](getting-started/choosing-variant.md)
 
 ### By Task
 
 **"I want to get started quickly"**
-→ [5-Minute Quickstart](getting-started/quickstart)
+→ [5-Minute Quickstart](getting-started/quickstart.md)
 
 **"I need to add a PHP extension"**
-→ [Extending Images](advanced/extending-images)
+→ [Extending Images](advanced/extending-images.md)
 
 **"My Laravel app won't connect to MySQL"**
-→ [Laravel Guide - Common Mistakes](guides/laravel-guide#common-mistakes-and-how-to-avoid-them)
+→ [Laravel Guide - Common Mistakes](guides/laravel-guide.md#common-mistakes-and-how-to-avoid-them)
 
 **"How do I deploy to production?"**
-→ [Production Deployment](guides/production-deployment)
+→ [Production Deployment](guides/production-deployment.md)
 
 **"Something is broken, I need help"**
-→ [Common Issues](troubleshooting/common-issues)
+→ [Common Issues](troubleshooting/common-issues.md)
 
 **"Alpine vs Debian?"**
-→ [Choosing a Variant](getting-started/choosing-variant)
+→ [Choosing a Variant](getting-started/choosing-variant.md)
 
 **"Single container or separate containers?"**
-→ [Multi-Service vs Separate](reference/multi-service-vs-separate)
+→ [Multi-Service vs Separate](reference/multi-service-vs-separate.md)
 
 **"How do I debug Xdebug?"**
-→ [Development Workflow](guides/development-workflow)
+→ [Development Workflow](guides/development-workflow.md)
 
 ## 📋 Documentation Status
 
@@ -266,4 +287,4 @@ Inspired by ServerSideUp's excellent documentation standards.
 
 ---
 
-**Ready to dive in?** → [5-Minute Quickstart](getting-started/quickstart) 🚀
+**Ready to dive in?** → [5-Minute Quickstart](getting-started/quickstart.md) 🚀

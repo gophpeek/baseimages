@@ -255,7 +255,7 @@ When proxies are configured, these headers are available in PHP:
 | `$_SERVER['HTTP_X_FORWARDED_HOST']` | Original hostname |
 | `$_SERVER['HTTP_X_REAL_IP']` | Real client IP |
 
-See [Reverse Proxy & mTLS Guide](../advanced/reverse-proxy-mtls) for detailed setup.
+See [Reverse Proxy & mTLS Guide](../advanced/reverse-proxy-mtls.md) for detailed setup.
 
 ---
 

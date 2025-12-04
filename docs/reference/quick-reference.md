@@ -244,4 +244,4 @@ RUN apk add --no-cache $PHPIZE_DEPS \
     && apk del $PHPIZE_DEPS
 ```
 
-See [Extending Images](../advanced/extending-images) for more.
+See [Extending Images](../advanced/extending-images.md) for more.

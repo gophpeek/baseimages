@@ -1,6 +1,6 @@
 ---
 title: "Reference Documentation"
-description: "Complete technical reference for PHPeek base images including environment variables, configuration options, and available extensions"
+description: "Complete technical reference for PHPeek base images including image tiers, environment variables, and available extensions"
 weight: 30
 ---
 
@@ -8,39 +8,60 @@ weight: 30
 
 Complete technical reference materials for PHPeek base images.
 
+## Image Tiers
+
+PHPeek images come in three tiers:
+
+| Tier | Tag Suffix | Size | Best For |
+|------|------------|------|----------|
+| **Slim** | `-slim` | ~120MB | APIs, microservices |
+| **Standard** | (none) | ~250MB | Most apps (DEFAULT) |
+| **Full** | `-full` | ~700MB | Browsershot, Dusk, PDF |
+
 ## Available References
+
+### Image Information
+
+- **[Image Tiers Comparison](editions-comparison.md)**
+  - Slim vs Standard vs Full comparison
+  - Extension differences by tier
+  - Use case recommendations
+  - Migration between tiers
+
+- **[Available Images](available-images.md)**
+  - All image tags and variants
+  - Image sizes and architecture
+  - Version support matrix
+  - Rootless variants
+
+- **[Tagging Strategy](tagging-strategy.md)**
+  - Tag format and naming conventions
+  - Rolling vs immutable tags
+  - Deprecation policy
 
 ### Configuration & Settings
 
-- **[Environment Variables](environment-variables)**
+- **[Environment Variables](environment-variables.md)**
   - Complete list of all environment variables
   - Framework-specific variables
   - PHP, PHP-FPM, and Nginx configuration
   - Default values and examples
 
-- **[Configuration Options](configuration-options)**
+- **[Configuration Options](configuration-options.md)**
   - PHP.ini customization
   - PHP-FPM pool configuration
   - Nginx server blocks and includes
   - Custom configuration patterns
 
-### Image Information
-
-- **[Available Extensions](available-extensions)**
-  - Complete list of 40+ pre-installed extensions
+- **[Available Extensions](available-extensions.md)**
+  - Extensions by tier (Slim/Standard/Full)
   - Extension usage examples
-  - Version information by PHP version
-  - Enabling/disabling extensions
-
-- **[Available Images](available-images)**
-  - All image tags and variants
-  - Image sizes and architecture
-  - Version support matrix
-  - Deprecation notices
+  - Version information
+  - Adding custom extensions
 
 ### Monitoring & Operations
 
-- **[Health Checks](health-checks)**
+- **[Health Checks](health-checks.md)**
   - Built-in health check internals
   - Docker healthcheck configuration
   - Kubernetes liveness/readiness probes
@@ -48,11 +69,27 @@ Complete technical reference materials for PHPeek base images.
 
 ### Architecture Decisions
 
-- **[Multi-Service vs Separate](multi-service-vs-separate)**
+- **[Multi-Service vs Separate](multi-service-vs-separate.md)**
   - Architecture comparison guide
   - When to use each approach
   - Trade-offs and considerations
   - Migration between approaches
+
+## Quick Tier Selection
+
+```yaml
+# Standard tier (DEFAULT) - Most Laravel/PHP apps
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# Slim tier - APIs, microservices
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+
+# Full tier - Browsershot, Dusk, PDF generation
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+
+# Rootless variants (add -rootless suffix)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+```
 
 ## How to Use This Section
 
@@ -60,10 +97,11 @@ Complete technical reference materials for PHPeek base images.
 
 Looking for a specific setting or variable?
 
-- **Environment variable**: Check [Environment Variables](environment-variables)
-- **PHP setting**: Check [Configuration Options](configuration-options#php-ini)
-- **Extension availability**: Check [Available Extensions](available-extensions)
-- **Image tag**: Check [Available Images](available-images)
+- **Image tier**: Check [Image Tiers Comparison](editions-comparison.md)
+- **Environment variable**: Check [Environment Variables](environment-variables.md)
+- **PHP setting**: Check [Configuration Options](configuration-options.md#php-ini)
+- **Extension availability**: Check [Available Extensions](available-extensions.md)
+- **Image tag**: Check [Available Images](available-images.md)
 
 ### Integration Examples
 
@@ -72,11 +110,11 @@ Most reference pages include copy-paste ready examples:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
     environment:
-      # Reference: docs/reference/environment-variables
-      - PHP_MEMORY_LIMIT=256M
-      - PHP_MAX_EXECUTION_TIME=60
+      # Reference: docs/reference/environment-variables.md
+      PHP_MEMORY_LIMIT: "512M"
+      PHP_MAX_EXECUTION_TIME: "60"
 ```
 
 ### Cross-References
@@ -97,4 +135,4 @@ Found an undocumented variable or option?
 
 ---
 
-**Need more help?** Check the [guides](../guides) for practical examples or [troubleshooting](../troubleshooting/common-issues) for common issues.
+**Need more help?** Check the [guides](../guides/_index.md) for practical examples or [troubleshooting](../troubleshooting/common-issues.md) for common issues.

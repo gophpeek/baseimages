@@ -100,10 +100,10 @@ curl localhost:8000/health    # Health check
 
 | Goal | Guide |
 |------|-------|
-| Laravel setup | [Laravel Guide](../guides/laravel-guide) |
-| Add PHP extensions | [Extending Images](../advanced/extending-images) |
-| Production deployment | [Production Guide](../guides/production-deployment) |
-| All environment variables | [Environment Variables](../reference/environment-variables) |
+| Laravel setup | [Laravel Guide](../guides/laravel-guide.md) |
+| Add PHP extensions | [Extending Images](../advanced/extending-images.md) |
+| Production deployment | [Production Guide](../guides/production-deployment.md) |
+| All environment variables | [Environment Variables](../reference/environment-variables.md) |
 
 ## Available Images
 
@@ -131,4 +131,4 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm  # ~150MB (Debian)
 
 **Permission errors?** PHPeek auto-fixes Laravel directories. Manual: `docker compose exec app chown -R www-data:www-data storage`
 
-**More help?** See [Common Issues](../troubleshooting/common-issues)
+**More help?** See [Common Issues](../troubleshooting/common-issues.md)

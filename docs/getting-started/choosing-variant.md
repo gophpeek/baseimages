@@ -1,167 +1,212 @@
 ---
 title: "Choosing a Variant"
-description: "Alpine vs Debian - which OS variant and edition to use for your PHP application"
+description: "Slim vs Standard vs Full - which image tier to use for your PHP application"
 weight: 4
 ---
 
 # Choosing a Variant
 
-PHPeek offers two OS variants and multiple editions. This guide helps you choose the right combination.
+PHPeek offers three image tiers and rootless variants. This guide helps you choose the right combination.
+
+## Quick Decision Guide
+
+```
+What do you need?
+│
+├─ PDF generation, browser testing (Browsershot/Dusk)?
+│  └─ Full Tier (~700MB)
+│
+├─ Image processing (ImageMagick, vips), Node.js?
+│  └─ Standard Tier (~250MB) ✅ DEFAULT
+│
+└─ Minimal footprint, APIs, microservices?
+   └─ Slim Tier (~120MB)
+```
 
 ## Quick Decision Matrix
 
-| Use Case | Recommended Variant |
-|----------|---------------------|
-| Production (default) | `8.4-alpine` |
-| Need glibc compatibility | `8.4-debian` |
-| Local development | `8.4-alpine-dev` |
-| Native extensions | `8.4-debian` |
+| Use Case | Recommended Tag |
+|----------|-----------------|
+| Most Laravel/PHP apps | `8.4-alpine` (Standard) |
+| REST/GraphQL APIs | `8.4-alpine-slim` |
+| Browsershot/PDF | `8.4-alpine-full` |
+| Laravel Dusk tests | `8.4-alpine-full` |
+| Kubernetes (security) | `8.4-alpine-rootless` |
 
-## OS Variants
+## Image Tiers
 
-### Alpine Linux
+### Standard Tier (Default)
 
 ```bash
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```
 
-**Size**: ~50MB (smallest)
+**Size**: ~250MB
 
-**Pros**:
-- Smallest image size
-- Fast pull/push times
-- Reduced attack surface
-- Efficient for Kubernetes
-
-**Cons**:
-- Uses musl libc (not glibc)
-- Some native extensions may not work
-- Different package manager (apk)
+**Includes**:
+- All Slim tier extensions
+- ImageMagick (complex image operations)
+- vips (high-performance image processing)
+- Node.js 22 + npm
+- GD with AVIF support
+- exiftool, ghostscript, librsvg
 
 **Best for**:
-- Production deployments
-- Microservices
-- Kubernetes clusters
-- CI/CD pipelines (fast builds)
+- Most Laravel applications
+- Symfony applications
+- WordPress sites
+- Applications with image processing
+- Apps using npm/Node.js build tools
 
 **Example**:
 ```yaml
 services:
   app:
     image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-    # ~50MB, boots in <1 second
+    environment:
+      LARAVEL_SCHEDULER: "true"
 ```
 
-### Debian (Bookworm)
+### Slim Tier
 
 ```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
 ```
 
-**Size**: ~120MB
-
-**Pros**:
-- Uses glibc (maximum compatibility)
-- Native extension support
-- Familiar apt package manager
-- Stable, well-tested
-
-**Cons**:
-- Larger image size
-- More packages = larger attack surface
-
-**Best for**:
-- Applications requiring glibc
-- Native PHP extensions (some PECL)
-- Legacy application migration
-- When Alpine causes issues
-
-**Example**:
-```yaml
-services:
-  app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
-    # glibc compatibility for all extensions
-```
-
-## Editions
-
-### Standard Edition
-
-```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-```
-
-**Includes**: 40+ PHP extensions for production
-
-**Best for**: Production deployments
-
-### Development Edition
-
-```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev
-```
+**Size**: ~120MB (smallest)
 
 **Includes**:
-- All standard extensions
-- Xdebug 3.x (step debugging, profiling, coverage)
-- SPX Profiler (performance analysis)
-- Development PHP settings
+- 25+ core PHP extensions
+- opcache, pdo_mysql, pdo_pgsql, redis, mongodb
+- grpc, intl, bcmath, gd (WebP), zip
+- Composer 2, PHPeek PM
 
-**Best for**: Local development
+**Best for**:
+- REST APIs
+- GraphQL APIs
+- Microservices
+- Maximum security (minimal attack surface)
+- CI/CD pipelines (fast builds)
+
+**Example**:
+```yaml
+services:
+  api:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    environment:
+      PHP_MEMORY_LIMIT: "256M"
+```
+
+### Full Tier
+
+```bash
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+```
+
+**Size**: ~700MB
+
+**Includes**:
+- Everything in Standard tier
+- Chromium (headless browser)
+- Puppeteer environment pre-configured
+- NSS, HarfBuzz, fonts
+
+**Environment variables (auto-set)**:
+```
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+```
+
+**Best for**:
+- Browsershot (PDF generation)
+- Laravel Dusk (browser testing)
+- Puppeteer/Playwright
+- Screenshot services
+- Web scraping
 
 **Example**:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
     environment:
-      XDEBUG_MODE: debug,develop,coverage
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9003
-    ports:
-      - "8000:80"
-      - "9003:9003"  # Xdebug
+      PHP_MEMORY_LIMIT: "1G"  # Chromium needs more memory
 ```
 
-### Minimal Edition
+## Rootless Variants
 
-```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-minimal
+All tiers support rootless execution (runs as `www-data` user):
+
+| Tag | Tier | Description |
+|-----|------|-------------|
+| `8.4-alpine-rootless` | Standard | Default + rootless |
+| `8.4-alpine-slim-rootless` | Slim | Slim + rootless |
+| `8.4-alpine-full-rootless` | Full | Full + rootless |
+
+**When to use rootless**:
+- Kubernetes with security policies
+- OpenShift
+- Security-sensitive environments
+- Compliance requirements (CIS benchmarks)
+
+**Example**:
+```yaml
+# Kubernetes deployment
+spec:
+  containers:
+    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+      securityContext:
+        runAsNonRoot: true
 ```
-
-**Includes**: Core extensions only (opcache, pdo, json, etc.)
-
-**Best for**:
-- Microservices with specific needs
-- Maximum security (minimal attack surface)
-- When you'll add extensions yourself
 
 ## Size Comparison
 
-| Variant | Standard | Dev | Minimal |
-|---------|----------|-----|---------|
-| Alpine | ~50MB | ~80MB | ~30MB |
-| Debian | ~120MB | ~150MB | ~80MB |
+| Tier | Alpine |
+|------|--------|
+| Slim | ~120MB |
+| Standard | ~250MB |
+| Full | ~700MB |
+
+## Extension Comparison
+
+| Extension | Slim | Standard | Full |
+|-----------|------|----------|------|
+| opcache | ✅ | ✅ | ✅ |
+| pdo_mysql, pdo_pgsql | ✅ | ✅ | ✅ |
+| redis, mongodb | ✅ | ✅ | ✅ |
+| grpc | ✅ | ✅ | ✅ |
+| gd (WebP) | ✅ | ✅ | ✅ |
+| gd (AVIF) | ❌ | ✅ | ✅ |
+| imagick | ❌ | ✅ | ✅ |
+| vips | ❌ | ✅ | ✅ |
+| **Node.js 22** | ❌ | ✅ | ✅ |
+| **Chromium** | ❌ | ❌ | ✅ |
 
 ## Decision Flowchart
 
 ```
 Start
-  |
+  │
   v
-Need Xdebug/debugging?
-  |
-  +-- Yes --> Use -dev edition
-  |
-  +-- No --> Continue
-        |
+Need Browsershot, Dusk, or PDF generation?
+  │
+  ├── Yes → Full Tier (`-full`)
+  │
+  └── No → Continue
+        │
         v
-    Need glibc compatibility?
-    (Native extensions, Oracle, etc.)
-        |
-        +-- Yes --> Debian
-        |
-        +-- No --> Alpine (recommended)
+    Need ImageMagick, vips, or Node.js?
+        │
+        ├── Yes → Standard Tier (default, no suffix)
+        │
+        └── No → Slim Tier (`-slim`)
+              │
+              v
+          Need rootless for Kubernetes/security?
+              │
+              ├── Yes → Add `-rootless` suffix
+              │
+              └── No → Done
 ```
 
 ## Common Scenarios
@@ -169,109 +214,102 @@ Need Xdebug/debugging?
 ### Scenario 1: New Laravel Project
 
 ```yaml
-# Development
+# Development (standard tier is fine)
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 
-# Production
+# Production (same, standard handles most needs)
 services:
   app:
     image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```
 
-### Scenario 2: Legacy PHP Application
+### Scenario 2: Laravel with Browsershot
 
 ```yaml
-# Debian for maximum compatibility
+# Full tier required for Chromium
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    environment:
+      PHP_MEMORY_LIMIT: "1G"
 ```
 
-### Scenario 3: Kubernetes Microservices
+### Scenario 3: REST API Microservice
 
 ```yaml
-# Alpine for smallest footprint
+# Slim tier for minimal footprint
+services:
+  api:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+```
+
+### Scenario 4: Kubernetes Production
+
+```yaml
+# Rootless for security compliance
 spec:
   containers:
-    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+      securityContext:
+        runAsNonRoot: true
+        readOnlyRootFilesystem: true
 ```
 
-## When Alpine Doesn't Work
+### Scenario 5: Laravel Dusk Testing
 
-Alpine uses musl libc instead of glibc. Some scenarios where you need Debian:
-
-### Oracle Database (oci8)
-
-```dockerfile
-# oci8 requires glibc - use Debian
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
-
-RUN apt-get update && apt-get install -y libaio1 \
-    && pecl install oci8
+```yaml
+# Full tier for Chromium
+services:
+  dusk:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    environment:
+      DUSK_DRIVER_URL: ""  # Use local Chromium
 ```
 
-### Microsoft SQL Server (sqlsrv)
+## Migration Between Tiers
 
-```dockerfile
-# sqlsrv works better with glibc
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+### Upgrading to a Larger Tier
 
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/12/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 unixodbc-dev \
-    && pecl install sqlsrv pdo_sqlsrv
+```yaml
+# From Slim to Standard
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# From Standard to Full
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
 ```
 
-### Custom Native Extensions
+### Downgrading to a Smaller Tier
 
-```dockerfile
-# Some PECL extensions compile better with glibc
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+**Before downgrading, verify**:
+1. Check `composer.json` for extension requirements
+2. Search code for `extension_loaded()` calls
+3. Test all features in staging
+4. Monitor error logs for missing extensions
 
-# Extensions that may have musl issues
-RUN pecl install grpc protobuf
-```
-
-## Multi-Stage for Dev/Prod
-
-Use different bases for dev and prod:
-
-```dockerfile
-# Development target
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev AS development
-COPY . /var/www/html
-
-# Production target
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine AS production
-COPY --from=development /var/www/html /var/www/html
-RUN composer install --no-dev --optimize-autoloader
-```
-
-```bash
-# Build for development
-docker build --target development -t myapp:dev .
-
-# Build for production
-docker build --target production -t myapp:prod .
+```yaml
+# From Standard to Slim (if no ImageMagick/Node needed)
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
 ```
 
 ## Recommendations Summary
 
 | Situation | Recommendation |
 |-----------|----------------|
-| Starting new project | `8.4-alpine` |
-| Local development | `8.4-alpine-dev` |
-| Need specific extension | `8.4-debian` |
-| Kubernetes production | `8.4-alpine` |
-| CI/CD pipelines | `8.4-alpine` (fast) |
-| Legacy migration | `8.3-debian` |
-| Maximum security | `8.4-alpine-minimal` |
+| Starting new Laravel/PHP project | `8.4-alpine` (Standard) |
+| Building REST/GraphQL API | `8.4-alpine-slim` |
+| Need PDF generation | `8.4-alpine-full` |
+| Running Laravel Dusk | `8.4-alpine-full` |
+| Kubernetes production | `8.4-alpine-rootless` |
+| Maximum security | `8.4-alpine-slim-rootless` |
+| CI/CD pipelines | `8.4-alpine-slim` (fast) |
 
 ## Next Steps
 
-- **[5-Minute Quickstart](quickstart)** - Get running immediately
-- **[Laravel Guide](../guides/laravel-guide)** - Complete Laravel setup
-- **[Extending Images](../advanced/extending-images)** - Add custom extensions
+- **[5-Minute Quickstart](quickstart.md)** - Get running immediately
+- **[Laravel Guide](../guides/laravel-guide.md)** - Complete Laravel setup
+- **[Image Tiers Comparison](../reference/editions-comparison.md)** - Detailed tier comparison

@@ -20,7 +20,7 @@ Complete reference for advanced PHP, PHP-FPM, and Nginx configuration in PHPeek 
 
 ### Method 1: Environment Variables (Recommended)
 
-Use environment variables for simple settings (see [Environment Variables Reference](environment-variables)).
+Use environment variables for simple settings (see [Environment Variables Reference](environment-variables.md)).
 
 ```yaml
 services:
@@ -758,11 +758,11 @@ pm.process_idle_timeout = 10s
 
 ## Related Documentation
 
-- [Environment Variables Reference](environment-variables) - Simple configuration via env vars
-- [Performance Tuning](../advanced/performance-tuning) - Optimization strategies
-- [Security Hardening](../advanced/security-hardening) - Security best practices
-- [Extending Images](../advanced/extending-images) - Creating custom images
+- [Environment Variables Reference](environment-variables.md) - Simple configuration via env vars
+- [Performance Tuning](../advanced/performance-tuning.md) - Optimization strategies
+- [Security Hardening](../advanced/security-hardening.md) - Security best practices
+- [Extending Images](../advanced/extending-images.md) - Creating custom images
 
 ---
 
-**Questions?** Check [common issues](../troubleshooting/common-issues) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).
+**Questions?** Check [common issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).

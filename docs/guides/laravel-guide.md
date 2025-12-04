@@ -83,7 +83,7 @@ REDIS_CLIENT=phpredis
 REDIS_HOST=redis
 ```
 
-See [Environment Variables Reference](../reference/environment-variables) for all options.
+See [Environment Variables Reference](../reference/environment-variables.md) for all options.
 
 ---
 
@@ -130,7 +130,7 @@ services:
       - PHP_IDE_CONFIG=serverName=docker
 ```
 
-See [Development Workflow](development-workflow) for Xdebug setup.
+See [Development Workflow](development-workflow.md) for Xdebug setup.
 
 ---
 
@@ -155,7 +155,7 @@ php artisan view:cache
 php artisan migrate --force
 ```
 
-See [Production Deployment](production-deployment) for full guide.
+See [Production Deployment](production-deployment.md) for full guide.
 
 ---
 
@@ -220,8 +220,8 @@ docker compose exec app php artisan test
 
 | Topic | Guide |
 |-------|-------|
-| Xdebug & hot-reload | [Development Workflow](development-workflow) |
-| Production deploy | [Production Deployment](production-deployment) |
-| Add extensions | [Extending Images](../advanced/extending-images) |
-| Performance tuning | [Performance Tuning](../advanced/performance-tuning) |
-| All env vars | [Environment Variables](../reference/environment-variables) |
+| Xdebug & hot-reload | [Development Workflow](development-workflow.md) |
+| Production deploy | [Production Deployment](production-deployment.md) |
+| Add extensions | [Extending Images](../advanced/extending-images.md) |
+| Performance tuning | [Performance Tuning](../advanced/performance-tuning.md) |
+| All env vars | [Environment Variables](../reference/environment-variables.md) |

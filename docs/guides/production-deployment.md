@@ -879,11 +879,11 @@ Before going live:
 
 ## Related Documentation
 
-- [Security Hardening](../advanced/security-hardening) - Detailed security guide
-- [Performance Tuning](../advanced/performance-tuning) - Optimization deep dive
-- [Environment Variables](../reference/environment-variables) - Configuration reference
-- [Health Checks](../reference/health-checks) - Monitoring guide
+- [Security Hardening](../advanced/security-hardening.md) - Detailed security guide
+- [Performance Tuning](../advanced/performance-tuning.md) - Optimization deep dive
+- [Environment Variables](../reference/environment-variables.md) - Configuration reference
+- [Health Checks](../reference/health-checks.md) - Monitoring guide
 
 ---
 
-**Questions?** Check [common issues](../troubleshooting/common-issues) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).
+**Questions?** Check [common issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).

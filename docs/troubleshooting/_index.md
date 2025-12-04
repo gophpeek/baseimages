@@ -12,7 +12,7 @@ Solutions to common issues and systematic approaches to debugging PHPeek contain
 
 ### Quick Solutions
 
-- **[Common Issues](common-issues)** ⭐ Start here!
+- **[Common Issues](common-issues.md)** ⭐ Start here!
   - FAQ-style solutions
   - Copy-paste fixes
   - Quick diagnostics
@@ -20,7 +20,7 @@ Solutions to common issues and systematic approaches to debugging PHPeek contain
 
 ### Systematic Debugging
 
-- **[Debugging Guide](debugging-guide)**
+- **[Debugging Guide](debugging-guide.md)**
   - Step-by-step debugging process
   - Log analysis techniques
   - Performance profiling
@@ -28,7 +28,7 @@ Solutions to common issues and systematic approaches to debugging PHPeek contain
 
 ### Migration Help
 
-- **[Migration Guide](migration-guide)**
+- **[Migration Guide](migration-guide.md)**
   - From ServerSideUp images
   - From Bitnami images
   - From custom images
@@ -49,7 +49,7 @@ docker-compose logs app
 # - Missing dependencies
 ```
 
-→ See [Common Issues - Container Problems](common-issues#container-problems)
+→ See [Common Issues - Container Problems](common-issues.md#container-problems)
 
 ### Application Not Accessible
 
@@ -64,7 +64,7 @@ docker-compose port app 80
 docker-compose exec app curl http://localhost
 ```
 
-→ See [Common Issues - Connection Problems](common-issues#connection-problems)
+→ See [Common Issues - Connection Problems](common-issues.md#connection-problems)
 
 ### PHP Errors
 
@@ -79,7 +79,7 @@ docker-compose exec app ps aux | grep php-fpm
 docker-compose exec app php -i | grep error
 ```
 
-→ See [Common Issues - PHP Problems](common-issues#php-problems)
+→ See [Common Issues - PHP Problems](common-issues.md#php-problems)
 
 ### Database Connection Failed
 
@@ -96,15 +96,15 @@ docker-compose exec app nc -zv mysql 3306
 # - Wrong credentials
 ```
 
-→ See [Common Issues - Database Problems](common-issues#database-problems)
+→ See [Common Issues - Database Problems](common-issues.md#database-problems)
 
 ## Getting Help
 
 ### Before Asking for Help
 
 1. **Check logs**: `docker-compose logs -f app`
-2. **Search common issues**: Read [Common Issues](common-issues)
-3. **Try debugging guide**: Follow [Debugging Guide](debugging-guide)
+2. **Search common issues**: Read [Common Issues](common-issues.md)
+3. **Try debugging guide**: Follow [Debugging Guide](debugging-guide.md)
 4. **Search GitHub**: Check [existing issues](https://github.com/gophpeek/baseimages/issues)
 
 ### When Asking for Help
@@ -180,31 +180,31 @@ docker-compose logs app > logs.txt
 ### By Experience Level
 
 **Junior Developer:**
-1. Start with [Common Issues](common-issues)
-2. If not found, try [Debugging Guide](debugging-guide)
-3. Check framework guides: [Laravel](../guides/laravel-guide) | [Symfony](../guides/symfony-guide)
+1. Start with [Common Issues](common-issues.md)
+2. If not found, try [Debugging Guide](debugging-guide.md)
+3. Check framework guides: [Laravel](../guides/laravel-guide.md) | [Symfony](../guides/symfony-guide.md)
 
 **Experienced Developer:**
-1. [Debugging Guide](debugging-guide) for systematic approach
-2. [Performance Tuning](../advanced/performance-tuning) for optimization
-3. [Configuration Options](../reference/configuration-options) for deep customization
+1. [Debugging Guide](debugging-guide.md) for systematic approach
+2. [Performance Tuning](../advanced/performance-tuning.md) for optimization
+3. [Configuration Options](../reference/configuration-options.md) for deep customization
 
 **DevOps / SRE:**
-1. [Production Deployment](../guides/production-deployment) for deployment issues
-2. [Security Hardening](../advanced/security-hardening) for security concerns
-3. [Performance Tuning](../advanced/performance-tuning) for optimization
+1. [Production Deployment](../guides/production-deployment.md) for deployment issues
+2. [Security Hardening](../advanced/security-hardening.md) for security concerns
+3. [Performance Tuning](../advanced/performance-tuning.md) for optimization
 
 ### By Problem Type
 
-**"Something is broken"** → [Common Issues](common-issues)
+**"Something is broken"** → [Common Issues](common-issues.md)
 
-**"Need to understand why"** → [Debugging Guide](debugging-guide)
+**"Need to understand why"** → [Debugging Guide](debugging-guide.md)
 
-**"Moving from another solution"** → [Migration Guide](migration-guide)
+**"Moving from another solution"** → [Migration Guide](migration-guide.md)
 
-**"Performance is slow"** → [Performance Tuning](../advanced/performance-tuning)
+**"Performance is slow"** → [Performance Tuning](../advanced/performance-tuning.md)
 
-**"Security concerns"** → [Security Hardening](../advanced/security-hardening)
+**"Security concerns"** → [Security Hardening](../advanced/security-hardening.md)
 
 ## Contributing
 

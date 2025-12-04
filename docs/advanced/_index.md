@@ -12,20 +12,20 @@ Deep dives for experienced users who need to customize and optimize PHPeek image
 
 ### Customization
 
-- **[Extending Images](extending-images)** ⭐ Most Requested
+- **[Extending Images](extending-images.md)** ⭐ Most Requested
   - Add custom PHP extensions (PECL and compiled)
   - Install system packages
   - Custom PHP and Nginx configuration
   - Multi-stage builds for dev/prod separation
   - Custom initialization scripts
 
-- **[Custom Extensions](custom-extensions)** - Complete Guide
+- **[Custom Extensions](custom-extensions.md)** - Complete Guide
   - PECL extension installation examples
   - Compiling extensions from source
   - Version pinning strategies
   - Extension configuration best practices
 
-- **[Custom Initialization](custom-initialization)** - Complete Guide
+- **[Custom Initialization](custom-initialization.md)** - Complete Guide
   - Startup script patterns
   - Wait-for-dependency scripts
   - Database migration automation
@@ -33,7 +33,7 @@ Deep dives for experienced users who need to customize and optimize PHPeek image
 
 ### Performance & Optimization
 
-- **[Performance Tuning](performance-tuning)**
+- **[Performance Tuning](performance-tuning.md)**
   - PHP-FPM pool optimization
   - OPcache configuration tuning
   - Nginx performance settings
@@ -42,27 +42,27 @@ Deep dives for experienced users who need to customize and optimize PHPeek image
 
 ### Security
 
-- **[Reverse Proxy & mTLS](reverse-proxy-mtls)** - Production Critical
+- **[Reverse Proxy & mTLS](reverse-proxy-mtls.md)** - Production Critical
   - Cloudflare, HAProxy, Traefik, Nginx, Fastly configuration
   - Tailscale, Cloudflare Tunnel, VPN support
   - mTLS client certificate authentication
   - Zero-trust network integration (Istio, service mesh)
 
-- **[Security Hardening](security-hardening)**
+- **[Security Hardening](security-hardening.md)**
   - Security best practices checklist
   - CVE management and patching strategy
   - Secrets management (environment variables, Docker secrets)
   - User permissions and file ownership
   - Network security and isolation
 
-- **[Rootless Containers](rootless-containers)**
+- **[Rootless Containers](rootless-containers.md)**
   - Running containers as non-root
   - OpenShift and Kubernetes Pod Security Standards
   - Enterprise compliance (PCI-DSS, HIPAA)
 
 ### Platform & Architecture
 
-- **[Multi-Architecture Builds](multi-architecture)** 🆕
+- **[Multi-Architecture Builds](multi-architecture.md)** 🆕
   - AMD64 and ARM64 support
   - Apple Silicon (M1/M2/M3) development
   - AWS Graviton deployment optimization
@@ -71,7 +71,7 @@ Deep dives for experienced users who need to customize and optimize PHPeek image
 
 ### Development & Testing
 
-- **[Testing Guide](testing-guide)** 🆕
+- **[Testing Guide](testing-guide.md)** 🆕
   - E2E test scenarios (Laravel, Symfony, WordPress)
   - Matrix testing across PHP versions and OS variants
   - Writing custom tests with fixtures
@@ -91,7 +91,7 @@ Deep dives for experienced users who need to customize and optimize PHPeek image
 Before diving into advanced topics:
 
 1. Comfortable with Docker and Dockerfiles
-2. Completed at least one [framework guide](../guides)
+2. Completed at least one [framework guide](../guides/_index.md)
 3. Running PHPeek in development successfully
 4. Basic understanding of PHP-FPM and Nginx
 
@@ -154,9 +154,9 @@ Document all customizations in your repository:
 
 ## Need Help?
 
-- **Quick Answers**: [Common Issues](../troubleshooting/common-issues)
-- **Debugging**: [Debugging Guide](../troubleshooting/debugging-guide)
-- **Reference**: [Environment Variables](../reference/environment-variables)
+- **Quick Answers**: [Common Issues](../troubleshooting/common-issues.md)
+- **Debugging**: [Debugging Guide](../troubleshooting/debugging-guide.md)
+- **Reference**: [Environment Variables](../reference/environment-variables.md)
 - **Community**: [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions)
 
 ---

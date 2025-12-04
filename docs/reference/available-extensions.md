@@ -1,203 +1,171 @@
 ---
 title: "Available Extensions"
-description: "Complete list of 40+ pre-installed PHP extensions in PHPeek base images with version information"
+description: "Complete list of PHP extensions by image tier - Slim, Standard, and Full"
 weight: 30
 ---
 
 # Available Extensions
 
-Complete reference of all PHP extensions included in PHPeek base images.
+Complete reference of all PHP extensions included in PHPeek base images by tier.
 
-## Extension Overview
+## Extension Overview by Tier
 
-PHPeek images come with **40+ extensions** pre-installed, organized into categories:
+PHPeek images come in three tiers with different extension sets:
 
-| Category | Extensions | Purpose |
-|----------|-----------|---------|
-| Core PHP | opcache, apcu, bcmath, intl | Performance and internationalization |
-| Database | pdo_mysql, pdo_pgsql, mysqli, pgsql, redis | Database connectivity |
-| Images | gd, imagick, exif | Image processing |
-| Compression | zip, bz2, zlib | File compression |
-| Communication | sockets, pcntl, posix | Process and network |
-| XML/SOAP | xml, xsl, soap, xmlreader, xmlwriter | Data exchange |
-| Enterprise | ldap, imap | Enterprise integration |
+| Tier | Extensions | Best For |
+|------|-----------|----------|
+| **Slim** | 25+ core | APIs, microservices |
+| **Standard** | Slim + ImageMagick, vips, Node.js | Most apps (DEFAULT) |
+| **Full** | Standard + Chromium | Browsershot, Dusk, PDF |
 
-## Full Edition Extensions
+## Slim Tier Extensions
 
-The Full Edition includes all extensions for maximum compatibility.
+The Slim tier includes all core extensions needed for most PHP applications.
 
-### Core & Performance
+### PHP Extensions
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `opcache` | Built-in | Built-in | Bytecode caching for performance |
-| `apcu` | PECL | PECL | User-land data caching |
-| `bcmath` | Built-in | Built-in | Arbitrary precision mathematics |
-| `intl` | Built-in | Built-in | Internationalization functions |
-| `mbstring` | Built-in | Built-in | Multibyte string handling |
+| Extension | Type | Purpose |
+|-----------|------|---------|
+| `opcache` | Built-in | Bytecode caching for performance |
+| `pdo_mysql` | Built-in | MySQL PDO driver |
+| `pdo_pgsql` | Built-in | PostgreSQL PDO driver |
+| `mysqli` | Built-in | MySQL improved extension |
+| `pgsql` | Built-in | PostgreSQL extension |
+| `redis` | PECL | Redis client extension |
+| `apcu` | PECL | User-land data caching |
+| `mongodb` | PECL | MongoDB driver |
+| `igbinary` | PECL | Fast serialization |
+| `msgpack` | PECL | MessagePack serialization |
+| `grpc` | PECL | gRPC protocol support |
+| `zip` | Built-in | ZIP archive support |
+| `intl` | Built-in | Internationalization functions |
+| `bcmath` | Built-in | Arbitrary precision mathematics |
+| `gd` | Built-in | Image processing (WebP, JPEG, PNG) |
+| `exif` | Built-in | EXIF metadata reading |
+| `pcntl` | Built-in | Process control (signals, forking) |
+| `sockets` | Built-in | Low-level socket interface |
+| `soap` | Built-in | SOAP protocol |
+| `xsl` | Built-in | XSL transformations |
+| `ldap` | Built-in | LDAP directory services |
+| `bz2` | Built-in | Bzip2 compression |
+| `calendar` | Built-in | Calendar conversion |
+| `gettext` | Built-in | GNU translations |
+| `gmp` | Built-in | Arbitrary precision math |
+| `shmop` | Built-in | Shared memory operations |
+| `sysvmsg` | Built-in | System V message queue |
+| `sysvsem` | Built-in | System V semaphore |
+| `sysvshm` | Built-in | System V shared memory |
 
-### Database Extensions
+### Tools Included
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `pdo` | Built-in | Built-in | PHP Data Objects base |
-| `pdo_mysql` | Built-in | Built-in | MySQL PDO driver |
-| `pdo_pgsql` | Built-in | Built-in | PostgreSQL PDO driver |
-| `pdo_sqlite` | Built-in | Built-in | SQLite PDO driver |
-| `mysqli` | Built-in | Built-in | MySQL improved extension |
-| `pgsql` | Built-in | Built-in | PostgreSQL extension |
-| `redis` | PECL | PECL | Redis client extension |
-| `mongodb` | PECL | - | MongoDB driver (Full only) |
+| Tool | Purpose |
+|------|---------|
+| Composer 2 | PHP package manager |
+| PHPeek PM | Process manager |
+| curl, wget | HTTP clients |
+| git | Version control |
+| unzip | Archive extraction |
 
-### Image Processing
+## Standard Tier Extensions
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `gd` | Built-in | Built-in | Image creation and manipulation |
-| `imagick` | PECL | - | ImageMagick binding (Full only) |
-| `vips` | PECL | - | High-performance libvips binding (Full only) |
-| `exif` | Built-in | Built-in | EXIF metadata reading |
+The Standard tier includes everything in Slim, plus image processing and Node.js.
 
-#### Format Support Matrix
+### Additional Extensions (on top of Slim)
 
-| Format | GD | ImageMagick | libvips | Notes |
-|--------|:--:|:-----------:|:-------:|-------|
-| JPEG | ✓ | ✓ | ✓ | Universal support |
-| PNG | ✓ | ✓ | ✓ | With transparency |
-| GIF | ✓ | ✓ | ✓ | Animated GIF support |
-| WebP | ✓ | ✓ | ✓ | Modern web format |
-| AVIF | ✓ | ✓ | ✓ | Next-gen compression |
-| HEIC/HEIF | - | ✓ | ✓ | iPhone photos (requires libheif) |
-| PDF | - | ✓ | - | Read/write via Ghostscript |
-| SVG | - | ✓ | ✓ | Read-only (security) |
-| BMP | ✓ | ✓ | ✓ | Legacy format |
-| TIFF | - | ✓ | ✓ | Professional imaging |
+| Extension | Type | Purpose |
+|-----------|------|---------|
+| `imagick` | PECL | ImageMagick for complex image operations |
+| `vips` | PECL | High-performance libvips (4-10x faster) |
+| `gd` (AVIF) | Built-in | GD rebuilt with AVIF support |
 
-#### Pre-installed Image Processing Tools
+### Additional Tools
 
-| Tool | Purpose | Usage |
-|------|---------|-------|
-| `exiftool` | Image metadata extraction | `exiftool image.jpg` |
-| `chromium` | PDF generation via Browsershot | Puppeteer/Browsershot |
-| `ghostscript` | PDF/PostScript processing | ImageMagick PDF support |
+| Tool | Purpose |
+|------|---------|
+| Node.js 22 | JavaScript runtime |
+| npm | Node package manager |
+| exiftool | Advanced image metadata |
+| ghostscript | PDF/PostScript support |
+| librsvg | SVG rendering |
+| icu-data-full | Complete ICU locale data |
 
-> **Note**: HEIC/HEIF support requires `libheif` which is pre-installed. PDF operations require Ghostscript which is also pre-installed. See [Image Processing Guide](../guides/image-processing) for usage examples.
+### Image Format Support (Standard Tier)
 
-### Compression
+| Format | GD | ImageMagick | libvips |
+|--------|:--:|:-----------:|:-------:|
+| JPEG | ✅ | ✅ | ✅ |
+| PNG | ✅ | ✅ | ✅ |
+| GIF | ✅ | ✅ | ✅ |
+| WebP | ✅ | ✅ | ✅ |
+| AVIF | ✅ | ✅ | ✅ |
+| HEIC/HEIF | ❌ | ✅ | ✅ |
+| PDF | ❌ | ✅ | ❌ |
+| SVG | ❌ | ✅ | ✅ |
+| TIFF | ❌ | ✅ | ✅ |
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `zip` | Built-in | Built-in | ZIP archive support |
-| `bz2` | Built-in | - | Bzip2 compression (Full only) |
-| `zlib` | Built-in | Built-in | Gzip compression |
+## Full Tier Extensions
 
-### Process & Communication
+The Full tier includes everything in Standard, plus Chromium for browser automation.
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `pcntl` | Built-in | Built-in | Process control (signals, forking) |
-| `posix` | Built-in | Built-in | POSIX functions |
-| `sockets` | Built-in | Built-in | Low-level socket interface |
+### Additional Components (on top of Standard)
 
-### XML & Data Exchange
+| Component | Purpose |
+|-----------|---------|
+| Chromium | Headless browser |
+| nss | Network Security Services |
+| harfbuzz | Text shaping |
+| ttf-freefont | Free fonts |
 
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `xml` | Built-in | Built-in | XML parsing |
-| `xmlreader` | Built-in | Built-in | XML pull parser |
-| `xmlwriter` | Built-in | Built-in | XML stream writing |
-| `xsl` | Built-in | - | XSL transformations (Full only) |
-| `soap` | Built-in | - | SOAP protocol (Full only) |
-| `simplexml` | Built-in | Built-in | SimpleXML interface |
-| `dom` | Built-in | Built-in | DOM manipulation |
-
-### Enterprise Integration
-
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `ldap` | Built-in | - | LDAP directory services (Full only) |
-| `imap` | Built-in | - | IMAP email protocol (Full only) |
-
-### Utility Extensions
-
-| Extension | Full | Minimal | Description |
-|-----------|------|---------|-------------|
-| `calendar` | Built-in | - | Calendar conversion (Full only) |
-| `gettext` | Built-in | - | Gettext localization (Full only) |
-| `ctype` | Built-in | Built-in | Character type checking |
-| `curl` | Built-in | Built-in | URL transfer library |
-| `fileinfo` | Built-in | Built-in | File information |
-| `ftp` | Built-in | - | FTP protocol (Full only) |
-| `iconv` | Built-in | Built-in | Character encoding conversion |
-| `json` | Built-in | Built-in | JSON encoding/decoding |
-| `openssl` | Built-in | Built-in | OpenSSL cryptography |
-| `phar` | Built-in | Built-in | PHP Archive support |
-| `readline` | Built-in | Built-in | Interactive shell |
-| `sodium` | Built-in | Built-in | Modern cryptography |
-| `tokenizer` | Built-in | Built-in | PHP tokenizer |
-
-## Minimal Edition Extensions
-
-The Minimal Edition includes **17 essential extensions** optimized for Laravel:
+### Environment Variables (auto-set)
 
 ```
-apcu, bcmath, ctype, curl, dom, exif, fileinfo, gd, iconv, intl,
-json, mbstring, openssl, pcntl, pdo_mysql, pdo_pgsql, pdo_sqlite,
-phar, posix, redis, simplexml, sockets, sodium, tokenizer, xml,
-xmlreader, xmlwriter, zip, zlib
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ```
 
-**Minimal-only difference**: OPcache is **disabled by default** (explicit enable recommended).
+## Extension Comparison by Tier
 
-## Development Extensions
+| Extension | Slim | Standard | Full |
+|-----------|:----:|:--------:|:----:|
+| opcache | ✅ | ✅ | ✅ |
+| pdo_mysql, pdo_pgsql | ✅ | ✅ | ✅ |
+| mysqli, pgsql | ✅ | ✅ | ✅ |
+| redis | ✅ | ✅ | ✅ |
+| apcu | ✅ | ✅ | ✅ |
+| mongodb | ✅ | ✅ | ✅ |
+| grpc | ✅ | ✅ | ✅ |
+| igbinary, msgpack | ✅ | ✅ | ✅ |
+| intl | ✅ | ✅ | ✅ |
+| bcmath | ✅ | ✅ | ✅ |
+| gd (WebP) | ✅ | ✅ | ✅ |
+| gd (AVIF) | ❌ | ✅ | ✅ |
+| imagick | ❌ | ✅ | ✅ |
+| vips | ❌ | ✅ | ✅ |
+| exif | ✅ | ✅ | ✅ |
+| pcntl | ✅ | ✅ | ✅ |
+| sockets | ✅ | ✅ | ✅ |
+| soap | ✅ | ✅ | ✅ |
+| xsl | ✅ | ✅ | ✅ |
+| ldap | ✅ | ✅ | ✅ |
+| bz2 | ✅ | ✅ | ✅ |
+| zip | ✅ | ✅ | ✅ |
+| **Node.js 22** | ❌ | ✅ | ✅ |
+| **Chromium** | ❌ | ❌ | ✅ |
 
-Development images (`-dev` suffix) include additional debugging tools:
+## Extension Versions
 
-| Extension | Purpose | Configuration |
-|-----------|---------|---------------|
-| `xdebug` | Step debugging, coverage, profiling | `XDEBUG_MODE=debug,develop,coverage` |
+All PECL extensions use pinned versions for reproducibility:
 
-### Xdebug Configuration
-
-```ini
-; Default development settings
-xdebug.mode=debug,develop,coverage
-xdebug.client_host=host.docker.internal
-xdebug.client_port=9003
-xdebug.start_with_request=yes
-```
-
-## Extension Versions by PHP Version
-
-### PHP 8.4
-
-| Extension | Version | Notes |
-|-----------|---------|-------|
-| Redis | 6.x | Latest stable |
-| APCu | 5.1.x | Latest stable |
-| Imagick | 3.7.x | Latest stable |
-| MongoDB | 1.19.x | Latest stable |
-| Xdebug | 3.4.x | Dev images only |
-
-### PHP 8.3
-
-| Extension | Version | Notes |
-|-----------|---------|-------|
-| Redis | 6.x | Latest stable |
-| APCu | 5.1.x | Latest stable |
-| Imagick | 3.7.x | Latest stable |
-| MongoDB | 1.19.x | Latest stable |
-| Xdebug | 3.3.x | Dev images only |
-
-### PHP 8.2
-
-| Extension | Version | Notes |
-|-----------|---------|-------|
-| Redis | 6.x | Latest stable |
-| APCu | 5.1.x | Latest stable |
-| Imagick | 3.7.x | Latest stable |
-| MongoDB | 1.18.x | Latest stable |
-| Xdebug | 3.3.x | Dev images only |
+| Extension | Version |
+|-----------|---------|
+| redis | 6.3.0 |
+| apcu | 5.1.27 |
+| mongodb | 2.1.4 |
+| igbinary | 3.2.16 |
+| msgpack | 3.0.0 |
+| imagick | 3.8.1 |
+| vips | 1.0.13 |
+| grpc | 1.72.0 |
 
 ## Checking Installed Extensions
 
@@ -258,67 +226,65 @@ Some extensions require system packages:
 ```dockerfile
 FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 
-# Example: Installing GMP
-RUN apk add --no-cache gmp-dev && \
-    docker-php-ext-install gmp
+# Example: Adding additional libraries
+RUN apk add --no-cache some-package-dev && \
+    docker-php-ext-install some-extension
 ```
 
 ## Framework Requirements
 
 ### Laravel
 
-All Laravel requirements are satisfied:
+All Laravel requirements are satisfied by **Slim tier**:
 
 | Requirement | Extension | Status |
 |-------------|-----------|--------|
-| PHP >= 8.2 | - | PHP 8.2, 8.3, 8.4 available |
-| Ctype | ctype | Included |
-| cURL | curl | Included |
-| DOM | dom | Included |
-| Fileinfo | fileinfo | Included |
-| Filter | filter | Built-in |
-| Hash | hash | Built-in |
-| Mbstring | mbstring | Included |
-| OpenSSL | openssl | Included |
-| PCRE | pcre | Built-in |
-| PDO | pdo, pdo_mysql/pgsql | Included |
-| Session | session | Built-in |
-| Tokenizer | tokenizer | Included |
-| XML | xml | Included |
+| PHP >= 8.2 | - | ✅ PHP 8.2, 8.3, 8.4 |
+| Ctype | ctype | ✅ Built-in |
+| cURL | curl | ✅ Built-in |
+| DOM | dom | ✅ Built-in |
+| Fileinfo | fileinfo | ✅ Built-in |
+| Mbstring | mbstring | ✅ Built-in |
+| OpenSSL | openssl | ✅ Built-in |
+| PDO | pdo_mysql/pgsql | ✅ Included |
+| Tokenizer | tokenizer | ✅ Built-in |
+| XML | xml | ✅ Built-in |
 
 ### Symfony
 
-All Symfony requirements are satisfied:
+All Symfony requirements are satisfied by **Slim tier**:
 
 | Requirement | Extension | Status |
 |-------------|-----------|--------|
-| PHP >= 8.2 | - | PHP 8.2, 8.3, 8.4 available |
-| Ctype | ctype | Included |
-| iconv | iconv | Included |
-| JSON | json | Included |
-| PCRE | pcre | Built-in |
-| Session | session | Built-in |
-| SimpleXML | simplexml | Included |
-| Tokenizer | tokenizer | Included |
+| PHP >= 8.2 | - | ✅ PHP 8.2, 8.3, 8.4 |
+| Ctype | ctype | ✅ Built-in |
+| iconv | iconv | ✅ Built-in |
+| JSON | json | ✅ Built-in |
+| SimpleXML | simplexml | ✅ Built-in |
 
 ### WordPress
 
-All WordPress requirements are satisfied:
+All WordPress requirements are satisfied by **Standard tier** (for ImageMagick):
 
 | Requirement | Extension | Status |
 |-------------|-----------|--------|
-| PHP >= 7.4 | - | PHP 8.2+ available |
-| MySQL | mysqli, pdo_mysql | Included |
-| JSON | json | Included |
-| cURL | curl | Included |
-| DOM | dom | Included |
-| EXIF | exif | Included |
-| Fileinfo | fileinfo | Included |
-| Imagick/GD | gd, imagick | Included |
-| Mbstring | mbstring | Included |
-| OpenSSL | openssl | Included |
-| XML | xml | Included |
-| Zip | zip | Included |
+| PHP >= 7.4 | - | ✅ PHP 8.2+ |
+| MySQL | mysqli | ✅ Included |
+| cURL | curl | ✅ Built-in |
+| DOM | dom | ✅ Built-in |
+| EXIF | exif | ✅ Included |
+| Imagick/GD | gd, imagick | ✅ Standard tier |
+| Mbstring | mbstring | ✅ Built-in |
+| ZIP | zip | ✅ Included |
+
+### Browsershot / Laravel Dusk
+
+Requires **Full tier** for Chromium:
+
+| Requirement | Status |
+|-------------|--------|
+| Chromium | ✅ Full tier |
+| Puppeteer env vars | ✅ Auto-configured |
 
 ## Troubleshooting
 
@@ -326,7 +292,7 @@ All WordPress requirements are satisfied:
 
 ```bash
 # Check PHP error log
-docker exec myapp cat /var/log/php-fpm/error.log
+docker exec myapp cat /var/log/php/error.log
 
 # Verify extension file exists
 docker exec myapp ls /usr/local/lib/php/extensions/
@@ -348,4 +314,4 @@ docker exec myapp php -r "foreach(get_loaded_extensions() as \$ext) echo \$ext.'
 
 ---
 
-**Need a specific extension?** See [Extending Images](../advanced/extending-images) | [Custom Extensions](../advanced/custom-extensions)
+**Need a specific extension?** See [Extending Images](../advanced/extending-images.md) | [Image Tiers Comparison](editions-comparison.md)

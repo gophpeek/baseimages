@@ -456,4 +456,4 @@ Score each factor 1-5 for your project, multiply by weight:
 
 ---
 
-**Need more guidance?** [Getting Started](../getting-started/quickstart) | [Production Deployment](../guides/production-deployment)
+**Need more guidance?** [Getting Started](../getting-started/quickstart.md) | [Production Deployment](../guides/production-deployment.md)

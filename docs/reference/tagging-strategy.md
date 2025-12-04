@@ -6,102 +6,88 @@ weight: 40
 
 # Image Tagging Strategy
 
-PHPeek Base Images follow a clear, predictable tagging strategy with OS version support for current + 1 version back.
+PHPeek Base Images follow a clear, predictable tagging strategy with three image tiers and rootless variants.
 
 ## Tag Format
 
 ```
-{image-type}:{php-version}-{os-variant}[-{edition}]
+{image-type}:{php-version}-{os}[-tier][-rootless]
 ```
 
-## Supported OS Versions
+## Image Tiers
 
-### Alpine Linux
-- **Current**: Alpine 3.20+ (auto-updated with upstream)
-- **Support**: Latest stable only
-- **Tag format**: `8.3-alpine`, `8.3-alpine-minimal`
-
-### Debian
-- **Current**: Bookworm (Debian 12) - PHP 8.2, 8.3, 8.4
-- **Previous**: Bullseye (Debian 11) - PHP 8.2, 8.3 only
-- **Tag format**: `8.3-bookworm`, `8.3-bookworm-minimal`
-
-## Edition Suffixes
-
-- **Full Edition** (default): No suffix - `8.3-alpine`
-- **Minimal Edition**: `-minimal` suffix - `8.3-alpine-minimal`
+| Tier | Tag Suffix | Size | Use Case |
+|------|------------|------|----------|
+| **Slim** | `-slim` | ~120MB | APIs, microservices, minimal footprint |
+| **Standard** | (none) | ~250MB | Most Laravel/PHP apps (DEFAULT) |
+| **Full** | `-full` | ~700MB | Browsershot, Dusk, PDF generation |
 
 ## Complete Tag Examples
 
-### PHP-FPM Images
+### Standard Tier (Default)
 
-**Alpine (Full Edition)**:
-```
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm:8.4-alpine
-```
+Most applications should use standard tier:
 
-**Alpine (Minimal Edition)**:
 ```
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine-minimal
-ghcr.io/gophpeek/baseimages/php-fpm:8.4-alpine-minimal
-```
-
-**Debian Bookworm (Full Edition)**:
-```
-ghcr.io/gophpeek/baseimages/php-fpm:8.2-bookworm
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
-ghcr.io/gophpeek/baseimages/php-fpm:8.4-bookworm
-```
-
-**Debian Bookworm (Minimal Edition)**:
-```
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm-minimal
-ghcr.io/gophpeek/baseimages/php-fpm:8.4-bookworm-minimal
-```
-
-**Debian Bullseye (Full Edition - Legacy Support)**:
-```
-ghcr.io/gophpeek/baseimages/php-fpm:8.2-bullseye
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-bullseye
-```
-
-### PHP-FPM-Nginx Images
-
-**Alpine**:
-```
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-minimal
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
 ```
 
-**Debian Bookworm**:
+### Slim Tier
+
+For APIs and microservices with minimal footprint:
+
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-minimal
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-slim
+```
+
+### Full Tier
+
+For Browsershot, Dusk, Puppeteer, and PDF generation:
+
+```
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-full
+```
+
+### Rootless Variants
+
+All tiers support rootless execution (runs as `www-data` user):
+
+```
+# Standard + rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+
+# Slim + rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim-rootless
+
+# Full + rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full-rootless
 ```
 
 ## Version Matrix
 
-| PHP Version | Alpine | Debian Bookworm | Debian Bullseye |
-|-------------|--------|-----------------|-----------------|
-| 8.2         | ✅     | ✅              | ✅              |
-| 8.3         | ✅     | ✅              | ✅              |
-| 8.4         | ✅     | ✅              | ❌              |
+| PHP Version | Alpine (Slim) | Alpine (Standard) | Alpine (Full) |
+|-------------|---------------|-------------------|---------------|
+| 8.4         | ✅            | ✅                | ✅            |
+| 8.3         | ✅            | ✅                | ✅            |
+| 8.2         | ✅            | ✅                | ✅            |
 
-**Note**: PHP 8.4 Bullseye variant not available (newer PHP requires newer OS)
+All variants also available with `-rootless` suffix.
 
 ## Alias Tags
 
 **Latest stable**:
-- `latest` → `8.3-alpine`
-- `8.3` → `8.3-alpine`
+- `latest` → `8.4-alpine`
+- `8.4` → `8.4-alpine`
 
-**Minimal latest**:
-- `minimal` → `8.3-alpine-minimal`
-- `8.3-minimal` → `8.3-alpine-minimal`
-
-**OS-specific latest**:
-- `debian` → `8.3-bookworm`
+**Tier aliases**:
+- `slim` → `8.4-alpine-slim`
+- `full` → `8.4-alpine-full`
 
 ## Deprecation Policy
 
@@ -112,7 +98,6 @@ PHPeek follows a predictable deprecation schedule based on upstream EOL dates.
 | Component | Removal After EOL | Warning Period |
 |-----------|-------------------|----------------|
 | PHP       | 6 months          | 90 days        |
-| Debian    | 3 months          | 90 days        |
 | Alpine    | 3 months          | 90 days        |
 | Node.js   | 6 months          | 90 days        |
 
@@ -162,29 +147,36 @@ When a version is deprecated, migration guides are published at:
 
 ## Examples by Use Case
 
-### Production (Full Edition, Latest Stable)
+### Production (Standard Tier, Recommended)
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```
 
-### Production (Minimal Edition, Laravel)
+### API/Microservice (Slim Tier)
 ```yaml
 services:
-  app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm-minimal
+  api:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
 ```
 
-### Legacy Application (Older OS)
+### PDF Generation (Full Tier)
+```yaml
+services:
+  pdf:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+```
+
+### Kubernetes (Rootless)
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm:8.2-bullseye
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
 ```
 
 ## See Also
 
 - [Available Images](available-images.md) - Complete list of all images
-- [Choosing a Variant](../getting-started/choosing-variant.md) - Which OS to choose
-- [Minimal vs Full Editions](editions-comparison.md) - Edition feature comparison
+- [Choosing a Variant](../getting-started/choosing-variant.md) - Which tier to choose
+- [Image Tiers Comparison](editions-comparison.md) - Tier feature comparison

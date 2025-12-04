@@ -364,6 +364,6 @@ RUN composer install --no-dev --optimize-autoloader
 
 ## Next Steps
 
-- **[Extending Images](extending-images)** - Complete customization guide
-- **[Custom Initialization](custom-initialization)** - Startup scripts
-- **[Performance Tuning](performance-tuning)** - Optimize your extensions
+- **[Extending Images](extending-images.md)** - Complete customization guide
+- **[Custom Initialization](custom-initialization.md)** - Startup scripts
+- **[Performance Tuning](performance-tuning.md)** - Optimize your extensions

@@ -6,7 +6,7 @@ weight: 1
 
 # Introduction to PHPeek Base Images
 
-PHPeek Base Images are production-ready PHP Docker containers designed for modern PHP applications. Built with a "batteries included" philosophy while maintaining clean, minimal images.
+PHPeek Base Images are production-ready PHP Docker containers designed for modern PHP applications. Built with a "batteries included" philosophy while maintaining clean, optimized images.
 
 ## Why PHPeek?
 
@@ -24,14 +24,29 @@ Setting up PHP containers for production is surprisingly complex:
 
 PHPeek provides production-ready containers with:
 
-- **40+ PHP extensions pre-installed** - Everything Laravel, Symfony, WordPress need
-- **Minimal images** - Alpine variant as small as 50MB
+- **Three Image Tiers** - Slim (~120MB), Standard (~250MB), Full (~700MB)
+- **25+ PHP extensions pre-installed** - Everything Laravel, Symfony, WordPress need
 - **Vanilla bash entrypoint** - Simple, debuggable process management (no S6 Overlay)
 - **50+ environment variables** - Runtime configuration without rebuilding
 - **Weekly security rebuilds** - Automatic CVE patching
 - **Framework auto-detection** - Laravel, Symfony, WordPress optimizations
 
-> **PHPeek PM**: A Go-based process manager for advanced multi-process orchestration. See [PHPeek PM Integration](../phpeek-pm-integration) for details.
+> **PHPeek PM**: A Go-based process manager for advanced multi-process orchestration. See [PHPeek PM Integration](../phpeek-pm-integration.md) for details.
+
+## Three Image Tiers
+
+PHPeek images come in three tiers to match your exact needs:
+
+| Tier | Size | Use Case |
+|------|------|----------|
+| **Slim** | ~120MB | APIs, microservices, minimal footprint |
+| **Standard** | ~250MB | Most Laravel/PHP apps (DEFAULT) |
+| **Full** | ~700MB | Browsershot, Dusk, PDF generation |
+
+**Quick decision**:
+- Need PDF generation or browser testing? → **Full**
+- Building a standard Laravel/PHP app? → **Standard** (default)
+- Building APIs or microservices? → **Slim**
 
 ## PHPeek vs Alternatives
 
@@ -40,10 +55,10 @@ PHPeek provides production-ready containers with:
 | Feature | PHPeek | ServerSideUp |
 |---------|--------|--------------|
 | Process Manager | Vanilla bash (simple) | S6 Overlay (complex) |
+| Image Tiers | 3 (Slim/Standard/Full) | 2 (Basic/Pro) |
 | Framework Support | Laravel/Symfony/WordPress | Laravel only |
 | Runtime Config | 50+ variables | ~30 variables |
 | PHP Versions | 8.2, 8.3, 8.4 | 8.1, 8.2, 8.3 |
-| Minimal Edition | Yes (50MB) | No |
 | Security Rebuilds | Weekly automated | Manual |
 
 **When to choose PHPeek**: You need Symfony/WordPress support, latest PHP, or prefer simple debuggable entrypoints.
@@ -54,11 +69,11 @@ PHPeek provides production-ready containers with:
 
 | Feature | PHPeek | Official PHP |
 |---------|--------|--------------|
-| Extensions | 40+ included | ~10 basic |
+| Extensions | 25+ included | ~10 basic |
 | Production Ready | Yes | No (minimal) |
 | Nginx Integration | Built-in | Separate setup |
 | Framework Support | Auto-detection | None |
-| Image Size | 50-130MB | 120MB+ (with extensions) |
+| Image Size | 120-700MB | 120MB+ (with extensions) |
 
 **When to choose PHPeek**: Production applications, rapid development, team standardization.
 
@@ -68,7 +83,7 @@ PHPeek provides production-ready containers with:
 
 | Feature | PHPeek | Bitnami |
 |---------|--------|---------|
-| Image Size | 50-130MB | 400-600MB |
+| Image Size | 120-700MB | 400-600MB |
 | Customization | Easy | Complex |
 | Configuration | Environment vars | Config files |
 | Updates | Weekly | Bitnami schedule |
@@ -147,34 +162,34 @@ No Dockerfile changes needed!
 ### Image Types
 
 ```
-php-fpm/           # PHP-FPM only (for microservices)
-php-cli/           # CLI scripts, queue workers
-nginx/             # Nginx only (reverse proxy)
 php-fpm-nginx/     # All-in-one (recommended for most)
 ```
 
-### OS Variants
+### Image Tiers
 
-| Variant | Size | Use Case |
-|---------|------|----------|
-| Alpine | ~50MB | Production, smallest footprint |
-| Debian | ~120MB | glibc compatibility, native extensions |
+| Tier | Tag | Includes |
+|------|-----|----------|
+| **Slim** | `-slim` | Core extensions (25+) |
+| **Standard** | (none) | + ImageMagick, vips, Node.js |
+| **Full** | `-full` | + Chromium for browser automation |
 
-### Editions
+### Rootless Variants
 
-| Edition | Includes | Use Case |
-|---------|----------|----------|
-| Standard | 40+ extensions | Production |
-| Dev | + Xdebug, SPX | Development |
-| Minimal | Core extensions only | Microservices |
+All tiers support rootless execution:
+
+| Tag | Description |
+|-----|-------------|
+| `8.4-alpine-rootless` | Standard + rootless |
+| `8.4-alpine-slim-rootless` | Slim + rootless |
+| `8.4-alpine-full-rootless` | Full + rootless |
 
 ## Getting Started
 
 Ready to try PHPeek?
 
-1. **[5-Minute Quickstart](quickstart)** - Get running immediately
-2. **[Laravel Guide](../guides/laravel-guide)** - Complete Laravel setup
-3. **[Choosing a Variant](choosing-variant)** - Alpine vs Debian
+1. **[5-Minute Quickstart](quickstart.md)** - Get running immediately
+2. **[Laravel Guide](../guides/laravel-guide.md)** - Complete Laravel setup
+3. **[Choosing a Variant](choosing-variant.md)** - Which tier to use
 
 ## Requirements
 

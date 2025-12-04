@@ -1320,11 +1320,11 @@ groups:
 
 ## Related Documentation
 
-- [Production Deployment](../guides/production-deployment) - Production setup
-- [Environment Variables](../reference/environment-variables) - Configuration options
-- [Configuration Options](../reference/configuration-options) - Detailed config
-- [Performance Tuning](performance-tuning) - Performance optimization
+- [Production Deployment](../guides/production-deployment.md) - Production setup
+- [Environment Variables](../reference/environment-variables.md) - Configuration options
+- [Configuration Options](../reference/configuration-options.md) - Detailed config
+- [Performance Tuning](performance-tuning.md) - Performance optimization
 
 ---
 
-**Questions?** Check [common issues](../troubleshooting/common-issues) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).
+**Questions?** Check [common issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).

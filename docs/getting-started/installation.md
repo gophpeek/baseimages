@@ -311,6 +311,6 @@ docker pull --platform linux/amd64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4
 
 ## Next Steps
 
-- **[5-Minute Quickstart](quickstart)** - Get a Laravel app running
-- **[Choosing a Variant](choosing-variant)** - Alpine vs Debian
-- **[Laravel Guide](../guides/laravel-guide)** - Complete Laravel setup
+- **[5-Minute Quickstart](quickstart.md)** - Get a Laravel app running
+- **[Choosing a Variant](choosing-variant.md)** - Alpine vs Debian
+- **[Laravel Guide](../guides/laravel-guide.md)** - Complete Laravel setup

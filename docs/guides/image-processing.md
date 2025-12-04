@@ -475,4 +475,4 @@ docker exec myapp gs --version
 
 ---
 
-**Related Guides**: [Available Extensions](../reference/available-extensions) | [Laravel Guide](laravel-guide) | [Performance Tuning](../advanced/performance-tuning)
+**Related Guides**: [Available Extensions](../reference/available-extensions.md) | [Laravel Guide](laravel-guide.md) | [Performance Tuning](../advanced/performance-tuning.md)

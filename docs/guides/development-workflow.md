@@ -837,11 +837,11 @@ volumes:
 
 ## Related Documentation
 
-- [Laravel Guide](laravel-guide) - Laravel-specific development
-- [Symfony Guide](symfony-guide) - Symfony-specific development
-- [Extending Images](../advanced/extending-images) - Custom development images
-- [Debugging Guide](../troubleshooting/debugging-guide) - Advanced debugging
+- [Laravel Guide](laravel-guide.md) - Laravel-specific development
+- [Symfony Guide](symfony-guide.md) - Symfony-specific development
+- [Extending Images](../advanced/extending-images.md) - Custom development images
+- [Debugging Guide](../troubleshooting/debugging-guide.md) - Advanced debugging
 
 ---
 
-**Questions?** Check [common issues](../troubleshooting/common-issues) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).
+**Questions?** Check [common issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/gophpeek/baseimages/discussions).

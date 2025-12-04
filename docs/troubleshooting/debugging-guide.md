@@ -292,10 +292,10 @@ When debugging an issue:
 
 ## Related Documentation
 
-- [Common Issues](common-issues) - Quick fixes
-- [Performance Tuning](../advanced/performance-tuning) - Optimization
-- [Development Workflow](../guides/development-workflow) - Development setup
-- [Environment Variables](../reference/environment-variables) - Configuration
+- [Common Issues](common-issues.md) - Quick fixes
+- [Performance Tuning](../advanced/performance-tuning.md) - Optimization
+- [Development Workflow](../guides/development-workflow.md) - Development setup
+- [Environment Variables](../reference/environment-variables.md) - Configuration
 
 ---
 
