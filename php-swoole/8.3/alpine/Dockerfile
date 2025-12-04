@@ -13,6 +13,7 @@ LABEL org.opencontainers.image.vendor="PHPeek"
 LABEL org.opencontainers.image.source="https://github.com/gophpeek/baseimages"
 
 # Install Swoole build dependencies and compile
+# Note: brotli-dev is required for Swoole's brotli compression support
 RUN apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
         openssl-dev \
@@ -20,6 +21,7 @@ RUN apk add --no-cache --virtual .build-deps \
         c-ares-dev \
         postgresql-dev \
         linux-headers \
+        brotli-dev \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
     && apk del .build-deps \

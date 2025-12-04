@@ -14,6 +14,7 @@ LABEL org.opencontainers.image.vendor="PHPeek"
 LABEL org.opencontainers.image.source="https://github.com/gophpeek/baseimages"
 
 # Install Swoole from Ondrej PPA (if available) or compile
+# Note: libbrotli-dev is required for Swoole's brotli compression support when compiling
 RUN apt-get update && \
     if apt-cache show php8.2-swoole >/dev/null 2>&1; then \
         apt-get install -y --no-install-recommends php8.2-swoole; \
@@ -23,7 +24,8 @@ RUN apt-get update && \
             libssl-dev \
             libcurl4-openssl-dev \
             libc-ares-dev \
-            libpq-dev && \
+            libpq-dev \
+            libbrotli-dev && \
         pecl install swoole && \
         echo "extension=swoole.so" > /etc/php/8.2/cli/conf.d/20-swoole.ini && \
         apt-get purge -y php8.2-dev && \
