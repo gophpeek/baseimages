@@ -75,14 +75,27 @@ jobs:
           case "${{ matrix.os_variant }}" in
             alpine)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=alpine" >> $GITHUB_OUTPUT
               ;;
             bookworm)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=bookworm" >> $GITHUB_OUTPUT
               ;;
             trixie)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=trixie" >> $GITHUB_OUTPUT
               ;;
           esac
+
+      - name: Get PHP patch version
+        id: php_patch
+        run: |
+          # Extract full PHP version from upstream base image for version pinning
+          # This enables tags like 8.4.15-alpine alongside rolling 8.4-alpine
+          BASE_IMAGE="php:${{ matrix.php_version }}-fpm-${{ steps.dockerfile.outputs.base_os }}"
+          PHP_FULL=$(docker run --rm $BASE_IMAGE php -r 'echo PHP_VERSION;')
+          echo "version=$PHP_FULL" >> $GITHUB_OUTPUT
+          echo "PHP patch version: $PHP_FULL"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -107,6 +120,8 @@ jobs:
           tags: |
             # Rolling version tags (recommended for most users)
             type=raw,value=${{ matrix.php_version }}-${{ matrix.os_variant }},enable={{is_default_branch}}
+            # PHP patch version tags for version pinning (e.g., 8.4.15-alpine)
+            type=raw,value=${{ steps.php_patch.outputs.version }}-${{ matrix.os_variant }},enable={{is_default_branch}}
             # Convenience tags (8.3 -> 8.3-alpine)
             type=raw,value=${{ matrix.php_version }},enable=${{ matrix.os_variant == 'alpine' && github.ref == 'refs/heads/main' }}
             # Latest tag (points to 8.4-alpine)
@@ -221,14 +236,27 @@ jobs:
           case "${{ matrix.os_variant }}" in
             alpine)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=alpine" >> $GITHUB_OUTPUT
               ;;
             bookworm)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=bookworm" >> $GITHUB_OUTPUT
               ;;
             trixie)
               echo "path=./php-fpm-nginx/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
+              echo "base_os=trixie" >> $GITHUB_OUTPUT
               ;;
           esac
+
+      - name: Get PHP patch version
+        id: php_patch
+        run: |
+          # Extract full PHP version from upstream base image for version pinning
+          # This enables tags like 8.4.15-alpine-rootless alongside rolling 8.4-alpine-rootless
+          BASE_IMAGE="php:${{ matrix.php_version }}-fpm-${{ steps.dockerfile.outputs.base_os }}"
+          PHP_FULL=$(docker run --rm $BASE_IMAGE php -r 'echo PHP_VERSION;')
+          echo "version=$PHP_FULL" >> $GITHUB_OUTPUT
+          echo "PHP patch version: $PHP_FULL"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -253,6 +281,8 @@ jobs:
           tags: |
             # Rolling version tags (recommended for most users)
             type=raw,value=${{ matrix.php_version }}-${{ matrix.os_variant }}-rootless,enable={{is_default_branch}}
+            # PHP patch version tags for version pinning (e.g., 8.4.15-alpine-rootless)
+            type=raw,value=${{ steps.php_patch.outputs.version }}-${{ matrix.os_variant }}-rootless,enable={{is_default_branch}}
             # Convenience tags (8.3-rootless -> 8.3-alpine-rootless)
             type=raw,value=${{ matrix.php_version }}-rootless,enable=${{ matrix.os_variant == 'alpine' && github.ref == 'refs/heads/main' }}
             # Immutable SHA tags for reproducibility
