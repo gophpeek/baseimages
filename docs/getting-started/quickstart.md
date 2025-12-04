@@ -13,18 +13,22 @@ Get a production-ready PHP environment running in under 5 minutes.
 Just want to test the image? Run these docker commands:
 
 ```bash
-# Test PHP version and extensions
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -v
+# Test PHP version and extensions (use php-cli for quick tests)
+docker run --rm ghcr.io/gophpeek/baseimages/php-cli:8.4-alpine php -v
 
 # List all loaded extensions
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -m
+docker run --rm ghcr.io/gophpeek/baseimages/php-cli:8.4-alpine php -m
 
 # Run a one-liner to see available tools
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine sh -c "php -v && composer -V && node -v"
+docker run --rm ghcr.io/gophpeek/baseimages/php-cli:8.4-alpine sh -c "php -v && composer -V && node -v"
 
-# Start a web server with current directory mounted
+# Start a web server with current directory mounted (php-fpm-nginx for web apps)
 docker run --rm -p 8000:80 -v $(pwd):/var/www/html ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```
+
+> **Note**: `php-fpm-nginx` images run PHPeek PM as the entrypoint for process management.
+> Use `php-cli` images for direct PHP commands, or override the entrypoint:
+> `docker run --rm --entrypoint php ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine -v`
 
 For a proper project setup, continue below.
 
