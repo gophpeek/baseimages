@@ -3,6 +3,11 @@
 # ============================================================================
 # LAYER 2: Single source of truth for all PHP extensions, Composer, Node, PHPeek PM
 # All other images (php-cli, php-fpm, php-fpm-nginx, php-swoole, etc.) extend this
+#
+# IMAGE TIERS:
+# - slim:     Minimal PHP + essential extensions (~200MB) - API/microservices
+# - standard: + ImageMagick, vips, Node.js (~400MB) - Most Laravel apps (DEFAULT)
+# - full:     + Chromium for Browsershot/Dusk (~800MB) - PDF generation, testing
 # ============================================================================
 
 # ============================================================================
@@ -20,95 +25,54 @@ ARG VIPS_VERSION=1.0.13
 ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-bookworm-slim AS node
 
-# Stage 2: PHP CLI base (NOT FPM - that's a separate layer)
-FROM php:8.4-cli-bookworm AS base
+# ============================================================================
+# SLIM BASE - Minimal dependencies, essential extensions only
+# ============================================================================
+FROM php:8.4-cli-bookworm AS slim-base
 
 LABEL org.opencontainers.image.title="PHPeek PHP Base 8.4 Debian"
-LABEL org.opencontainers.image.description="Base PHP image with all extensions, Composer, Node.js, and PHPeek PM"
+LABEL org.opencontainers.image.description="Base PHP image with extensions, Composer, and PHPeek PM"
 LABEL org.opencontainers.image.vendor="PHPeek"
 LABEL org.opencontainers.image.source="https://github.com/gophpeek/baseimages"
 
 # Re-declare ARGs after FROM (they don't persist)
 ARG REDIS_VERSION
-ARG IMAGICK_VERSION
 ARG APCU_VERSION
 ARG MONGODB_VERSION
 ARG IGBINARY_VERSION
 ARG MSGPACK_VERSION
-ARG VIPS_VERSION
-
-# Copy Node.js binaries from official node image
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-
-# Create npm/npx symlinks
-RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
-    ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
 
 # ============================================================================
-# System Dependencies (Runtime only)
+# SLIM: System Dependencies (Runtime only - minimal set)
 # ============================================================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # Essential tools
     bash curl wget git unzip procps \
     # Cron for Laravel Scheduler
     cron \
-    # Runtime libraries (NOT -dev packages)
-    libpng16-16 libjpeg62-turbo libfreetype6 \
-    libwebp7 libavif15 libmagickwand-6.q16-6 \
-    # HEIC/HEIF support for ImageMagick
-    libheif1 \
-    # PDF support for ImageMagick (Ghostscript)
-    ghostscript \
-    # SVG support for ImageMagick
-    librsvg2-bin \
-    libvips42 libvips-tools \
+    # Runtime libraries (minimal set for slim tier)
+    libpng16-16 libjpeg62-turbo libfreetype6 libwebp7 \
     libpq5 libicu72 libzip4 \
     libxml2 libxslt1.1 libldap-2.5-0 \
     libbz2-1.0 libonig5 libreadline8 libgmp10 \
-    # Exiftool for image metadata
-    libimage-exiftool-perl \
-    # Chromium for Browsershot/Puppeteer PDF generation
-    chromium \
-    fonts-liberation \
-    libnss3 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libxkbcommon0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxrandr2 \
-    libgbm1 \
-    libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Puppeteer to use installed Chromium
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
 # ============================================================================
-# PHP Extensions (40+)
+# SLIM: PHP Extensions (essential only)
 # ============================================================================
-
-# Install build dependencies (will be removed after compilation)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     $PHPIZE_DEPS \
-    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    libwebp-dev libavif-dev libmagickwand-dev \
-    libvips-dev \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
     libpq-dev libicu-dev libzip-dev \
     libxml2-dev libxslt1-dev libldap2-dev \
     libbz2-dev libonig-dev libreadline-dev libgmp-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Configure GD with WebP/AVIF support
+# Configure GD with WebP support (no AVIF in slim to keep size down)
 RUN docker-php-ext-configure gd \
     --with-freetype \
     --with-jpeg \
-    --with-webp \
-    --with-avif
+    --with-webp
 
 # Install core PHP extensions
 RUN docker-php-ext-install -j$(nproc) \
@@ -123,27 +87,20 @@ RUN docker-php-ext-install -j$(nproc) \
 RUN pecl install igbinary-${IGBINARY_VERSION} && \
     docker-php-ext-enable igbinary && \
     pecl install redis-${REDIS_VERSION} --configureoptions 'enable-igbinary-serializer="yes"' && \
-    pecl install imagick-${IMAGICK_VERSION} && \
     pecl install apcu-${APCU_VERSION} && \
     pecl install msgpack-${MSGPACK_VERSION} && \
     pecl install mongodb-${MONGODB_VERSION} && \
-    pecl install vips-${VIPS_VERSION} && \
-    docker-php-ext-enable redis imagick apcu msgpack mongodb vips
+    docker-php-ext-enable redis apcu msgpack mongodb
 
-# ============================================================================
-# Cleanup: Remove build deps, caches, and unnecessary files for slim image
-# ============================================================================
+# Cleanup build deps
 RUN apt-get purge -y --auto-remove $PHPIZE_DEPS \
-    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
-    libwebp-dev libavif-dev libmagickwand-dev \
-    libvips-dev \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
     libpq-dev libicu-dev libzip-dev \
     libxml2-dev libxslt1-dev libldap2-dev \
     libbz2-dev libonig-dev libreadline-dev libgmp-dev && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     /usr/share/doc /usr/share/man /usr/share/locale/* \
     /root/.pearrc /root/.pear && \
-    # Strip debug symbols from PHP extensions
     find /usr/local/lib/php/extensions -name '*.so' -exec strip --strip-all {} \; 2>/dev/null || true
 
 # ============================================================================
@@ -186,11 +143,6 @@ RUN set -eux; \
 COPY php-base/common/php.ini /usr/local/etc/php/conf.d/99-phpeek.ini
 
 # ============================================================================
-# ImageMagick Security Policy (Debian uses ImageMagick-6)
-# ============================================================================
-COPY php-base/common/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
-
-# ============================================================================
 # PHPeek Shared Libraries (entrypoint helpers, lifecycle checks)
 # ============================================================================
 RUN mkdir -p /usr/local/lib/phpeek
@@ -221,27 +173,155 @@ RUN mkdir -p /var/www/html && \
 
 WORKDIR /var/www/html
 
-# ═══════════════════════════════════════════════════════════════════════════
-# ROOT VARIANT (default) - Runs as root, PUID/PGID mapping at runtime
-# ═══════════════════════════════════════════════════════════════════════════
-FROM base AS root
+# ============================================================================
+# STANDARD BASE - Add ImageMagick, vips, Node.js (DEFAULT)
+# ============================================================================
+FROM slim-base AS standard-base
 
-ENV PHPEEK_ROOTLESS=false
+# Re-declare ARGs
+ARG IMAGICK_VERSION
+ARG VIPS_VERSION
+
+# Copy Node.js binaries from official node image
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+
+# Create npm/npx symlinks
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
+    ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+
+# ============================================================================
+# STANDARD: Additional runtime deps + ImageMagick/vips extensions
+# ============================================================================
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # AVIF support
+    libavif15 \
+    # ImageMagick runtime
+    libmagickwand-6.q16-6 \
+    # HEIC/HEIF support for ImageMagick
+    libheif1 \
+    # PDF support for ImageMagick (Ghostscript)
+    ghostscript \
+    # SVG support for ImageMagick
+    librsvg2-bin \
+    # vips runtime
+    libvips42 libvips-tools \
+    # Exiftool for image metadata
+    libimage-exiftool-perl \
+    # Netcat for health checks
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install build deps for ImageMagick/vips extensions
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    $PHPIZE_DEPS \
+    libavif-dev libmagickwand-dev libvips-dev \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Reconfigure GD with AVIF support
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    --with-avif && \
+    docker-php-ext-install -j$(nproc) gd
+
+# Install ImageMagick and vips PECL extensions
+RUN pecl install imagick-${IMAGICK_VERSION} && \
+    pecl install vips-${VIPS_VERSION} && \
+    docker-php-ext-enable imagick vips
+
+# Cleanup build deps
+RUN apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    libavif-dev libmagickwand-dev libvips-dev \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev && \
+    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
+    /root/.pearrc /root/.pear && \
+    find /usr/local/lib/php/extensions -name '*.so' -exec strip --strip-all {} \; 2>/dev/null || true
+
+# ImageMagick Security Policy (Debian uses ImageMagick-6)
+COPY php-base/common/imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
+
+# ============================================================================
+# FULL BASE - Add Chromium for Browsershot/Dusk/Puppeteer
+# ============================================================================
+FROM standard-base AS full-base
+
+# Chromium and dependencies for headless browser
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium \
+    fonts-liberation \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Puppeteer to use installed Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 # ═══════════════════════════════════════════════════════════════════════════
-# ROOTLESS VARIANT - Runs entirely as www-data, no root privileges
+# SLIM VARIANTS (root + rootless)
 # ═══════════════════════════════════════════════════════════════════════════
-FROM base AS rootless
+FROM slim-base AS slim-root
+ENV PHPEEK_ROOTLESS=false \
+    PHPEEK_IMAGE_TIER=slim
 
-# Pre-create ALL directories with www-data ownership for rootless operation
+FROM slim-base AS slim-rootless
 RUN mkdir -p \
     /var/www/html /var/www/.composer /var/www/.npm \
     /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d && \
     chown -R www-data:www-data \
         /var/www /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d
-
 ENV PHPEEK_ROOTLESS=true \
+    PHPEEK_IMAGE_TIER=slim \
     HOME=/var/www
+USER www-data
+WORKDIR /var/www/html
 
+# ═══════════════════════════════════════════════════════════════════════════
+# STANDARD VARIANTS (root + rootless) - DEFAULT
+# ═══════════════════════════════════════════════════════════════════════════
+FROM standard-base AS root
+ENV PHPEEK_ROOTLESS=false \
+    PHPEEK_IMAGE_TIER=standard
+
+FROM standard-base AS rootless
+RUN mkdir -p \
+    /var/www/html /var/www/.composer /var/www/.npm \
+    /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d && \
+    chown -R www-data:www-data \
+        /var/www /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d
+ENV PHPEEK_ROOTLESS=true \
+    PHPEEK_IMAGE_TIER=standard \
+    HOME=/var/www
+USER www-data
+WORKDIR /var/www/html
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FULL VARIANTS (root + rootless)
+# ═══════════════════════════════════════════════════════════════════════════
+FROM full-base AS full-root
+ENV PHPEEK_ROOTLESS=false \
+    PHPEEK_IMAGE_TIER=full
+
+FROM full-base AS full-rootless
+RUN mkdir -p \
+    /var/www/html /var/www/.composer /var/www/.npm \
+    /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d && \
+    chown -R www-data:www-data \
+        /var/www /var/lib/php/sessions /tmp/phpeek /docker-entrypoint-init.d
+ENV PHPEEK_ROOTLESS=true \
+    PHPEEK_IMAGE_TIER=full \
+    HOME=/var/www
 USER www-data
 WORKDIR /var/www/html

@@ -40,8 +40,8 @@ env:
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════════
-  # SLIM TIER - Minimal PHP with essential extensions only (Alpine only)
-  # Note: Debian images don't have tiered builds - they include everything
+  # SLIM TIER - Minimal PHP with essential extensions only
+  # All OS variants now support tiered builds (slim, standard, full)
   # ═══════════════════════════════════════════════════════════════════════════
   build-slim-matrix:
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Slim tier only available for Alpine
+        os_variant: ['alpine', 'bookworm', 'trixie']  # All OS variants
 
     permissions:
       contents: read
@@ -185,7 +185,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Slim tier only available for Alpine
+        os_variant: ['alpine', 'bookworm', 'trixie']  # All OS variants
 
     permissions:
       contents: read
@@ -602,8 +602,8 @@ jobs:
           docker run --rm $IMAGE phpeek-pm --version
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # FULL TIER - Includes Chromium for Browsershot/Dusk (Alpine only)
-  # Note: Debian standard tier already includes Chromium
+  # FULL TIER - Includes Chromium for Browsershot/Dusk
+  # All OS variants now support tiered builds (slim, standard, full)
   # ═══════════════════════════════════════════════════════════════════════════
   build-full-matrix:
     runs-on: ubuntu-latest
@@ -611,7 +611,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Full tier only available for Alpine
+        os_variant: ['alpine', 'bookworm', 'trixie']  # All OS variants
 
     permissions:
       contents: read
@@ -750,7 +750,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Full tier only available for Alpine
+        os_variant: ['alpine', 'bookworm', 'trixie']  # All OS variants
 
     permissions:
       contents: read
