@@ -118,12 +118,10 @@ services:
 
 ```bash
 # Bitnami uses UID 1001
-# PHPeek uses www-data (82 on Alpine, 33 on Debian)
+# PHPeek uses www-data (UID 33 on Debian)
 
 # Update file ownership
-chown -R 82:82 .  # Alpine
-# OR
-chown -R 33:33 .  # Debian
+chown -R 33:33 .  # www-data on Debian
 ```
 
 **3. Update configuration paths:**
@@ -172,7 +170,7 @@ services:
       - ./:/var/www/html
 
   nginx:
-    image: nginx:alpine
+    image: nginx:bookworm
     volumes:
       - ./:/var/www/html
       - ./nginx.conf:/etc/nginx/conf.d/default.conf

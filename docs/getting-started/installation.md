@@ -53,11 +53,11 @@ open http://localhost:8000
 PHP-FPM + Nginx in one container. Best for most applications.
 
 ```bash
-# Alpine (smallest, ~50MB)
+# Standard tier (DEFAULT)
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
-# Debian (glibc, ~120MB)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+# Slim tier (APIs, microservices)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ### Development Editions
@@ -66,7 +66,6 @@ Include Xdebug and SPX profiler:
 
 ```bash
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-dev
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian-dev
 ```
 
 ### Single-Process (Microservices)
@@ -110,8 +109,8 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 Updated weekly with security patches:
 
 ```bash
-php-fpm-nginx:8.4-bookworm    # Latest 8.4 on Alpine
-php-fpm-nginx:8.4-debian    # Latest 8.4 on Debian
+php-fpm-nginx:8.4-bookworm       # Latest 8.4 (standard tier)
+php-fpm-nginx:8.4-bookworm-slim  # Latest 8.4 (slim tier)
 ```
 
 ### Immutable Tags
@@ -312,5 +311,5 @@ docker pull --platform linux/amd64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4
 ## Next Steps
 
 - **[5-Minute Quickstart](quickstart.md)** - Get a Laravel app running
-- **[Choosing a Variant](choosing-variant.md)** - Alpine vs Debian
+- **[Choosing a Tier](choosing-variant.md)** - Slim vs Standard vs Full
 - **[Laravel Guide](../guides/laravel-guide.md)** - Complete Laravel setup

@@ -203,8 +203,8 @@ Solutions to common issues and systematic debugging.
 **"Something is broken, I need help"**
 → [Common Issues](troubleshooting/common-issues.md)
 
-**"Alpine vs Debian?"**
-→ [Choosing a Variant](getting-started/choosing-variant.md)
+**"Which tier should I use?"**
+→ [Choosing a Tier](getting-started/choosing-variant.md)
 
 **"Single container or separate containers?"**
 → [Multi-Service vs Separate](reference/multi-service-vs-separate.md)
@@ -243,7 +243,7 @@ Solutions to common issues and systematic debugging.
 **Phase 5 - Extended Reference**
 - ✅ Introduction (Why PHPeek?)
 - ✅ Installation Guide
-- ✅ Choosing a Variant (Alpine vs Debian)
+- ✅ Choosing a Tier (Slim vs Standard vs Full)
 - ✅ Custom Extensions Guide
 - ✅ Custom Initialization Guide
 - ✅ Reverse Proxy & mTLS Guide

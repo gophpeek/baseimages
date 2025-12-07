@@ -13,7 +13,7 @@ weight: 10
 PHPeek Base Images is a collection of production-ready Docker images for PHP applications. We provide:
 
 - **40+ PHP extensions** pre-installed and optimized
-- **Multiple OS variants**: Alpine (smallest), Debian (compatibility)
+- **Three tiers**: Slim (APIs), Standard (most apps), Full (Browsershot/Dusk)
 - **PHP versions**: 8.2, 8.3, 8.4
 - **Architecture types**: Single-process (PHP-FPM, PHP-CLI, Nginx) and Multi-service (PHP-FPM + Nginx)
 - **Development variants** with Xdebug pre-configured

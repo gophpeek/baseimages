@@ -25,8 +25,8 @@ What do you need?
 
 ## Tier Overview
 
-| Tier | Size (Alpine) | Best For | Tag Suffix |
-|------|---------------|----------|------------|
+| Tier | Size | Best For | Tag Suffix |
+|------|------|----------|------------|
 | **Slim** | ~120MB | APIs, microservices, minimal footprint | `-slim` |
 | **Standard** | ~250MB | Most Laravel/PHP apps (DEFAULT) | (none) |
 | **Full** | ~700MB | Browsershot, Dusk, PDF generation | `-full` |
@@ -117,8 +117,8 @@ PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ## Size Comparison
 
-| Tier | Alpine | Use Case |
-|------|--------|----------|
+| Tier | Size | Use Case |
+|------|------|----------|
 | **Slim** | ~120MB | APIs, microservices |
 | **Standard** | ~250MB | Most apps |
 | **Full** | ~700MB | Browser automation |

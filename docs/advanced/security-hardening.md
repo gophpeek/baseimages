@@ -693,7 +693,7 @@ docker-compose up -d
 ### Automated CVE Scanning with Trivy
 
 [Trivy](https://trivy.dev/) is a comprehensive security scanner that detects vulnerabilities in:
-- OS packages (Alpine, Debian)
+- OS packages (Debian)
 - Application dependencies (Composer, npm, etc.)
 - Container images and configuration issues
 - Misconfigurations and secrets
@@ -718,7 +718,7 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:lates
 **Scan your images:**
 
 ```bash
-# Scan PHPeek Alpine image
+# Scan PHPeek image
 trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Scan with severity filter (only HIGH and CRITICAL)
@@ -831,35 +831,36 @@ jobs:
 
     strategy:
       matrix:
-        os: [alpine, debian]
+        tier: [slim, standard, full]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build ${{ matrix.os }} image
+      - name: Build ${{ matrix.tier }} image
         run: |
-          docker build -t phpeek-test:${{ matrix.os }} \
-            -f php-fpm-nginx/8.3/${{ matrix.os }}/Dockerfile .
+          docker build -t phpeek-test:${{ matrix.tier }} \
+            --target ${{ matrix.tier }} \
+            -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
 
-      - name: Run Trivy scan - ${{ matrix.os }}
+      - name: Run Trivy scan - ${{ matrix.tier }}
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'phpeek-test:${{ matrix.os }}'
+          image-ref: 'phpeek-test:${{ matrix.tier }}'
           format: 'json'
-          output: 'trivy-${{ matrix.os }}.json'
+          output: 'trivy-${{ matrix.tier }}.json'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
 
       - name: Generate security summary
         run: |
-          echo "# Security Scan Results - ${{ matrix.os }}" >> $GITHUB_STEP_SUMMARY
+          echo "# Security Scan Results - ${{ matrix.tier }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Extract counts by severity
-          CRITICAL=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' trivy-${{ matrix.os }}.json)
-          HIGH=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="HIGH")] | length' trivy-${{ matrix.os }}.json)
-          MEDIUM=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="MEDIUM")] | length' trivy-${{ matrix.os }}.json)
-          LOW=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="LOW")] | length' trivy-${{ matrix.os }}.json)
+          CRITICAL=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="CRITICAL")] | length' trivy-${{ matrix.tier }}.json)
+          HIGH=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="HIGH")] | length' trivy-${{ matrix.tier }}.json)
+          MEDIUM=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="MEDIUM")] | length' trivy-${{ matrix.tier }}.json)
+          LOW=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity=="LOW")] | length' trivy-${{ matrix.tier }}.json)
 
           echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
@@ -1301,7 +1302,7 @@ groups:
 - [ ] Read-only root filesystem where possible
 - [ ] Drop unnecessary capabilities
 - [ ] Regular security scanning
-- [ ] Minimal base image (Alpine preferred)
+- [ ] Minimal base image (use slim tier when possible)
 - [ ] No secrets in image layers
 
 ### ✅ Network Security

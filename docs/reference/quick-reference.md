@@ -202,18 +202,19 @@ docker compose exec app php artisan test
 ## Available Images
 
 ```
-# Alpine (smallest, ~80MB)
+# Standard tier (DEFAULT)
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 
-# Debian (glibc, ~150MB)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
+# Slim tier (APIs, microservices)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
+
+# Full tier (Browsershot, Dusk)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 
 # Development (with Xdebug)
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-dev
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian-dev
 ```
 
 ---
@@ -238,10 +239,11 @@ Verify: `docker compose exec app php -m`
 ```dockerfile
 FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y --no-install-recommends $PHPIZE_DEPS \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 See [Extending Images](../advanced/extending-images.md) for more.

@@ -98,7 +98,7 @@ PHPeek follows a predictable deprecation schedule based on upstream EOL dates.
 | Component | Removal After EOL | Warning Period |
 |-----------|-------------------|----------------|
 | PHP       | 6 months          | 90 days        |
-| Alpine    | 3 months          | 90 days        |
+| Debian    | 3 months          | 90 days        |
 | Node.js   | 6 months          | 90 days        |
 
 ### Current EOL Dates

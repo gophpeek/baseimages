@@ -96,7 +96,7 @@ PHPeek Base Images use **Debian 12 (Bookworm)** for maximum compatibility and st
 | Queue worker | `php-cli:8.3-bookworm` |
 | Cron scheduler | `php-cli:8.3-bookworm` |
 | Artisan commands | `php-cli:8.3-bookworm` |
-| Kubernetes | `php-fpm:8.3-bookworm` + `nginx:alpine` |
+| Kubernetes | `php-fpm:8.3-bookworm` + `nginx:bookworm` |
 | Laravel Octane | `php-fpm-nginx:8.3-bookworm` |
 | Laravel Horizon | `php-cli:8.3-bookworm` |
 

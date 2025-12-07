@@ -112,7 +112,7 @@ PHPeek images already run as non-root, but verify:
 
 ```bash
 docker exec <container> whoami
-# Should output: www-data (Debian) or nginx (Alpine)
+# Should output: www-data
 ```
 
 ## Performance Optimization
