@@ -1,19 +1,13 @@
 name: Build and Push PHP-CLI Images
 
+# IMPORTANT: This workflow depends on php-base tier images being available.
+# Do NOT add push triggers for php-cli/** paths - this would cause race conditions
+# where php-cli tries to build before php-base images are pushed.
+# Instead, use repository_dispatch from php-base workflow or workflow_dispatch.
+
 on:
-  push:
-    branches: [main, develop]
-    paths:
-      - 'php-cli/**'
-      # NOTE: common/** and php-base/** changes trigger php-cli via repository_dispatch
-      # from build-php-base.yml, not via push trigger, to avoid race conditions
-      - '.github/workflows/build-php-cli.yml'
-    tags:
-      - 'cli-*'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'php-cli/**'
+  # NO push trigger - php-cli depends on php-base images being built first
+  # Use repository_dispatch from php-base workflow instead
   workflow_dispatch:
     inputs:
       php_version:

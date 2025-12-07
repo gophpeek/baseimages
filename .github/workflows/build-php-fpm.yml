@@ -1,19 +1,13 @@
 name: Build and Push PHP-FPM Images
 
+# IMPORTANT: This workflow depends on php-base tier images being available.
+# Do NOT add push triggers for php-fpm/** paths - this would cause race conditions
+# where php-fpm tries to build before php-base images are pushed.
+# Instead, use repository_dispatch from php-base workflow or workflow_dispatch.
+
 on:
-  push:
-    branches: [main, develop]
-    paths:
-      - 'php-fpm/**'
-      # NOTE: common/** and php-base/** changes trigger php-fpm via repository_dispatch
-      # from build-php-base.yml, not via push trigger, to avoid race conditions
-      - '.github/workflows/build-php-fpm.yml'
-    tags:
-      - 'fpm-*'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'php-fpm/**'
+  # NO push trigger - php-fpm depends on php-base images being built first
+  # Use repository_dispatch from php-base workflow instead
   workflow_dispatch:
     inputs:
       php_version:

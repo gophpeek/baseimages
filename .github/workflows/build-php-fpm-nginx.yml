@@ -1,18 +1,13 @@
 name: Build and Push PHP-FPM+Nginx Multi-Service Images
 
+# IMPORTANT: This workflow depends on php-fpm tier images being available.
+# Do NOT add push triggers for php-fpm-nginx/** paths - this would cause race conditions
+# where php-fpm-nginx tries to build before php-fpm images are pushed.
+# Instead, use repository_dispatch from php-fpm workflow or workflow_dispatch.
+
 on:
-  push:
-    branches: [main, develop]
-    paths:
-      - 'php-fpm-nginx/**'
-      # NOTE: common/** changes trigger php-fpm-nginx via repository_dispatch cascade:
-      # common/** → php-base → php-fpm → php-fpm-nginx (via repository_dispatch)
-      # php-fpm/** changes also trigger via repository_dispatch from build-php-fpm.yml
-      - '.github/workflows/build-php-fpm-nginx.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'php-fpm-nginx/**'
+  # NO push trigger - php-fpm-nginx depends on php-fpm images being built first
+  # Use repository_dispatch from php-fpm workflow instead
   workflow_dispatch:
     inputs:
       php_version:
