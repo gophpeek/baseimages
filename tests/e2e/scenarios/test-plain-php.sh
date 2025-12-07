@@ -66,10 +66,12 @@ assert_http_contains "$BASE_URL/" '"temp_dir_writable": true' "Temp directory is
 log_section "Container Health Tests"
 
 # Check PHP-FPM is responding on port 9000
-assert_exec_succeeds "$CONTAINER_NAME" "netstat -tlnp | grep ':9000'" "PHP-FPM listening on port 9000"
+# Use ss (iproute2) as primary, fall back to checking /proc/net/tcp for port 2328 (hex 9000)
+assert_exec_succeeds "$CONTAINER_NAME" "ss -tlnp 2>/dev/null | grep -q ':9000' || grep -q ':2328' /proc/net/tcp 2>/dev/null" "PHP-FPM listening on port 9000"
 
 # Check Nginx is responding on port 80
-assert_exec_succeeds "$CONTAINER_NAME" "netstat -tlnp | grep ':80'" "Nginx listening on port 80"
+# Use ss (iproute2) as primary, fall back to checking /proc/net/tcp for port 0050 (hex 80)
+assert_exec_succeeds "$CONTAINER_NAME" "ss -tlnp 2>/dev/null | grep -q ':80' || grep -q ':0050' /proc/net/tcp 2>/dev/null" "Nginx listening on port 80"
 
 # Verify OPcache is working via FPM (CLI has opcache.enable_cli=Off by default)
 assert_http_contains "$BASE_URL/" '"opcache": true' "OPcache is enabled (via FPM)"

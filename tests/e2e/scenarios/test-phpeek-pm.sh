@@ -187,13 +187,11 @@ log_section "PHPeek PM DAG Dependency Tests"
 
 # Verify nginx depends on php-fpm (DAG dependency)
 # This is tested by ensuring both are running and nginx can reach php-fpm
-PHP_FPM_PORT=$(docker exec "$CONTAINER_NAME" netstat -tlnp 2>/dev/null | grep ":9000" || echo "")
-if [[ -n "$PHP_FPM_PORT" ]]; then
+# Use ss (iproute2) as primary, fall back to /proc/net/tcp (port 9000 = hex 2328)
+if docker exec "$CONTAINER_NAME" sh -c "ss -tlnp 2>/dev/null | grep -q ':9000' || grep -q ':2328' /proc/net/tcp 2>/dev/null"; then
     log_success "PHP-FPM listening on port 9000"
 else
-    # Alternative check using ss
-    PHP_FPM_PORT=$(docker exec "$CONTAINER_NAME" ss -tlnp 2>/dev/null | grep ":9000" || echo "not found")
-    log_info "PHP-FPM port check: $PHP_FPM_PORT"
+    log_info "PHP-FPM port check: Could not verify port 9000 via ss or /proc/net/tcp"
 fi
 
 # Test FastCGI connection from nginx to php-fpm

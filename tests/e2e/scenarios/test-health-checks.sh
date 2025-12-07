@@ -42,10 +42,12 @@ wait_for_healthy "$CONTAINER_NAME" 60
 log_section "Internal Health Check Script Tests"
 
 # Test PHP-FPM is responding on its port (healthcheck.sh requires PHPeek PM in production)
-assert_exec_succeeds "$CONTAINER_NAME" "netstat -tlnp | grep ':9000'" "PHP-FPM listening on port 9000"
+# Use ss (iproute2) as primary, fall back to checking /proc/net/tcp for port 2328 (hex 9000)
+assert_exec_succeeds "$CONTAINER_NAME" "ss -tlnp 2>/dev/null | grep -q ':9000' || grep -q ':2328' /proc/net/tcp 2>/dev/null" "PHP-FPM listening on port 9000"
 
 # Test Nginx is responding on its port
-assert_exec_succeeds "$CONTAINER_NAME" "netstat -tlnp | grep ':80'" "Nginx listening on port 80"
+# Use ss (iproute2) as primary, fall back to checking /proc/net/tcp for port 0050 (hex 80)
+assert_exec_succeeds "$CONTAINER_NAME" "ss -tlnp 2>/dev/null | grep -q ':80' || grep -q ':0050' /proc/net/tcp 2>/dev/null" "Nginx listening on port 80"
 
 # Test that PHP-FPM and Nginx processes are running
 assert_process_running "$CONTAINER_NAME" "php-fpm" "PHP-FPM process running"

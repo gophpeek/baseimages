@@ -73,10 +73,12 @@ fi
 log_section "Rootless Port Configuration"
 
 # Verify Nginx listens on 8080 (unprivileged port)
-assert_exec_succeeds "$CONTAINER_NAME" "netstat -tlnp 2>/dev/null | grep ':8080' || ss -tlnp | grep ':8080'" "Nginx listening on port 8080 (unprivileged)"
+# Use ss (iproute2) as primary, fall back to /proc/net/tcp (port 8080 = hex 1F90)
+assert_exec_succeeds "$CONTAINER_NAME" "ss -tlnp 2>/dev/null | grep -q ':8080' || grep -q ':1F90' /proc/net/tcp 2>/dev/null" "Nginx listening on port 8080 (unprivileged)"
 
 # Verify NOT listening on port 80 (requires root)
-if docker exec "$CONTAINER_NAME" sh -c "netstat -tlnp 2>/dev/null | grep ':80[^0-9]' || ss -tlnp | grep ':80[^0-9]'" 2>/dev/null; then
+# Use ss (iproute2) as primary, fall back to /proc/net/tcp (port 80 = hex 0050)
+if docker exec "$CONTAINER_NAME" sh -c "ss -tlnp 2>/dev/null | grep -q ':80[^0-9]' || grep -q ':0050' /proc/net/tcp 2>/dev/null" 2>/dev/null; then
     log_fail "Should NOT be listening on privileged port 80"
 else
     log_success "Not listening on privileged port 80 (correct for rootless)"
