@@ -176,7 +176,7 @@ All PECL extensions use pinned versions for reproducibility:
 docker exec myapp php -m
 
 # One-liner
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -m
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm php -m
 ```
 
 ### Check Specific Extension
@@ -201,10 +201,10 @@ docker exec myapp php -i | grep -A 10 "redis"
 ### PECL Extensions
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Install PECL extension
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install swoole && \
     docker-php-ext-enable swoole && \
     apk del $PHPIZE_DEPS
@@ -213,7 +213,7 @@ RUN apk add --no-cache $PHPIZE_DEPS && \
 ### Core Extensions
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Enable a disabled core extension
 RUN docker-php-ext-install shmop
@@ -224,10 +224,10 @@ RUN docker-php-ext-install shmop
 Some extensions require system packages:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Example: Adding additional libraries
-RUN apk add --no-cache some-package-dev && \
+RUN apt-get update && apt-get install -y some-package-dev && \
     docker-php-ext-install some-extension
 ```
 

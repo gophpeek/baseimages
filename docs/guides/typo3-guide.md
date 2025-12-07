@@ -16,7 +16,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8082:80"
     volumes:
@@ -119,7 +119,7 @@ docker compose exec app vendor/bin/typo3 scheduler:run
 
 ## Development Tips
 
-- Switch to `php-fpm-nginx:8.3-alpine-dev` for Xdebug.
+- Switch to `php-fpm-nginx:8.3-bookworm-dev` for Xdebug.
 - Use `composer req typo3/cms-introduction --dev` to seed sample content.
 - Enable error display in `config/system/settings.php` for local environments.
 
@@ -128,7 +128,7 @@ docker compose exec app vendor/bin/typo3 scheduler:run
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       - APP_ENV=production
       - PHP_DISPLAY_ERRORS=Off

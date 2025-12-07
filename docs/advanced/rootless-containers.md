@@ -14,12 +14,12 @@ PHPeek Base Images provide **official rootless variants** for all images:
 
 | Image Type | Root (Default) | Rootless |
 |------------|----------------|----------|
-| php-base | `8.4-alpine` | `8.4-alpine-rootless` |
-| php-cli | `8.4-alpine` | `8.4-alpine-rootless` |
-| php-fpm | `8.4-alpine` | `8.4-alpine-rootless` |
-| php-fpm-nginx | `8.4-alpine` | `8.4-alpine-rootless` |
+| php-base | `8.4-bookworm` | `8.4-bookworm-rootless` |
+| php-cli | `8.4-bookworm` | `8.4-bookworm-rootless` |
+| php-fpm | `8.4-bookworm` | `8.4-bookworm-rootless` |
+| php-fpm-nginx | `8.4-bookworm` | `8.4-bookworm-rootless` |
 
-All OS variants (Alpine, Bookworm, Trixie) have corresponding rootless versions.
+All tiers (slim, standard, full) have corresponding rootless versions.
 
 ## Quick Start: Using Rootless Images
 
@@ -27,10 +27,10 @@ All OS variants (Alpine, Bookworm, Trixie) have corresponding rootless versions.
 
 ```bash
 # Pull rootless image
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 # Run with port mapping (rootless uses port 8080)
-docker run -d -p 80:8080 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+docker run -d -p 80:8080 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 ```
 
 ### Docker Compose
@@ -40,13 +40,13 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
     ports:
       - "80:8080"  # Map host 80 to container 8080
     volumes:
       - ./:/var/www/html
     # Optional: Explicitly set user (already set in image)
-    user: "82:82"  # www-data UID:GID on Alpine
+    user: "33:33"  # www-data UID:GID on Debian
 ```
 
 ### Kubernetes
@@ -67,7 +67,7 @@ spec:
 
   containers:
   - name: app
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
     ports:
     - containerPort: 8080
 
@@ -89,7 +89,7 @@ spec:
 
 ### Rootless Images
 
-- Container runs entirely as www-data (UID 82 on Alpine, 33 on Debian)
+- Container runs entirely as www-data (UID 33 on Debian)
 - No root privileges at any point
 - No PUID/PGID mapping (not needed)
 - Uses unprivileged port 8080
@@ -135,7 +135,7 @@ spec:
 Rootless images require correct file ownership at build time:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 # Copy application with correct ownership
 COPY --chown=www-data:www-data . /var/www/html
@@ -156,7 +156,7 @@ The `PUID` and `PGID` environment variables are ignored in rootless mode. The en
 Run Laravel optimizations during image build:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 COPY --chown=www-data:www-data . /var/www/html
 
@@ -176,7 +176,7 @@ For database migrations, use Kubernetes init containers:
 ```yaml
 initContainers:
 - name: laravel-migrate
-  image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+  image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
   command: ["/bin/sh", "-c"]
   args:
     - |
@@ -230,7 +230,7 @@ spec:
 
       containers:
       - name: app
-        image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+        image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -269,16 +269,16 @@ environment:
 
 ```bash
 # Check container user
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless id
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless id
 # Output: uid=82(www-data) gid=82(www-data)
 
 # Verify PHPEEK_ROOTLESS is set
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless \
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless \
   printenv PHPEEK_ROOTLESS
 # Output: true
 
 # Verify processes
-docker run -d --name test ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+docker run -d --name test ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 docker exec test ps aux
 # All processes should run as www-data, not root
 docker stop test && docker rm test
@@ -290,10 +290,10 @@ docker stop test && docker rm test
 # Scan for vulnerabilities
 docker run --rm \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  aquasec/trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+  aquasec/trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 # Check user configuration
-docker inspect ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless \
+docker inspect ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless \
   | jq '.[0].Config.User'
 # Should output: "www-data"
 ```
@@ -303,7 +303,7 @@ docker inspect ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless \
 ```bash
 # Verify Pod Security Standards compliance
 kubectl run test \
-  --image=ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless \
+  --image=ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless \
   --dry-run=server -o yaml
 ```
 
@@ -380,7 +380,7 @@ livenessProbe:
 To build your own rootless image from PHPeek base:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 # Copy application (ownership already correct as www-data runs the build)
 COPY --chown=www-data:www-data . /var/www/html

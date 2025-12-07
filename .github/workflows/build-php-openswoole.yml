@@ -19,7 +19,7 @@ on:
         required: false
         default: 'all'
       os_variant:
-        description: 'OS variant to build (alpine, debian, ubuntu, or all)'
+        description: 'OS variant to build (bookworm or all)'
         required: false
         default: 'all'
   repository_dispatch:
@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine', 'bookworm']
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -52,15 +52,7 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          # Map os_variant to Dockerfile path
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-openswoole/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-openswoole/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-openswoole/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

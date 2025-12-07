@@ -170,7 +170,7 @@ NGINX_HEADER_CSP="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       # Strict CSP for high-security applications
       - NGINX_HEADER_CSP=default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
@@ -343,7 +343,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     secrets:
       - app_key
       - db_password
@@ -431,7 +431,7 @@ spec:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       - VAULT_ADDR=https://vault.example.com
       - VAULT_TOKEN=${VAULT_TOKEN}
@@ -459,11 +459,11 @@ PHPeek images already run as non-root by default:
 ```bash
 # Verify non-root
 docker exec <container> whoami
-# Output: www-data (Debian) or nginx (Alpine)
+# Output: www-data
 
 # Check user ID
 docker exec <container> id
-# Output: uid=82(www-data) gid=82(www-data) (Alpine) or uid=33(www-data) gid=33(www-data) (Debian)
+# Output: uid=33(www-data) gid=33(www-data)
 ```
 
 ### Read-Only Root Filesystem
@@ -471,7 +471,7 @@ docker exec <container> id
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     read_only: true
     tmpfs:
       - /tmp
@@ -502,13 +502,13 @@ services:
 
 ```bash
 # Scan image for vulnerabilities
-trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Scan with severity filter
-trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Fail CI on vulnerabilities
-trivy image --exit-code 1 --severity CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --exit-code 1 --severity CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 **Integrate in CI/CD:**
@@ -532,7 +532,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine'
+          image-ref: 'ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm'
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
@@ -683,7 +683,7 @@ PHPeek images are automatically rebuilt weekly (Mondays 03:00 UTC) to include:
 
 ```bash
 # Pull latest image
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Rebuild and restart
 docker-compose build --pull
@@ -719,34 +719,36 @@ docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:lates
 
 ```bash
 # Scan PHPeek Alpine image
-trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Scan with severity filter (only HIGH and CRITICAL)
-trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Scan and exit with error if vulnerabilities found
-trivy image --exit-code 1 --severity CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --exit-code 1 --severity CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Scan your custom image
 docker build -t my-app:latest .
 trivy image --severity HIGH,CRITICAL my-app:latest
 
 # Generate JSON report
-trivy image --format json --output trivy-report.json ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --format json --output trivy-report.json ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Generate HTML report (requires template)
-trivy image --format template --template "@contrib/html.tpl" --output trivy-report.html ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+trivy image --format template --template "@contrib/html.tpl" --output trivy-report.html ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 ```
 
-**Compare OS variants:**
+**Scan different tiers:**
 
 ```bash
-# Alpine
-trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+# Standard tier
+trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
-# Debian
-trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
+# Slim tier
+trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 
+# Full tier
+trivy image --severity HIGH,CRITICAL ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 #### CI/CD Integration
@@ -904,7 +906,7 @@ security_scan:
     DOCKER_DRIVER: overlay2
     TRIVY_VERSION: latest
   before_script:
-    - apk add --no-cache curl
+    - apt-get update && apt-get install -y curl
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
   script:
     - docker build -t $CI_PROJECT_NAME:$CI_COMMIT_SHA .
@@ -973,7 +975,7 @@ Create `scripts/security-check.sh`:
 #!/bin/bash
 set -e
 
-IMAGE="${1:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine}"
+IMAGE="${1:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm}"
 
 echo "🔍 Running security scan on: $IMAGE"
 
@@ -1083,7 +1085,7 @@ jobs:
 
 ```bash
 # Example Trivy table output
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine (alpine 3.19.0)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm (debian 12 bookworm)
 ================================================================================
 Total: 5 (HIGH: 2, CRITICAL: 3)
 

@@ -36,41 +36,28 @@ What are you building?
 | `php-cli` | Workers, schedulers, commands | PHP CLI only |
 | `nginx` | Static files, reverse proxy | Nginx only |
 
-## OS Variant Selection
+## OS Base
 
-| Variant | Size | Use When |
-|---------|------|----------|
-| **Alpine** | ~50MB | Default choice, production, most cases |
-| **Debian** | ~120MB | Need glibc, specific libraries, debugging |
+PHPeek Base Images use **Debian 12 (Bookworm)** for maximum compatibility and stability.
 
-### Detailed Comparison
+| Feature | Debian 12 (Bookworm) |
+|---------|----------------------|
+| Base size | ~120MB |
+| C library | glibc |
+| Package manager | apt-get |
+| Security updates | Weekly |
+| Binary compatibility | Excellent |
+| Debug tools | Full |
+| Cron daemon | cron |
 
-| Feature | Alpine | Debian |
-|---------|--------|--------|
-| Base size | ~5MB | ~120MB |
-| C library | musl | glibc |
-| Package manager | apk | apt |
-| Security updates | Fast | Fast |
-| Binary compatibility | Limited | Excellent |
-| Debug tools | Minimal | Full |
-| Cron daemon | dcron | cron |
+### Why Debian 12?
 
-### When to Choose Each
-
-**Alpine** (recommended default):
-- ✅ Smallest image size
-- ✅ Fastest builds and pulls
-- ✅ Minimal attack surface
-- ✅ Most PHP applications work perfectly
-- ⚠️ Some native extensions may need recompilation
-- ⚠️ Limited binary compatibility (musl vs glibc)
-
-**Debian**:
-- ✅ Maximum binary compatibility
-- ✅ Pre-compiled PHP extensions available
+- ✅ Maximum binary compatibility with pre-compiled extensions
+- ✅ glibc support for all PHP extensions
 - ✅ Familiar apt package management
-- ✅ Better for debugging with full tools
-- ⚠️ Larger image size
+- ✅ Full debugging tools available
+- ✅ Stable, long-term support base
+- ✅ Weekly security updates
 
 ## PHP Version Selection
 
@@ -103,51 +90,47 @@ What are you building?
 
 | Use Case | Recommended Image |
 |----------|-------------------|
-| Laravel/Symfony web app | `php-fpm-nginx:8.3-alpine` |
-| WordPress | `php-fpm-nginx:8.3-alpine` |
-| REST API | `php-fpm-nginx:8.3-alpine` |
-| Queue worker | `php-cli:8.3-alpine` |
-| Cron scheduler | `php-cli:8.3-alpine` |
-| Artisan commands | `php-cli:8.3-alpine` |
-| Kubernetes | `php-fpm:8.3-alpine` + `nginx:alpine` |
-| Laravel Octane | `php-fpm-nginx:8.3-alpine` |
-| Laravel Horizon | `php-cli:8.3-alpine` |
+| Laravel/Symfony web app | `php-fpm-nginx:8.3-bookworm` |
+| WordPress | `php-fpm-nginx:8.3-bookworm` |
+| REST API | `php-fpm-nginx:8.3-bookworm` |
+| Queue worker | `php-cli:8.3-bookworm` |
+| Cron scheduler | `php-cli:8.3-bookworm` |
+| Artisan commands | `php-cli:8.3-bookworm` |
+| Kubernetes | `php-fpm:8.3-bookworm` + `nginx:alpine` |
+| Laravel Octane | `php-fpm-nginx:8.3-bookworm` |
+| Laravel Horizon | `php-cli:8.3-bookworm` |
 
 ### By Environment
 
-| Environment | Version | Variant |
-|-------------|---------|---------|
-| Development | Latest (8.4) | alpine or debian |
+| Environment | Version | Tier |
+|-------------|---------|------|
+| Development | Latest (8.4) | Standard |
 | Staging | Same as prod | Same as prod |
-| Production | Stable (8.3) | alpine |
+| Production | Stable (8.3) | Standard or Slim |
 | CI/CD | Same as prod | Same as prod |
 
 ### By Team Experience
 
 | Team Profile | Recommendation |
 |--------------|----------------|
-| DevOps experienced | Alpine (smallest, fastest) |
-| Traditional PHP dev | Debian (familiar apt) |
-| Mixed/new team | Debian (best docs, most compatible) |
+| All teams | Debian 12 (Bookworm) - single OS choice |
+| Tier selection | Standard for most apps, Slim for APIs |
+| Familiar tools | apt package management, glibc compatibility |
 
 ## Complete Image Reference
 
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-debian
+# Multi-service (PHP-FPM + Nginx)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm:8.3-debian
-
-ghcr.io/gophpeek/baseimages/php-cli:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-cli:8.3-debian
-
-ghcr.io/gophpeek/baseimages/nginx:alpine
-ghcr.io/gophpeek/baseimages/nginx:debian
+# Single-process images (legacy)
+ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
+ghcr.io/gophpeek/baseimages/php-cli:8.3-bookworm
+ghcr.io/gophpeek/baseimages/nginx:bookworm
 ```
 
 ## Migration Guide
@@ -156,20 +139,20 @@ ghcr.io/gophpeek/baseimages/nginx:debian
 
 ```yaml
 # Before (official)
-image: php:8.3-fpm-alpine
+image: php:8.3-fpm
 
 # After (PHPeek)
-image: phpeek/php-fpm-nginx:8.3-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 ```
 
 ### From ServersideUp
 
 ```yaml
 # Before (ServersideUp)
-image: serversideup/php:8.3-fpm-nginx-alpine
+image: serversideup/php:8.3-fpm-nginx
 
 # After (PHPeek) - nearly identical API
-image: phpeek/php-fpm-nginx:8.3-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 ```
 
 ### From Custom Dockerfiles
@@ -180,10 +163,10 @@ If you're building custom PHP images, you can likely:
 3. Benefit from weekly security updates
 
 ```dockerfile
-FROM phpeek/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-# Add custom extension
-RUN apk add --no-cache php83-custom-extension
+# Add custom extension (Debian uses apt-get)
+RUN apt-get update && apt-get install -y php8.3-custom-extension && rm -rf /var/lib/apt/lists/*
 
 # Add custom config
 COPY custom.ini /usr/local/etc/php/conf.d/
@@ -192,10 +175,10 @@ COPY custom.ini /usr/local/etc/php/conf.d/
 ## FAQ
 
 **Q: Which image for Laravel?**
-A: `php-fpm-nginx:8.3-alpine` for web, `php-cli:8.3-alpine` for workers
+A: `php-fpm-nginx:8.3-bookworm` for web, `php-cli:8.3-bookworm` for workers
 
-**Q: Alpine or Debian for production?**
-A: Alpine unless you have specific glibc requirements
+**Q: Which tier for production?**
+A: Standard for most apps, Slim for APIs, Full for PDF/browser automation
 
 **Q: Should I use latest PHP version?**
 A: Use 8.3 for production stability, 8.4 for new projects

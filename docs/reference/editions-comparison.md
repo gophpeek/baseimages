@@ -37,12 +37,12 @@ What do you need?
 {image-type}:{php-version}-{os}[-tier][-rootless]
 
 Examples:
-php-fpm-nginx:8.4-alpine              # Standard (default)
-php-fpm-nginx:8.4-alpine-slim         # Slim
-php-fpm-nginx:8.4-alpine-full         # Full
-php-fpm-nginx:8.4-alpine-rootless     # Standard + rootless
-php-fpm-nginx:8.4-alpine-slim-rootless  # Slim + rootless
-php-fpm-nginx:8.4-alpine-full-rootless  # Full + rootless
+php-fpm-nginx:8.4-bookworm              # Standard (default)
+php-fpm-nginx:8.4-bookworm-slim         # Slim
+php-fpm-nginx:8.4-bookworm-full         # Full
+php-fpm-nginx:8.4-bookworm-rootless     # Standard + rootless
+php-fpm-nginx:8.4-bookworm-slim-rootless  # Slim + rootless
+php-fpm-nginx:8.4-bookworm-full-rootless  # Full + rootless
 ```
 
 ## Extensions by Tier
@@ -162,12 +162,12 @@ PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ```yaml
 # From Slim to Standard
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # From Standard to Full
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 ### Downgrading to a Smaller Tier
@@ -180,8 +180,8 @@ PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ```yaml
 # From Standard to Slim (if no ImageMagick/Node needed)
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ## Rootless Variants
@@ -190,9 +190,9 @@ All tiers support rootless execution (runs as `www-data` user):
 
 | Tag | Description |
 |-----|-------------|
-| `8.4-alpine-rootless` | Standard + rootless |
-| `8.4-alpine-slim-rootless` | Slim + rootless |
-| `8.4-alpine-full-rootless` | Full + rootless |
+| `8.4-bookworm-rootless` | Standard + rootless |
+| `8.4-bookworm-slim-rootless` | Slim + rootless |
+| `8.4-bookworm-full-rootless` | Full + rootless |
 
 **When to use rootless:**
 - Kubernetes with security policies
@@ -222,7 +222,7 @@ environment:
 ```yaml
 services:
   api:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
     ports:
       - "8000:80"
     environment:
@@ -234,7 +234,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     ports:
       - "8000:80"
     environment:
@@ -246,7 +246,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
     ports:
       - "8000:80"
     environment:

@@ -57,7 +57,7 @@ All examples use environment variables to control processes - **NEVER override `
 # Correct - Use environment variables
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       LARAVEL_QUEUE: "true"       # Enables queue workers
       LARAVEL_SCHEDULER: "true"   # Enables scheduler
@@ -68,7 +68,7 @@ services:
 # WRONG - Don't override command
 services:
   worker:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     command: php artisan queue:work  # DON'T DO THIS!
 ```
 
@@ -81,7 +81,7 @@ For apps without `public/` folder (WordPress, plain PHP), set `WEBROOT`:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       WEBROOT: /var/www/html  # Serve from root, not public/
 ```
@@ -97,9 +97,9 @@ PHPeek PM supports all three Laravel Octane servers:
 
 | Server | Image | Environment Variable |
 |--------|-------|---------------------|
-| Swoole | `php-swoole:8.3-alpine` | `OCTANE_SERVER: swoole` |
-| RoadRunner | `php-fpm-nginx:8.3-alpine` | `OCTANE_SERVER: roadrunner` |
-| FrankenPHP | `php-frankenphp:8.3-alpine` | `OCTANE_SERVER: frankenphp` |
+| Swoole | `php-swoole:8.3-bookworm` | `OCTANE_SERVER: swoole` |
+| RoadRunner | `php-fpm-nginx:8.3-bookworm` | `OCTANE_SERVER: roadrunner` |
+| FrankenPHP | `php-frankenphp:8.3-bookworm` | `OCTANE_SERVER: frankenphp` |
 
 See [Octane documentation](../docs/guides/laravel-octane.md) for full configuration reference.
 
@@ -160,7 +160,7 @@ volumes:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       LARAVEL_QUEUE: "true"
       REDIS_HOST: redis
@@ -172,7 +172,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       LARAVEL_HORIZON: "true"     # Use instead of LARAVEL_QUEUE
       REDIS_HOST: redis
@@ -183,7 +183,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     environment:
       LARAVEL_SCHEDULER: "true"
 ```
@@ -193,7 +193,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-swoole:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-swoole:8.3-bookworm
     environment:
       LARAVEL_OCTANE: "true"
       OCTANE_SERVER: swoole
@@ -205,7 +205,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8080:80"
       - "8085:8085"
@@ -221,11 +221,11 @@ All examples use PHPeek images. Swap versions as needed:
 
 ```yaml
 # Use different PHP version
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
-# Use different OS variant
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-ubuntu
+# Use different tier
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 ## Need Help?

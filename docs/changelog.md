@@ -10,6 +10,39 @@ All notable changes to PHPeek base images.
 
 ## [Unreleased]
 
+### Breaking Changes
+- **OS Variant Simplification** - Only Debian 12 (Bookworm) is now supported
+  - Removed Alpine variant
+  - Removed Debian 13 (Trixie) variant
+  - Removed Ubuntu variant (FrankenPHP, Swoole, OpenSwoole)
+  - All images now based on Debian 12 (Bookworm) with glibc
+
+### Migration from Alpine/Trixie
+
+**Tag changes:**
+```yaml
+# OLD (Alpine)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+
+# NEW (Bookworm)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+```
+
+**Why this change?**
+- Simplified maintenance and testing
+- Better glibc compatibility for all extensions
+- Consistent behavior across all deployments
+- Focus on stability over variety
+
+**Custom extension installation:**
+```dockerfile
+# OLD (Alpine)
+RUN apk add --no-cache package-name
+
+# NEW (Bookworm)
+RUN apt-get update && apt-get install -y package-name && rm -rf /var/lib/apt/lists/*
+```
+
 ### Added
 - PHP 8.5-beta support (experimental)
 - Laravel Reverb WebSocket support (`LARAVEL_REVERB=true`)
@@ -41,21 +74,21 @@ All notable changes to PHPeek base images.
 **Tag format changes:**
 ```yaml
 # OLD (2024.11)
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine           # Full edition
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-minimal   # Minimal edition
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm           # Full edition
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-minimal   # Minimal edition
 
 # NEW (2024.12)
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine           # Standard tier (default)
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim      # Slim tier
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full      # Full tier (with Chromium)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm           # Standard tier (default)
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim      # Slim tier
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full      # Full tier (with Chromium)
 ```
 
 **Tier selection guide:**
 | Old Tag | New Tag | When to Use |
 |---------|---------|-------------|
-| `8.4-alpine` | `8.4-alpine` | Most apps (Standard is default) |
-| `8.4-alpine-minimal` | `8.4-alpine-slim` | APIs, microservices |
-| N/A | `8.4-alpine-full` | Browsershot, Dusk, PDF |
+| `8.4-bookworm` | `8.4-bookworm` | Most apps (Standard is default) |
+| `8.4-bookworm-minimal` | `8.4-bookworm-slim` | APIs, microservices |
+| N/A | `8.4-bookworm-full` | Browsershot, Dusk, PDF |
 
 ---
 
@@ -117,21 +150,21 @@ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full      # Full tie
 
 | If you used... | You need... |
 |----------------|-------------|
-| `8.4-alpine` (Full edition) | `8.4-alpine` (Standard tier) - same tag! |
-| `8.4-alpine-minimal` | `8.4-alpine-slim` |
-| Browsershot/Dusk | `8.4-alpine-full` |
+| `8.4-bookworm` (Full edition) | `8.4-bookworm` (Standard tier) - same tag! |
+| `8.4-bookworm-minimal` | `8.4-bookworm-slim` |
+| Browsershot/Dusk | `8.4-bookworm-full` |
 
 **Step 2: Update your docker-compose.yml**
 
 ```yaml
 # Most apps - no change needed!
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # For Browsershot/Dusk users - use Full tier
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 
 # For API/microservices - use Slim tier
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ### From bash-based entrypoint to PHPeek PM

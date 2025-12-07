@@ -9,7 +9,7 @@ Comprehensive integration tests for PHPeek's automatic framework detection syste
 - ✅ WordPress detection (wp-config.php presence)
 - ✅ Generic PHP detection (no framework markers)
 - ✅ Detection priority (framework-specific wins over generic)
-- ✅ Cross-OS testing (Alpine, Debian, Ubuntu)
+- ✅ Cross-tier testing (slim, standard, full)
 
 ## Test Suites
 
@@ -34,10 +34,10 @@ Tests framework detection within actual Docker containers across OS variants.
 ```
 
 **What it tests:**
-- Laravel detection in Alpine container
-- Symfony detection in Debian container
-- WordPress detection in Ubuntu container
-- Generic PHP detection in Alpine container
+- Laravel detection in Bookworm container
+- Symfony detection in Bookworm container
+- WordPress detection in Bookworm container
+- Generic PHP detection in Bookworm container
 - Real entrypoint execution and behavior
 
 ## Running Tests
@@ -154,7 +154,7 @@ Edit `docker-test.sh` and add a new container test:
 
 ```bash
 test_newframework_container() {
-    info "Testing new framework detection in Alpine container..."
+    info "Testing new framework detection in Bookworm container..."
 
     # Create test structure
     mkdir -p tests/integration/framework-detection/fixtures/newframework
@@ -164,7 +164,7 @@ test_newframework_container() {
     docker run --rm \
         -v "$(pwd)/tests/integration/framework-detection/fixtures/newframework:/var/www/html" \
         --entrypoint /bin/sh \
-        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine \
+        ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm \
         -c "source /usr/local/bin/docker-entrypoint.sh && detect_framework" > /tmp/newframework-test.log 2>&1
 
     RESULT=$(cat /tmp/newframework-test.log | grep -o "newframework" || echo "error")
@@ -174,9 +174,9 @@ test_newframework_container() {
     rm -f /tmp/newframework-test.log
 
     if [ "$RESULT" = "newframework" ]; then
-        pass "New framework detected in Alpine container"
+        pass "New framework detected in Bookworm container"
     else
-        fail "New framework detection in Alpine container" "Got: $RESULT"
+        fail "New framework detection in Bookworm container" "Got: $RESULT"
     fi
 }
 ```
@@ -198,9 +198,7 @@ If Docker tests fail:
 
 3. **Pull latest images:**
    ```bash
-   docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-   docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
-   docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-ubuntu
+   docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
    ```
 
 ### Unit Tests Failing

@@ -113,7 +113,7 @@ Include this information:
 
 ```bash
 # PHPeek version
-docker inspect ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine | grep Created
+docker inspect ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm | grep Created
 
 # Docker version
 docker version

@@ -21,7 +21,7 @@ on:
         required: false
         default: 'all'
       os_variant:
-        description: 'OS variant to build (alpine, debian, ubuntu, or all)'
+        description: 'OS variant to build (bookworm or all)'
         required: false
         default: 'all'
   repository_dispatch:
@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Slim tier only available for Alpine
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -67,20 +67,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch
@@ -149,7 +137,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Slim tier only available for Alpine
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -169,20 +157,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch
@@ -249,7 +225,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine', 'bookworm', 'trixie']
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -275,20 +251,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch
@@ -364,7 +328,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine', 'bookworm', 'trixie']
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -390,20 +354,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch
@@ -481,7 +433,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Full tier only available for Alpine
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -501,20 +453,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch
@@ -586,7 +526,7 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ['8.2', '8.3', '8.4']
-        os_variant: ['alpine']  # Full tier only available for Alpine
+        os_variant: ['bookworm']
 
     permissions:
       contents: read
@@ -606,20 +546,8 @@ jobs:
       - name: Determine Dockerfile path
         id: dockerfile
         run: |
-          case "${{ matrix.os_variant }}" in
-            alpine)
-              echo "path=./php-cli/${{ matrix.php_version }}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=alpine" >> $GITHUB_OUTPUT
-              ;;
-            bookworm)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=bookworm" >> $GITHUB_OUTPUT
-              ;;
-            trixie)
-              echo "path=./php-cli/${{ matrix.php_version }}/debian/trixie/Dockerfile" >> $GITHUB_OUTPUT
-              echo "base_os=trixie" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "path=./php-cli/${{ matrix.php_version }}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "base_os=bookworm" >> $GITHUB_OUTPUT
 
       - name: Get PHP patch version
         id: php_patch

@@ -79,16 +79,16 @@ PHPeek images come in three tiers:
 
 ```yaml
 # Standard tier (DEFAULT) - Most Laravel/PHP apps
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Slim tier - APIs, microservices
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 
 # Full tier - Browsershot, Dusk, PDF generation
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 
 # Rootless variants (add -rootless suffix)
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 ```
 
 ## How to Use This Section
@@ -110,7 +110,7 @@ Most reference pages include copy-paste ready examples:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       # Reference: docs/reference/environment-variables.md
       PHP_MEMORY_LIMIT: "512M"

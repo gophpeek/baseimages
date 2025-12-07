@@ -25,7 +25,7 @@ Docker automatically selects the correct architecture:
 
 ```bash
 # Works on both AMD64 and ARM64
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Build Multi-Platform Images
@@ -55,7 +55,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     platform: linux/arm64  # Native ARM64
     ports:
       - "8000:80"
@@ -80,7 +80,7 @@ For cost-effective AWS deployments on Graviton instances:
   "containerDefinitions": [
     {
       "name": "app",
-      "image": "ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine",
+      "image": "ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm",
       "portMappings": [
         { "containerPort": 80, "protocol": "tcp" }
       ]
@@ -198,9 +198,9 @@ All PHPeek extensions are available on both architectures:
 
 | Image | AMD64 | ARM64 | Difference |
 |-------|-------|-------|------------|
-| php-fpm-nginx:8.4-alpine | ~70MB | ~68MB | ARM64 slightly smaller |
+| php-fpm-nginx:8.4-bookworm | ~70MB | ~68MB | ARM64 slightly smaller |
 | php-fpm-nginx:8.4-debian | ~150MB | ~145MB | ARM64 slightly smaller |
-| php-fpm-nginx:8.4-alpine-dev | ~180MB | ~175MB | ARM64 slightly smaller |
+| php-fpm-nginx:8.4-bookworm-dev | ~180MB | ~175MB | ARM64 slightly smaller |
 
 ## Troubleshooting
 
@@ -210,7 +210,7 @@ If you see slow performance on Apple Silicon:
 
 ```bash
 # Check if running under emulation
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine uname -m
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm uname -m
 # Should output: aarch64 (not x86_64)
 ```
 
@@ -218,7 +218,7 @@ docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine uname -m
 
 ```bash
 # Force ARM64 architecture
-docker pull --platform linux/arm64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull --platform linux/arm64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Build Failures on ARM64
@@ -227,10 +227,10 @@ Some PECL extensions may need source compilation on ARM64:
 
 ```dockerfile
 # Example: Building custom extension for ARM64
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Ensure build tools are available
-RUN apk add --no-cache $PHPIZE_DEPS
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS
 
 # Install extension from source
 RUN pecl install some-extension && \
@@ -272,7 +272,7 @@ For reproducibility in production:
 # docker-compose.prod.yml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     platform: linux/amd64  # Pin to specific architecture
 ```
 
@@ -331,7 +331,7 @@ spec:
                       - arm64
       containers:
         - name: app
-          image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+          image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Architecture-Specific Scheduling

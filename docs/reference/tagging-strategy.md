@@ -29,9 +29,9 @@ PHPeek Base Images follow a clear, predictable tagging strategy with three image
 Most applications should use standard tier:
 
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 ```
 
 ### Slim Tier
@@ -39,9 +39,9 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
 For APIs and microservices with minimal footprint:
 
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-slim
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm-slim
 ```
 
 ### Full Tier
@@ -49,9 +49,9 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-slim
 For Browsershot, Dusk, Puppeteer, and PDF generation:
 
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-full
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm-full
 ```
 
 ### Rootless Variants
@@ -60,34 +60,34 @@ All tiers support rootless execution (runs as `www-data` user):
 
 ```
 # Standard + rootless
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 
 # Slim + rootless
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim-rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim-rootless
 
 # Full + rootless
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full-rootless
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full-rootless
 ```
 
 ## Version Matrix
 
-| PHP Version | Alpine (Slim) | Alpine (Standard) | Alpine (Full) |
-|-------------|---------------|-------------------|---------------|
-| 8.4         | ✅            | ✅                | ✅            |
-| 8.3         | ✅            | ✅                | ✅            |
-| 8.2         | ✅            | ✅                | ✅            |
+| PHP Version | Debian 12 (Slim) | Debian 12 (Standard) | Debian 12 (Full) |
+|-------------|------------------|----------------------|------------------|
+| 8.4         | ✅               | ✅                   | ✅               |
+| 8.3         | ✅               | ✅                   | ✅               |
+| 8.2         | ✅               | ✅                   | ✅               |
 
 All variants also available with `-rootless` suffix.
 
 ## Alias Tags
 
 **Latest stable**:
-- `latest` → `8.4-alpine`
-- `8.4` → `8.4-alpine`
+- `latest` → `8.4-bookworm`
+- `8.4` → `8.4-bookworm`
 
 **Tier aliases**:
-- `slim` → `8.4-alpine-slim`
-- `full` → `8.4-alpine-full`
+- `slim` → `8.4-bookworm-slim`
+- `full` → `8.4-bookworm-full`
 
 ## Deprecation Policy
 
@@ -151,28 +151,28 @@ When a version is deprecated, migration guides are published at:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### API/Microservice (Slim Tier)
 ```yaml
 services:
   api:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ### PDF Generation (Full Tier)
 ```yaml
 services:
   pdf:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 ### Kubernetes (Rootless)
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
 ```
 
 ## See Also

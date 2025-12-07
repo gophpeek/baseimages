@@ -15,7 +15,7 @@ Enable PHPeek PM with a single environment variable:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
     ports:
@@ -39,7 +39,7 @@ PHPeek base images support two process management modes:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
     ports:
@@ -189,7 +189,7 @@ Processes start with environment-specific settings
 ```yaml
 services:
   app:
-    image: phpeek/php-fpm-nginx:8.3-alpine
+    image: phpeek/php-fpm-nginx:8.3-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
 ```
@@ -199,7 +199,7 @@ services:
 ```yaml
 services:
   app:
-    image: phpeek/php-fpm-nginx:8.3-alpine
+    image: phpeek/php-fpm-nginx:8.3-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
       LARAVEL_OPTIMIZE_CONFIG: "true"
@@ -215,7 +215,7 @@ A complete example configuration for Laravel with PHPeek PM:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
 
@@ -537,7 +537,7 @@ Mount a custom `phpeek-pm.yaml`:
 ```yaml
 services:
   app:
-    image: phpeek/php-fpm-nginx:8.3-alpine
+    image: phpeek/php-fpm-nginx:8.3-bookworm
     environment:
       PHPEEK_PROCESS_MANAGER: phpeek-pm
       PHPEEK_PM_CONFIG: /app/config/phpeek-pm.yaml

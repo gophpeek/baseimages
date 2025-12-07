@@ -12,7 +12,6 @@
 # ARG declarations (customize these)
 # =============================================================================
 ARG PHP_VERSION=8.4
-ARG OS_VARIANT=alpine
 ARG NODE_VERSION=20
 
 # =============================================================================
@@ -63,7 +62,7 @@ RUN composer dump-autoload --optimize --classmap-authoritative
 # =============================================================================
 # Stage 3: Production Runtime
 # =============================================================================
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:${PHP_VERSION}-${OS_VARIANT} AS production
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:${PHP_VERSION}-bookworm AS production
 
 LABEL maintainer="PHPeek <hello@phpeek.com>"
 LABEL description="Production-optimized PHP application"
@@ -116,7 +115,7 @@ EXPOSE 80
 # =============================================================================
 # Stage 4: Development (optional, for local development)
 # =============================================================================
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:${PHP_VERSION}-${OS_VARIANT}-dev AS development
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:${PHP_VERSION}-bookworm-dev AS development
 
 WORKDIR /var/www/html
 
@@ -140,9 +139,6 @@ EXPOSE 80 5173 9003
 #
 # Build with specific PHP version:
 #   docker build --build-arg PHP_VERSION=8.3 --target production -t myapp:prod .
-#
-# Build with Debian instead of Alpine:
-#   docker build --build-arg OS_VARIANT=debian --target production -t myapp:prod .
 #
 # Multi-platform build (AMD64 + ARM64):
 #   docker buildx build --platform linux/amd64,linux/arm64 \

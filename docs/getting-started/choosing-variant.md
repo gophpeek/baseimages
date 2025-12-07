@@ -27,18 +27,18 @@ What do you need?
 
 | Use Case | Recommended Tag |
 |----------|-----------------|
-| Most Laravel/PHP apps | `8.4-alpine` (Standard) |
-| REST/GraphQL APIs | `8.4-alpine-slim` |
-| Browsershot/PDF | `8.4-alpine-full` |
-| Laravel Dusk tests | `8.4-alpine-full` |
-| Kubernetes (security) | `8.4-alpine-rootless` |
+| Most Laravel/PHP apps | `8.4-bookworm` (Standard) |
+| REST/GraphQL APIs | `8.4-bookworm-slim` |
+| Browsershot/PDF | `8.4-bookworm-full` |
+| Laravel Dusk tests | `8.4-bookworm-full` |
+| Kubernetes (security) | `8.4-bookworm-rootless` |
 
 ## Image Tiers
 
 ### Standard Tier (Default)
 
 ```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 **Size**: ~250MB
@@ -62,7 +62,7 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       LARAVEL_SCHEDULER: "true"
 ```
@@ -70,7 +70,7 @@ services:
 ### Slim Tier
 
 ```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 **Size**: ~120MB (smallest)
@@ -92,7 +92,7 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
 ```yaml
 services:
   api:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
     environment:
       PHP_MEMORY_LIMIT: "256M"
 ```
@@ -100,7 +100,7 @@ services:
 ### Full Tier
 
 ```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 **Size**: ~700MB
@@ -128,7 +128,7 @@ PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
     environment:
       PHP_MEMORY_LIMIT: "1G"  # Chromium needs more memory
 ```
@@ -139,9 +139,9 @@ All tiers support rootless execution (runs as `www-data` user):
 
 | Tag | Tier | Description |
 |-----|------|-------------|
-| `8.4-alpine-rootless` | Standard | Default + rootless |
-| `8.4-alpine-slim-rootless` | Slim | Slim + rootless |
-| `8.4-alpine-full-rootless` | Full | Full + rootless |
+| `8.4-bookworm-rootless` | Standard | Default + rootless |
+| `8.4-bookworm-slim-rootless` | Slim | Slim + rootless |
+| `8.4-bookworm-full-rootless` | Full | Full + rootless |
 
 **When to use rootless**:
 - Kubernetes with security policies
@@ -154,15 +154,15 @@ All tiers support rootless execution (runs as `www-data` user):
 # Kubernetes deployment
 spec:
   containers:
-    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
       securityContext:
         runAsNonRoot: true
 ```
 
 ## Size Comparison
 
-| Tier | Alpine |
-|------|--------|
+| Tier | Debian 12 (Bookworm) |
+|------|----------------------|
 | Slim | ~120MB |
 | Standard | ~250MB |
 | Full | ~700MB |
@@ -217,12 +217,12 @@ Need Browsershot, Dusk, or PDF generation?
 # Development (standard tier is fine)
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Production (same, standard handles most needs)
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Scenario 2: Laravel with Browsershot
@@ -231,7 +231,7 @@ services:
 # Full tier required for Chromium
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
     environment:
       PHP_MEMORY_LIMIT: "1G"
 ```
@@ -242,7 +242,7 @@ services:
 # Slim tier for minimal footprint
 services:
   api:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ### Scenario 4: Kubernetes Production
@@ -251,7 +251,7 @@ services:
 # Rootless for security compliance
 spec:
   containers:
-    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-rootless
+    - image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
       securityContext:
         runAsNonRoot: true
         readOnlyRootFilesystem: true
@@ -263,7 +263,7 @@ spec:
 # Full tier for Chromium
 services:
   dusk:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
     environment:
       DUSK_DRIVER_URL: ""  # Use local Chromium
 ```
@@ -274,12 +274,12 @@ services:
 
 ```yaml
 # From Slim to Standard
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # From Standard to Full
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 ### Downgrading to a Smaller Tier
@@ -292,21 +292,21 @@ services:
 
 ```yaml
 # From Standard to Slim (if no ImageMagick/Node needed)
-- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-+ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+- image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
++ image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 ```
 
 ## Recommendations Summary
 
 | Situation | Recommendation |
 |-----------|----------------|
-| Starting new Laravel/PHP project | `8.4-alpine` (Standard) |
-| Building REST/GraphQL API | `8.4-alpine-slim` |
-| Need PDF generation | `8.4-alpine-full` |
-| Running Laravel Dusk | `8.4-alpine-full` |
-| Kubernetes production | `8.4-alpine-rootless` |
-| Maximum security | `8.4-alpine-slim-rootless` |
-| CI/CD pipelines | `8.4-alpine-slim` (fast) |
+| Starting new Laravel/PHP project | `8.4-bookworm` (Standard) |
+| Building REST/GraphQL API | `8.4-bookworm-slim` |
+| Need PDF generation | `8.4-bookworm-full` |
+| Running Laravel Dusk | `8.4-bookworm-full` |
+| Kubernetes production | `8.4-bookworm-rootless` |
+| Maximum security | `8.4-bookworm-slim-rootless` |
+| CI/CD pipelines | `8.4-bookworm-slim` (fast) |
 
 ## Next Steps
 

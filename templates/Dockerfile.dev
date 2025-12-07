@@ -1,17 +1,19 @@
 # PHPeek Development Template
 # Includes Xdebug, SPX profiler, Node.js, and development tools
 
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Install development tools
-RUN apk add --no-cache \
-    $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    autoconf \
     nodejs \
     npm \
     git \
     vim \
     nano \
-    bash-completion
+    bash-completion \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Xdebug
 RUN pecl install xdebug-3.4.0 && \

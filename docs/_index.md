@@ -28,13 +28,13 @@ PHPeek images come in three tiers:
 
 ```yaml
 # Standard tier (DEFAULT) - Most Laravel/PHP apps
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Slim tier - APIs, microservices
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 
 # Full tier - Browsershot, Dusk, PDF generation
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 ```
 
 ## 📚 Documentation Structure

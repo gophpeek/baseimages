@@ -20,8 +20,8 @@ ghcr.io/gophpeek/baseimages/{image-type}:{tag}
 
 All images come in three tiers to match your needs:
 
-| Tier | Tag Suffix | Size (Alpine) | Best For |
-|------|------------|---------------|----------|
+| Tier | Tag Suffix | Size (Debian 12) | Best For |
+|------|------------|------------------|----------|
 | **Slim** | `-slim` | ~120MB | APIs, microservices |
 | **Standard** | (none) | ~250MB | Most apps (DEFAULT) |
 | **Full** | `-full` | ~700MB | Browsershot, Dusk, PDF |
@@ -34,9 +34,9 @@ Single container with both PHP-FPM and Nginx - perfect for simple deployments.
 
 | Image Tag | PHP | OS | Size | Architecture |
 |-----------|-----|----|----- |--------------|
-| `php-fpm-nginx:8.4-alpine` | 8.4 | Alpine | ~250MB | amd64, arm64 |
-| `php-fpm-nginx:8.3-alpine` | 8.3 | Alpine | ~250MB | amd64, arm64 |
-| `php-fpm-nginx:8.2-alpine` | 8.2 | Alpine | ~250MB | amd64, arm64 |
+| `php-fpm-nginx:8.4-bookworm` | 8.4 | Debian 12 | ~250MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-bookworm` | 8.3 | Debian 12 | ~250MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-bookworm` | 8.2 | Debian 12 | ~250MB | amd64, arm64 |
 
 ### Slim Tier
 
@@ -44,9 +44,9 @@ Optimized for APIs and microservices with minimal footprint:
 
 | Image Tag | PHP | OS | Size | Architecture |
 |-----------|-----|----|----- |--------------|
-| `php-fpm-nginx:8.4-alpine-slim` | 8.4 | Alpine | ~120MB | amd64, arm64 |
-| `php-fpm-nginx:8.3-alpine-slim` | 8.3 | Alpine | ~120MB | amd64, arm64 |
-| `php-fpm-nginx:8.2-alpine-slim` | 8.2 | Alpine | ~120MB | amd64, arm64 |
+| `php-fpm-nginx:8.4-bookworm-slim` | 8.4 | Debian 12 | ~120MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-bookworm-slim` | 8.3 | Debian 12 | ~120MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-bookworm-slim` | 8.2 | Debian 12 | ~120MB | amd64, arm64 |
 
 ### Full Tier
 
@@ -54,9 +54,9 @@ Includes Chromium for Browsershot, Dusk, and PDF generation:
 
 | Image Tag | PHP | OS | Size | Architecture |
 |-----------|-----|----|----- |--------------|
-| `php-fpm-nginx:8.4-alpine-full` | 8.4 | Alpine | ~700MB | amd64, arm64 |
-| `php-fpm-nginx:8.3-alpine-full` | 8.3 | Alpine | ~700MB | amd64, arm64 |
-| `php-fpm-nginx:8.2-alpine-full` | 8.2 | Alpine | ~700MB | amd64, arm64 |
+| `php-fpm-nginx:8.4-bookworm-full` | 8.4 | Debian 12 | ~700MB | amd64, arm64 |
+| `php-fpm-nginx:8.3-bookworm-full` | 8.3 | Debian 12 | ~700MB | amd64, arm64 |
+| `php-fpm-nginx:8.2-bookworm-full` | 8.2 | Debian 12 | ~700MB | amd64, arm64 |
 
 ### Rootless Variants
 
@@ -64,9 +64,9 @@ All tiers support rootless execution (runs as `www-data` user):
 
 | Image Tag | Tier | Description |
 |-----------|------|-------------|
-| `php-fpm-nginx:8.4-alpine-rootless` | Standard | Default + rootless |
-| `php-fpm-nginx:8.4-alpine-slim-rootless` | Slim | Slim + rootless |
-| `php-fpm-nginx:8.4-alpine-full-rootless` | Full | Full + rootless |
+| `php-fpm-nginx:8.4-bookworm-rootless` | Standard | Default + rootless |
+| `php-fpm-nginx:8.4-bookworm-slim-rootless` | Slim | Slim + rootless |
+| `php-fpm-nginx:8.4-bookworm-full-rootless` | Full | Full + rootless |
 
 ## Tag Format
 
@@ -74,12 +74,12 @@ All tiers support rootless execution (runs as `www-data` user):
 {type}:{php_version}-{os}[-tier][-rootless]
 
 Examples:
-php-fpm-nginx:8.4-alpine              # Standard tier (default)
-php-fpm-nginx:8.4-alpine-slim         # Slim tier
-php-fpm-nginx:8.4-alpine-full         # Full tier
-php-fpm-nginx:8.4-alpine-rootless     # Standard + rootless
-php-fpm-nginx:8.4-alpine-slim-rootless  # Slim + rootless
-php-fpm-nginx:8.4-alpine-full-rootless  # Full + rootless
+php-fpm-nginx:8.4-bookworm              # Standard tier (default)
+php-fpm-nginx:8.4-bookworm-slim         # Slim tier
+php-fpm-nginx:8.4-bookworm-full         # Full tier
+php-fpm-nginx:8.4-bookworm-rootless     # Standard + rootless
+php-fpm-nginx:8.4-bookworm-slim-rootless  # Slim + rootless
+php-fpm-nginx:8.4-bookworm-full-rootless  # Full + rootless
 ```
 
 ## Rolling Tags (Recommended)
@@ -88,7 +88,7 @@ Rolling tags receive weekly security updates:
 
 ```yaml
 # Automatically gets security patches every Monday
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ## Immutable SHA Tags
@@ -97,7 +97,7 @@ For reproducible builds, use SHA-pinned tags:
 
 ```yaml
 # Locked to specific build
-image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine@sha256:abc123...
+image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm@sha256:abc123...
 ```
 
 ## Architecture Support
@@ -113,25 +113,27 @@ Docker automatically pulls the correct architecture:
 
 ```bash
 # Works on both AMD64 and ARM64
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
-## OS Variant Comparison
+## OS Information
 
-| Feature | Alpine |
-|---------|--------|
-| **Base Size** | ~5MB |
-| **Package Manager** | apk |
-| **libc** | musl |
+PHPeek Base Images use Debian 12 (Bookworm) as the base operating system.
+
+| Feature | Debian 12 (Bookworm) |
+|---------|----------------------|
+| **Base Size** | ~120MB |
+| **Package Manager** | apt-get |
+| **libc** | glibc |
 | **Security Updates** | Weekly |
-| **Compatibility** | Good |
-| **Best For** | Production, size |
+| **Compatibility** | Excellent |
+| **Best For** | Production, compatibility |
 
 ## Tier Comparison
 
 | Feature | Slim | Standard | Full |
 |---------|------|----------|------|
-| **Size (Alpine)** | ~120MB | ~250MB | ~700MB |
+| **Size (Debian 12)** | ~120MB | ~250MB | ~700MB |
 | **Core Extensions** | ✅ 25+ | ✅ 25+ | ✅ 25+ |
 | **ImageMagick** | ❌ | ✅ | ✅ |
 | **vips** | ❌ | ✅ | ✅ |
@@ -155,17 +157,17 @@ docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
 
 ```bash
 # Pull standard tier (most Laravel/PHP apps)
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Pull slim tier (APIs, microservices)
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
 
 # Pull full tier (Browsershot, Dusk)
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 
 # Run with volume mount
 docker run -p 8000:80 -v $(pwd):/var/www/html \
-  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Docker Compose
@@ -174,7 +176,7 @@ docker run -p 8000:80 -v $(pwd):/var/www/html \
 services:
   # Standard tier - most Laravel apps
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -182,13 +184,13 @@ services:
 
   # Slim tier - API service
   api:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-slim
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
     ports:
       - "8001:80"
 
   # Full tier - PDF generation service
   pdf:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
     environment:
       PHP_MEMORY_LIMIT: "1G"
 ```
@@ -197,7 +199,7 @@ services:
 
 ```dockerfile
 # Standard tier for most apps
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 COPY --chown=www-data:www-data . /var/www/html
 
@@ -206,7 +208,7 @@ RUN composer install --no-dev --optimize-autoloader
 
 ```dockerfile
 # Full tier for Browsershot
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-full
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
 
 COPY --chown=www-data:www-data . /var/www/html
 
@@ -226,7 +228,7 @@ All images are automatically rebuilt every Monday at 03:00 UTC:
 
 ```bash
 # Pull latest security patches
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 docker-compose up -d --pull always
 ```
 

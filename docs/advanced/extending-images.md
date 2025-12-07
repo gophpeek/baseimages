@@ -47,10 +47,10 @@ Create `Dockerfile` in your project root:
 
 ```dockerfile
 # Start from PHPeek base image
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install MongoDB PHP extension
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install mongodb-1.20.1 && \
     docker-php-ext-enable mongodb && \
     apk del $PHPIZE_DEPS
@@ -97,10 +97,10 @@ mongodb
 Need video processing capabilities?
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install FFmpeg for video/audio processing
-RUN apk add --no-cache ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 
 # Verify installation
 RUN ffmpeg -version
@@ -119,10 +119,10 @@ docker-compose exec app ffmpeg -version
 Need to run `npm` or build frontend assets?
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install Node.js and npm
-RUN apk add --no-cache nodejs npm
+RUN apt-get update && apt-get install -y nodejs npm
 
 # Verify installation
 RUN node --version && npm --version
@@ -140,10 +140,10 @@ docker-compose exec app npm run build
 ### Example 4: Adding Multiple Extensions
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install build dependencies (needed for compiling extensions)
-RUN apk add --no-cache $PHPIZE_DEPS
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS
 
 # Install multiple PECL extensions
 RUN pecl install mongodb-1.20.1 && \
@@ -197,7 +197,7 @@ Mount it in `docker-compose.yml`:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     volumes:
       - ./:/var/www/html
       # Mount custom PHP configuration
@@ -297,16 +297,16 @@ For complex builds with different development and production configurations:
 # ======================
 # Base Stage - Common to all environments
 # ======================
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine AS base
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm AS base
 
 # Install common extensions
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install redis-6.1.0 mongodb-1.20.1 && \
     docker-php-ext-enable redis mongodb && \
     apk del $PHPIZE_DEPS
 
 # Install Node.js for asset compilation
-RUN apk add --no-cache nodejs npm
+RUN apt-get update && apt-get install -y nodejs npm
 
 # ======================
 # Development Stage
@@ -314,7 +314,7 @@ RUN apk add --no-cache nodejs npm
 FROM base AS development
 
 # Install Xdebug for debugging
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install xdebug-3.3.2 && \
     docker-php-ext-enable xdebug && \
     apk del $PHPIZE_DEPS
@@ -323,7 +323,7 @@ RUN apk add --no-cache $PHPIZE_DEPS && \
 COPY docker/dev-php.ini /usr/local/etc/php/conf.d/99-dev.ini
 
 # Install development tools
-RUN apk add --no-cache git vim
+RUN apt-get update && apt-get install -y git vim
 
 # ======================
 # Production Stage
@@ -387,9 +387,9 @@ docker-compose exec app php -m
 ### MongoDB Extension
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install mongodb-1.20.1 && \
     docker-php-ext-enable mongodb && \
     apk del $PHPIZE_DEPS
@@ -404,9 +404,9 @@ $collection = $client->mydb->mycollection;
 ### Swoole Extension (High-Performance PHP)
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install swoole-5.1.5 && \
     docker-php-ext-enable swoole && \
     apk del $PHPIZE_DEPS
@@ -415,9 +415,9 @@ RUN apk add --no-cache $PHPIZE_DEPS && \
 ### Memcached Extension
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS libmemcached-dev zlib-dev && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libmemcached-dev zlib-dev && \
     pecl install memcached-3.3.0 && \
     docker-php-ext-enable memcached && \
     apk del $PHPIZE_DEPS
@@ -426,9 +426,9 @@ RUN apk add --no-cache $PHPIZE_DEPS libmemcached-dev zlib-dev && \
 ### GRPc Extension (for microservices)
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS linux-headers && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS linux-headers && \
     pecl install grpc-1.68.0 && \
     docker-php-ext-enable grpc && \
     apk del $PHPIZE_DEPS
@@ -437,9 +437,9 @@ RUN apk add --no-cache $PHPIZE_DEPS linux-headers && \
 ### Decimal Extension (for financial calculations)
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS mpdecimal-dev && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS mpdecimal-dev && \
     pecl install decimal-2.0.0 && \
     docker-php-ext-enable decimal && \
     apk del $PHPIZE_DEPS
@@ -481,7 +481,7 @@ echo "MySQL is up - continuing"
 Add to Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Copy initialization script
 COPY docker/wait-for-db.sh /docker-entrypoint-init.d/01-wait-for-db.sh
@@ -512,7 +512,7 @@ fi
 Add to Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 COPY docker/run-migrations.sh /docker-entrypoint-init.d/02-run-migrations.sh
 RUN chmod +x /docker-entrypoint-init.d/02-run-migrations.sh
@@ -543,7 +543,7 @@ fi
 Add to Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 COPY docker/generate-key.sh /docker-entrypoint-init.d/03-generate-key.sh
 RUN chmod +x /docker-entrypoint-init.d/03-generate-key.sh
@@ -585,13 +585,13 @@ echo "Environment setup complete"
 
 ❌ **Wrong:**
 ```dockerfile
-FROM php:8.3-fpm-alpine
+FROM php:8.3-fpm-bookworm
 # Now you need to install everything yourself...
 ```
 
 ✅ **Correct:**
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 # Everything is already configured!
 ```
 
@@ -611,14 +611,14 @@ RUN pecl install redis-6.1.0  # Locked version
 
 ❌ **Wrong:**
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS
 RUN pecl install mongodb
 # Leaves build tools in final image (+50MB!)
 ```
 
 ✅ **Correct:**
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     pecl install mongodb && \
     docker-php-ext-enable mongodb && \
     apk del $PHPIZE_DEPS  # ← Removes build tools
@@ -638,7 +638,7 @@ COPY . .
 RUN npm run build
 
 # Production stage - small and secure
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 COPY --from=frontend-builder /app/public/build /var/www/html/public/build
 ```
 
@@ -663,12 +663,12 @@ docker run --rm -it my-app:test /bin/bash
 Use comments and logical grouping:
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # ======================
 # PHP Extensions
 # ======================
-RUN apk add --no-cache $PHPIZE_DEPS && \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS && \
     # Database extensions
     pecl install mongodb-1.20.1 && \
     # Caching extensions
@@ -681,7 +681,7 @@ RUN apk add --no-cache $PHPIZE_DEPS && \
 # ======================
 # System Packages
 # ======================
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     ffmpeg \
     imagemagick \
     nodejs \
@@ -728,10 +728,10 @@ docker build --progress=plain --no-cache -t my-app:test .
 - Solution: Use PHP 8.2+ base image
 
 **Error: "mpdecimal.h: No such file"**
-- Solution: Install development headers: `apk add mpdecimal-dev`
+- Solution: Install development headers: `apt-get update && apt-get install -y libmpdec-dev`
 
 **Error: "Cannot find autoconf"**
-- Solution: Install build tools: `apk add $PHPIZE_DEPS`
+- Solution: Install build tools: `apt-get update && apt-get install -y build-essential`
 
 ### Image Too Large
 
@@ -761,7 +761,7 @@ tests/
 
 **Solution: Fix ownership:**
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 COPY --chown=www-data:www-data . /var/www/html
 

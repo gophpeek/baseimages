@@ -14,7 +14,7 @@ Copy-paste ready snippets. No configuration needed.
 # docker-compose.yml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -31,7 +31,7 @@ docker compose up
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -71,7 +71,7 @@ REDIS_CLIENT=phpredis
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -99,7 +99,7 @@ volumes:
 ```yaml
 services:
   wordpress:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -203,16 +203,16 @@ docker compose exec app php artisan test
 
 ```
 # Alpine (smallest, ~80MB)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 
 # Debian (glibc, ~150MB)
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian
 
 # Development (with Xdebug)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-dev
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-dev
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-debian-dev
 ```
 
@@ -236,9 +236,9 @@ Verify: `docker compose exec app php -m`
 ## Add Custom Extension
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
     && apk del $PHPIZE_DEPS

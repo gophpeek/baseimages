@@ -164,7 +164,7 @@ Use **relative paths** to link between documentation pages:
 
 **Link Best Practices**
 - ✅ Use descriptive link text: `[View API Reference](api-reference)`
-- ✅ Remove `.md` extension: `[Guide](installation)` not `[Guide](installation.md)`
+- ✅ Don't remove `.md` extension: `[Guide](installation.md)` not `[Guide](installation)`
 - ✅ Use relative paths: `[Guide](../guide)`
 - ❌ Don't use generic text: `[Click here](guide)` or `[Read more](docs)`
 - ❌ Don't hardcode absolute URLs: `[Guide](/docs/package/v1/guide)`

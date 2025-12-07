@@ -21,13 +21,13 @@ New to PHPeek? This section will help you get up and running quickly.
 What do you need?
 │
 ├─ PDF generation, browser testing (Browsershot/Dusk)?
-│  └─ Full Tier (`8.4-alpine-full`)
+│  └─ Full Tier (`8.4-bookworm-full`)
 │
 ├─ Image processing (ImageMagick, vips), Node.js?
-│  └─ Standard Tier (`8.4-alpine`) ✅ DEFAULT
+│  └─ Standard Tier (`8.4-bookworm`) ✅ DEFAULT
 │
 └─ Minimal footprint, APIs, microservices?
-   └─ Slim Tier (`8.4-alpine-slim`)
+   └─ Slim Tier (`8.4-bookworm-slim`)
 ```
 
 ## What You'll Learn

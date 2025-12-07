@@ -9,7 +9,7 @@ PHPeek Base Images is a Docker image build system providing production-ready PHP
 1. **Single-Process Containers**: Separate PHP-FPM, PHP-CLI, and Nginx containers (traditional microservices)
 2. **Multi-Service Containers**: PHP-FPM + Nginx in one container with vanilla bash entrypoint (no S6 Overlay)
 
-**Key Philosophy**: Vanilla approach with simple bash entrypoints, comprehensive PHP extensions (40+), multiple OS variants (Alpine/Debian/Ubuntu), and framework auto-detection (Laravel/Symfony/WordPress).
+**Key Philosophy**: Vanilla approach with simple bash entrypoints, comprehensive PHP extensions (40+), Debian 12 (Bookworm) base, and framework auto-detection (Laravel/Symfony/WordPress).
 
 ## Architecture
 
@@ -19,23 +19,22 @@ PHPeek Base Images is a Docker image build system providing production-ready PHP
 .
 ├── php-fpm/           # Single-process PHP-FPM images
 │   ├── {version}/     # 8.2, 8.3, 8.4
-│   │   ├── alpine/    # Smallest (~50MB)
-│   │   ├── debian/    # glibc compatibility (~120MB)
-│   │   └── ubuntu/    # Familiar environment (~130MB)
+│   │   └── debian/
+│   │       └── bookworm/  # Debian 12 (only supported OS)
 │   └── common/        # Shared config (entrypoint, healthcheck, php.ini, fpm-pool.conf)
 │
 ├── php-cli/           # Single-process PHP-CLI images
 │   ├── {version}/
-│   │   └── {os}/
+│   │   └── debian/bookworm/
 │   └── common/        # Shared CLI entrypoint and healthcheck
 │
 ├── nginx/             # Standalone Nginx images
-│   ├── {os}/
+│   └── debian/bookworm/
 │   └── common/
 │
 ├── php-fpm-nginx/     # Multi-service containers (PHP-FPM + Nginx)
 │   ├── {version}/     # 8.2, 8.3, 8.4, 8.5-beta
-│   │   └── {os}/
+│   │   └── debian/bookworm/
 │   └── common/        # Shared multi-service entrypoint, nginx config, healthcheck
 │
 ├── .github/workflows/ # CI/CD with weekly security rebuilds
@@ -77,20 +76,12 @@ COPY {type}/common/healthcheck.sh /usr/local/bin/
 COPY {type}/common/php.ini /usr/local/etc/php/conf.d/99-custom.ini
 ```
 
-### OS-Specific Differences
+### OS Configuration (Debian 12 Bookworm)
 
-**Alpine**:
-- Uses musl libc
-- Package manager: `apk`
-- Nginx user: `nginx`
-- Smallest images
-- Cron: `dcron`
-
-**Debian/Ubuntu**:
-- Uses glibc
+All images are based on Debian 12 (Bookworm):
+- Uses glibc for maximum compatibility
 - Package manager: `apt`
-- Nginx user: `www-data` (requires sed fix in Dockerfile)
-- PHP-FPM on Ubuntu uses socket by default → must change to TCP `0.0.0.0:9000`
+- Nginx user: `www-data`
 - Cron: `cron`
 
 ## Build System
@@ -99,17 +90,16 @@ COPY {type}/common/php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
 ```bash
 # Build single-process containers (default profile)
-docker-compose build php-fpm-alpine nginx-alpine php-cli-alpine
+docker-compose build php-fpm nginx php-cli
 
 # Build multi-service containers (multi profile)
-docker-compose --profile multi build php-fpm-nginx-alpine
-docker-compose --profile multi build php-fpm-nginx-debian php-fpm-nginx-ubuntu
+docker-compose --profile multi build php-fpm-nginx
 
-# Build specific PHP version variant
-docker build -f php-fpm-nginx/8.3/alpine/Dockerfile -t test-image .
+# Build specific PHP version
+docker build -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile -t test-image .
 
 # Build with no cache (force rebuild)
-docker-compose build --no-cache php-fpm-alpine
+docker-compose build --no-cache php-fpm
 ```
 
 ### Testing Built Images
@@ -119,39 +109,37 @@ docker-compose build --no-cache php-fpm-alpine
 docker-compose up -d
 open http://localhost:8080
 
-# Test multi-service containers
-docker-compose --profile multi up -d php-fpm-nginx-alpine
-open http://localhost:8081  # Alpine
-open http://localhost:8082  # Debian
-open http://localhost:8083  # Ubuntu
+# Test multi-service container
+docker-compose --profile multi up -d php-fpm-nginx
+open http://localhost:8081
 
 # Run extension tests
-./tests/test-extensions.sh phpeek-fpm-alpine
-./tests/test-extensions.sh ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine
+./tests/test-extensions.sh phpeek-fpm
+./tests/test-extensions.sh ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
 
 # Check logs for entrypoint behavior
-docker-compose logs -f php-fpm-nginx-alpine
+docker-compose logs -f php-fpm-nginx
 
 # Interactive debugging
-docker-compose exec php-fpm-nginx-alpine /bin/bash
-docker-compose exec php-fpm-nginx-alpine php -m  # List extensions
-docker-compose exec php-fpm-nginx-alpine php -v  # Check version
+docker-compose exec php-fpm-nginx /bin/bash
+docker-compose exec php-fpm-nginx php -m  # List extensions
+docker-compose exec php-fpm-nginx php -v  # Check version
 ```
 
 ### CI/CD Workflows
 
 Located in `.github/workflows/`:
 
-- `build-php-fpm.yml` - Builds PHP-FPM images (Alpine/Debian/Ubuntu)
+- `build-php-fpm.yml` - Builds PHP-FPM images (Debian 12 Bookworm)
 - `build-php-cli.yml` - Builds PHP-CLI images
 - `build-nginx.yml` - Builds Nginx images
 - `build-php-fpm-nginx.yml` - **Multi-service images with weekly security rebuilds**
 
 **Key CI Features**:
-- **Matrix builds**: All PHP versions × OS variants in parallel
+- **Matrix builds**: All PHP versions × tiers (slim/standard/full) in parallel
 - **Weekly schedule**: Every Monday 03:00 UTC (`cron: '0 3 * * 1'`)
-- **Rolling tags**: `8.3-alpine` gets updated weekly with security patches
-- **Immutable tags**: `8.3-alpine-sha256:...` for reproducibility
+- **Rolling tags**: `8.3-bookworm` gets updated weekly with security patches
+- **Immutable tags**: `8.3-bookworm-sha256:...` for reproducibility
 - **Trivy scanning**: CVE scanning with results to GitHub Security tab
 - **Multi-arch**: Builds for `linux/amd64` and `linux/arm64`
 
@@ -181,15 +169,12 @@ matrix:
 Extensions are installed in Dockerfiles. Pattern:
 
 ```dockerfile
-# Alpine
-RUN apk add --no-cache $PHPIZE_DEPS && \
+# Debian 12 (Bookworm)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libextension-dev && \
     pecl install extension-version && \
     docker-php-ext-enable extension && \
-    apk del $PHPIZE_DEPS
-
-# Debian/Ubuntu
-RUN apt-get update && apt-get install -y \
-    php{version}-extension && \
+    apt-get purge -y --auto-remove && \
     rm -rf /var/lib/apt/lists/*
 ```
 
@@ -218,13 +203,13 @@ RUN apt-get update && apt-get install -y \
 **Testing entrypoint changes**:
 ```bash
 # Rebuild with entrypoint changes
-docker-compose build --no-cache php-fpm-nginx-alpine
+docker-compose build --no-cache php-fpm-nginx
 
 # Watch startup logs
-docker-compose up php-fpm-nginx-alpine
+docker-compose up php-fpm-nginx
 
 # Check framework detection
-docker-compose exec php-fpm-nginx-alpine cat /tmp/detected-framework.txt
+docker-compose exec php-fpm-nginx cat /tmp/detected-framework.txt
 ```
 
 ### Testing Health Checks
@@ -233,13 +218,13 @@ Health checks are in `{type}/common/healthcheck.sh`:
 
 ```bash
 # Manually run health check
-docker-compose exec php-fpm-nginx-alpine /usr/local/bin/healthcheck.sh
+docker-compose exec php-fpm-nginx /usr/local/bin/healthcheck.sh
 
 # Check health status
 docker-compose ps
 
 # Watch health check logs
-docker inspect phpeek-fpm-nginx-alpine --format='{{json .State.Health}}' | jq
+docker inspect phpeek-fpm-nginx --format='{{json .State.Health}}' | jq
 ```
 
 ## Critical Files
@@ -261,7 +246,7 @@ Nginx server block for multi-service containers:
 
 ### .github/workflows/build-php-fpm-nginx.yml
 CI/CD with security focus:
-- Matrix builds: `php_version × os_variant`
+- Matrix builds: `php_version × tier (slim/standard/full)`
 - Weekly rebuilds: `cron: '0 3 * * 1'`
 - Rolling + SHA tags
 - Trivy CVE scanning
@@ -303,29 +288,21 @@ These are handled in `php-fpm-nginx/common/docker-entrypoint.sh`
 
 ## Common Gotchas
 
-### Debian/Ubuntu Nginx User
-Debian/Ubuntu use `www-data` as the nginx user, not `nginx`. All Debian/Ubuntu Dockerfiles must include:
+### Nginx User Configuration
+Debian uses `www-data` as the nginx user. All Dockerfiles include:
 ```dockerfile
 RUN sed -i 's/user nginx;/user www-data;/' /etc/nginx/nginx.conf
 ```
 
-### Ubuntu PHP-FPM Socket vs TCP
-Ubuntu PHP-FPM defaults to Unix socket. Must change to TCP for multi-service:
-```dockerfile
-RUN sed -i 's|listen = /run/php/php8.3-fpm.sock|listen = 0.0.0.0:9000|' /etc/php/8.3/fpm/pool.d/www.conf
-```
-
 ### Nginx Config Path
-**Alpine**: `/etc/nginx/conf.d/`
-**Debian/Ubuntu**: Also `/etc/nginx/conf.d/` (NOT `/etc/nginx/sites-available/`)
-
+Nginx configuration: `/etc/nginx/conf.d/`
 nginx.conf includes: `include /etc/nginx/conf.d/*.conf;`
 
 ### Build Context
 All Dockerfiles must be built from repository root with proper context:
 ```bash
-docker build -f php-fpm-nginx/8.3/alpine/Dockerfile .
-# NOT: docker build php-fpm-nginx/8.3/alpine/
+docker build -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
+# NOT: docker build php-fpm-nginx/8.3/debian/bookworm/
 ```
 
 This is because Dockerfiles copy from `{type}/common/` which is relative to repo root.
@@ -335,28 +312,28 @@ This is because Dockerfiles copy from `{type}/common/` which is relative to repo
 **Strategy**: Rolling tags for automatic security updates
 
 **Schedule**: GitHub Actions runs every Monday 03:00 UTC
-- Pulls latest upstream base images (php:8.x-fpm-alpine, etc.)
-- Rebuilds all variants
-- Tags with rolling version (`8.3-alpine`) AND immutable SHA
+- Pulls latest upstream base images (php:8.x-fpm-bookworm, etc.)
+- Rebuilds all tiers (slim/standard/full)
+- Tags with rolling version (`8.3-bookworm`) AND immutable SHA
 - Runs Trivy CVE scan
 - Pushes to ghcr.io
 
 **Users**: Simply `docker pull` weekly to get security patches
 
 **Tags**:
-- `8.3-alpine` - Rolling (recommended for most users)
-- `8.3-alpine-sha256:abc...` - Immutable (for reproducibility)
-- `latest` - Points to newest stable (8.4-alpine)
+- `8.3-bookworm` - Rolling (recommended for most users)
+- `8.3-bookworm-sha256:abc...` - Immutable (for reproducibility)
+- `latest` - Points to newest stable (8.4-bookworm)
 
 ## Image Publishing
 
 Images published to GitHub Container Registry: `ghcr.io/gophpeek/baseimages/`
 
 **Naming convention**:
-- `php-fpm:8.3-alpine`
-- `php-cli:8.3-debian`
-- `nginx:alpine`
-- `php-fpm-nginx:8.3-ubuntu` (multi-service)
+- `php-fpm:8.3-bookworm`
+- `php-cli:8.3-bookworm`
+- `nginx:bookworm`
+- `php-fpm-nginx:8.3-bookworm` (multi-service)
 
 **Authentication** (for CI):
 ```bash

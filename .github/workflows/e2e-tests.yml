@@ -33,12 +33,10 @@ on:
       os_variant:
         description: 'OS variant to test'
         required: false
-        default: 'alpine'
+        default: 'bookworm'
         type: choice
         options:
-          - 'alpine'
           - 'bookworm'
-          - 'trixie'
       scenario:
         description: 'Test scenario to run'
         required: false
@@ -83,19 +81,19 @@ jobs:
 
       - name: Build image chain (php-base → php-fpm → php-fpm-nginx)
         run: |
-          echo "=== Building php-base:8.3-alpine ==="
+          echo "=== Building php-base:8.3-bookworm ==="
           docker build --target root \
-            -f php-base/8.3/alpine/Dockerfile \
-            -t ghcr.io/gophpeek/baseimages/php-base:8.3-alpine .
+            -f php-base/8.3/debian/bookworm/Dockerfile \
+            -t ghcr.io/gophpeek/baseimages/php-base:8.3-bookworm .
 
-          echo "=== Building php-fpm:8.3-alpine ==="
+          echo "=== Building php-fpm:8.3-bookworm ==="
           docker build --target root \
-            -f php-fpm/8.3/alpine/Dockerfile \
-            -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine .
+            -f php-fpm/8.3/debian/bookworm/Dockerfile \
+            -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm .
 
-          echo "=== Building php-fpm-nginx:8.3-alpine ==="
+          echo "=== Building php-fpm-nginx:8.3-bookworm ==="
           docker build --target root \
-            -f php-fpm-nginx/8.3/alpine/Dockerfile \
+            -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile \
             -t test-image:local .
 
       - name: Run plain PHP E2E test
@@ -153,19 +151,9 @@ jobs:
         id: paths
         run: |
           PHP="${{ github.event.inputs.php_version }}"
-          OS="${{ github.event.inputs.os_variant }}"
-          case "$OS" in
-            alpine)
-              echo "base=php-base/${PHP}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "fpm=php-fpm/${PHP}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              echo "nginx=php-fpm-nginx/${PHP}/alpine/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-            bookworm|trixie)
-              echo "base=php-base/${PHP}/debian/${OS}/Dockerfile" >> $GITHUB_OUTPUT
-              echo "fpm=php-fpm/${PHP}/debian/${OS}/Dockerfile" >> $GITHUB_OUTPUT
-              echo "nginx=php-fpm-nginx/${PHP}/debian/${OS}/Dockerfile" >> $GITHUB_OUTPUT
-              ;;
-          esac
+          echo "base=php-base/${PHP}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "fpm=php-fpm/${PHP}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
+          echo "nginx=php-fpm-nginx/${PHP}/debian/bookworm/Dockerfile" >> $GITHUB_OUTPUT
 
       - name: Build image chain
         run: |

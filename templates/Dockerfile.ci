@@ -1,21 +1,16 @@
 # PHPeek CI/CD Template
 # Optimized for continuous integration and testing
 
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Install CI/CD tools
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     zip \
-    unzip
-
-# Install Node.js for frontend testing
-RUN apk add --no-cache \
+    unzip \
     nodejs \
-    npm
-
-# Install Composer dependencies globally for caching
-# (override in pipeline with project-specific composer.json)
+    npm \
+    && rm -rf /var/lib/apt/lists/*
 
 # Pre-warm Composer cache
 RUN composer global require --dev \

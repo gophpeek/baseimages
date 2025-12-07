@@ -1,6 +1,6 @@
 # PHPeek Performance Benchmarks
 
-Comprehensive performance benchmarking suite for comparing PHPeek base images across Alpine, Debian, and Ubuntu variants.
+Performance benchmarking suite for PHPeek base images.
 
 ## Benchmark Suite
 
@@ -8,7 +8,7 @@ Comprehensive performance benchmarking suite for comparing PHPeek base images ac
 Measures and compares:
 - Uncompressed image size
 - Compressed image size (gzipped)
-- Storage efficiency across OS variants
+- Storage efficiency across tiers (slim, standard, full)
 
 ### 2. Container Startup Time
 Measures:
@@ -45,10 +45,10 @@ Benchmarks:
 
 ### Build Images First
 ```bash
-# Build all three variants
-docker build -t phpeek-alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-docker build -t phpeek-debian -f php-fpm-nginx/8.3/debian/Dockerfile .
-docker build -t phpeek-ubuntu -f php-fpm-nginx/8.3/ubuntu/Dockerfile .
+# Build all tiers
+docker build --target root -t phpeek-bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
+docker build --target slim -t phpeek-slim -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
+docker build --target full -t phpeek-full -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
 ```
 
 ### Run All Benchmarks
@@ -79,35 +79,35 @@ tests/benchmarks/results/
 
 ## Image Size Comparison
 
-| OS Variant | Image Size | Compressed Size |
-|------------|------------|-----------------|
-| alpine     | 52.3 MB    | 21.4 MB        |
-| debian     | 123.5 MB   | 45.2 MB        |
-| ubuntu     | 131.2 MB   | 47.8 MB        |
+| Tier | Image Size | Compressed Size |
+|------|------------|-----------------|
+| slim | 120 MB     | 45 MB           |
+| standard | 250 MB | 95 MB           |
+| full | 700 MB     | 280 MB          |
 
 ## Container Startup Time Comparison
 
-| OS Variant | Startup Time (avg of 5 runs) | Std Dev |
-|------------|-------------------------------|---------|
-| alpine     | 1.234s                        | 0.045s  |
-| debian     | 1.456s                        | 0.062s  |
-| ubuntu     | 1.523s                        | 0.071s  |
+| Tier | Startup Time (avg of 5 runs) | Std Dev |
+|------|-------------------------------|---------|
+| slim | 1.234s                        | 0.045s  |
+| standard | 1.456s                    | 0.062s  |
+| full | 1.623s                        | 0.071s  |
 
 ## PHP Performance Comparison
 
-| OS Variant | Operations/sec | Memory Usage | OPcache Hits |
-|------------|---------------|--------------|--------------|
-| alpine     | 45,234        | 12.5MB       | 98.5%        |
-| debian     | 44,892        | 13.2MB       | 98.3%        |
-| ubuntu     | 44,756        | 13.4MB       | 98.1%        |
+| Tier | Operations/sec | Memory Usage | OPcache Hits |
+|------|---------------|--------------|--------------|
+| slim | 45,234        | 12.5MB       | 98.5%        |
+| standard | 44,892    | 13.2MB       | 98.3%        |
+| full | 44,756        | 13.4MB       | 98.1%        |
 
 ## HTTP Request Performance Comparison
 
-| OS Variant | Requests/sec | Latency (avg) | Latency (p95) |
-|------------|--------------|---------------|---------------|
-| alpine     | 2,345        | 4.26ms        | 6.82ms        |
-| debian     | 2,312        | 4.33ms        | 6.95ms        |
-| ubuntu     | 2,289        | 4.37ms        | 7.01ms        |
+| Tier | Requests/sec | Latency (avg) | Latency (p95) |
+|------|--------------|---------------|---------------|
+| slim | 2,345        | 4.26ms        | 6.82ms        |
+| standard | 2,312    | 4.33ms        | 6.95ms        |
+| full | 2,289        | 4.37ms        | 7.01ms        |
 ```
 
 ## CI/CD Integration
@@ -132,32 +132,32 @@ GitHub Actions uploads results as artifacts:
 ## Interpreting Results
 
 ### Image Size
-- **Alpine**: ~50MB - Best for size-constrained environments
-- **Debian**: ~120MB - Balance of size and compatibility
-- **Ubuntu**: ~130MB - Most compatible, slightly larger
+- **Slim**: ~120MB - Best for size-constrained environments, APIs/microservices
+- **Standard**: ~250MB - Balance of size and features (default)
+- **Full**: ~700MB - Includes Chromium for Browsershot/Dusk
 
-**Recommendation**: Choose Alpine for microservices, Debian/Ubuntu for traditional apps.
+**Recommendation**: Choose slim for microservices, standard for most apps, full for browser testing.
 
 ### Startup Time
-- Differences typically 10-30% between variants
-- Alpine usually fastest due to smaller size
+- Differences typically 10-30% between tiers
+- Slim usually fastest due to smaller size
 - Consider warmup time in production (not just cold start)
 
 **Recommendation**: Startup time differences minimal in production with warm containers.
 
 ### PHP Performance
-- Performance similar across variants (~2-5% difference)
-- glibc (Debian/Ubuntu) may have slight edge in some workloads
-- musl (Alpine) optimized for size, not always speed
+- Performance similar across tiers (~2-5% difference)
+- Additional extensions have minimal runtime overhead
+- Application code has more impact than tier choice
 
 **Recommendation**: PHP performance differences negligible for most applications.
 
 ### HTTP Performance
-- Nginx performance consistent across variants
+- Nginx performance consistent across tiers
 - Network overhead typically dominates request latency
-- Application code has more impact than base OS
+- Application code has more impact than base image
 
-**Recommendation**: Base OS choice has minimal impact on HTTP performance.
+**Recommendation**: Tier choice has minimal impact on HTTP performance.
 
 ## Benchmark Limitations
 
@@ -194,13 +194,13 @@ benchmark_your_test() {
     echo "# Your Benchmark Results" > "$RESULTS_DIR/your-test-$TIMESTAMP.md"
     echo "" >> "$RESULTS_DIR/your-test-$TIMESTAMP.md"
 
-    for variant in alpine debian ubuntu; do
-        IMAGE="phpeek-${variant}"
+    for tier in slim standard full; do
+        IMAGE="phpeek-${tier}"
 
         # Your test logic here
         RESULT="your_measurement"
 
-        echo "| $variant | $RESULT |" >> "$RESULTS_DIR/your-test-$TIMESTAMP.md"
+        echo "| $tier | $RESULT |" >> "$RESULTS_DIR/your-test-$TIMESTAMP.md"
     done
 
     success "Your benchmark complete"
@@ -255,15 +255,13 @@ apt-get install apache2-utils
 ### Images Not Found
 Make sure to build images first:
 ```bash
-docker build -t phpeek-alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-docker build -t phpeek-debian -f php-fpm-nginx/8.3/debian/Dockerfile .
-docker build -t phpeek-ubuntu -f php-fpm-nginx/8.3/ubuntu/Dockerfile .
+docker build --target root -t phpeek-bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
 ```
 
 ## Related Documentation
 
 - [Performance Tuning Guide](../../docs/advanced/performance-tuning.md) - Optimize production performance
-- [Choosing a Variant](../../docs/getting-started/choosing-variant.md) - OS selection guide
+- [Choosing a Tier](../../docs/getting-started/choosing-tier.md) - Tier selection guide
 - [Production Deployment](../../docs/guides/production-deployment.md) - Production best practices
 
 ## Future Enhancements

@@ -141,7 +141,7 @@ Configure everything via environment variables:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     environment:
       # PHP
       PHP_MEMORY_LIMIT: 512M
@@ -179,9 +179,9 @@ All tiers support rootless execution:
 
 | Tag | Description |
 |-----|-------------|
-| `8.4-alpine-rootless` | Standard + rootless |
-| `8.4-alpine-slim-rootless` | Slim + rootless |
-| `8.4-alpine-full-rootless` | Full + rootless |
+| `8.4-bookworm-rootless` | Standard + rootless |
+| `8.4-bookworm-slim-rootless` | Slim + rootless |
+| `8.4-bookworm-full-rootless` | Full + rootless |
 
 ## Getting Started
 

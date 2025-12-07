@@ -18,7 +18,7 @@ RUN pecl install extension-name && docker-php-ext-enable extension-name
 RUN docker-php-ext-install extension-name
 
 # Extension with dependencies
-RUN apk add --no-cache dependency-package \
+RUN apt-get update && apt-get install -y dependency-package \
     && pecl install extension-name \
     && docker-php-ext-enable extension-name
 ```
@@ -28,25 +28,27 @@ RUN apk add --no-cache dependency-package \
 ### Basic Installation
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Install build dependencies, extension, enable, cleanup
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 ### With Version Pinning
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Pin specific version for reproducibility
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
     && pecl install swoole-5.1.1 \
     && docker-php-ext-enable swoole \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 ### Common PECL Extensions
@@ -54,17 +56,17 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 #### Swoole (Async/Coroutines)
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS openssl-dev curl-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libssl-dev libcurl4-openssl-dev \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 #### gRPC + Protobuf
 
 ```dockerfile
-# Note: Works better on Debian due to glibc
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 RUN apt-get update && apt-get install -y \
     libgrpc-dev libprotobuf-dev protobuf-compiler \
@@ -76,37 +78,41 @@ RUN apt-get update && apt-get install -y \
 #### Memcached
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS libmemcached-dev zlib-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libmemcached-dev zlib1g-dev \
     && pecl install memcached \
     && docker-php-ext-enable memcached \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 #### SSH2
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS libssh2-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libssh2-1-dev \
     && pecl install ssh2 \
     && docker-php-ext-enable ssh2 \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 #### AMQP (RabbitMQ)
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS rabbitmq-c-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS librabbitmq-dev \
     && pecl install amqp \
     && docker-php-ext-enable amqp \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 #### Event (libevent)
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS libevent-dev openssl-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libevent-dev libssl-dev \
     && pecl install event \
     && docker-php-ext-enable event \
-    && apk del $PHPIZE_DEPS
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 ## Core Extensions
@@ -140,9 +146,9 @@ For extensions not on PECL or needing custom options:
 ### Example: OpenSwoole with Custom Options
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
-RUN apk add --no-cache $PHPIZE_DEPS git openssl-dev curl-dev \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS git libssl-dev libcurl4-openssl-dev \
     && git clone https://github.com/openswoole/swoole-src.git \
     && cd swoole-src \
     && phpize \
@@ -155,13 +161,14 @@ RUN apk add --no-cache $PHPIZE_DEPS git openssl-dev curl-dev \
     && make install \
     && docker-php-ext-enable openswoole \
     && cd .. && rm -rf swoole-src \
-    && apk del $PHPIZE_DEPS git
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS git \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
 ### Example: Xhprof (Facebook's Profiler)
 
 ```dockerfile
-RUN apk add --no-cache $PHPIZE_DEPS git \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS git \
     && git clone https://github.com/longxinH/xhprof.git \
     && cd xhprof/extension \
     && phpize \
@@ -170,32 +177,7 @@ RUN apk add --no-cache $PHPIZE_DEPS git \
     && make install \
     && docker-php-ext-enable xhprof \
     && cd ../.. && rm -rf xhprof \
-    && apk del $PHPIZE_DEPS git
-```
-
-## Debian vs Alpine
-
-Some extensions compile better on Debian (glibc):
-
-### Extensions That May Need Debian
-
-| Extension | Alpine | Debian |
-|-----------|--------|--------|
-| grpc | Issues | Works |
-| oci8 | Not supported | Works |
-| sqlsrv | Issues | Works |
-| pdo_sqlsrv | Issues | Works |
-| newrelic | Not supported | Works |
-
-### Debian Example
-
-```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && pecl install grpc \
-    && docker-php-ext-enable grpc \
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS git \
     && rm -rf /var/lib/apt/lists/*
 ```
 
@@ -287,32 +269,34 @@ HEALTHCHECK --interval=30s --timeout=3s \
 docker build --progress=plain -t test .
 
 # Interactive debugging
-docker run --rm -it ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine sh
-apk add $PHPIZE_DEPS
+docker run --rm -it ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm sh
+apt-get update && apt-get install -y build-essential
 pecl install extension-name
 ```
 
 ### Missing Dependencies
 
 ```bash
-# Alpine: Search for package
-apk search libname
-
-# Debian: Search for package
+# Search for Debian packages
 apt-cache search libname
+
+# Or use apt-file to find which package provides a file
+apt-file search library-name
 ```
 
-### Common Dependency Mappings
+### Common Dependency Mappings (Debian)
 
-| Extension | Alpine Package | Debian Package |
-|-----------|---------------|----------------|
-| gd | freetype-dev libpng-dev | libfreetype6-dev libpng-dev |
-| imagick | imagemagick-dev | libmagickwand-dev |
-| memcached | libmemcached-dev | libmemcached-dev |
-| mongodb | openssl-dev | libssl-dev |
-| ssh2 | libssh2-dev | libssh2-1-dev |
-| amqp | rabbitmq-c-dev | librabbitmq-dev |
-| event | libevent-dev | libevent-dev |
+| Extension | Debian Package |
+|-----------|----------------|
+| gd | libfreetype6-dev libpng-dev |
+| imagick | libmagickwand-dev |
+| memcached | libmemcached-dev |
+| mongodb | libssl-dev |
+| ssh2 | libssh2-1-dev |
+| amqp | librabbitmq-dev |
+| event | libevent-dev |
+| curl | libcurl4-openssl-dev |
+| zip | libzip-dev |
 
 ### Extension Conflicts
 
@@ -330,18 +314,15 @@ RUN pecl install igbinary \
 ### Laravel with Swoole + Redis
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Build dependencies
-RUN apk add --no-cache $PHPIZE_DEPS openssl-dev curl-dev
-
-# Swoole with options
-RUN pecl install swoole-5.1.1 \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS libssl-dev libcurl4-openssl-dev \
+    && pecl install swoole-5.1.1 \
     && docker-php-ext-enable swoole \
-    && echo "swoole.use_shortname=Off" > /usr/local/etc/php/conf.d/99-swoole.ini
-
-# Cleanup
-RUN apk del $PHPIZE_DEPS
+    && echo "swoole.use_shortname=Off" > /usr/local/etc/php/conf.d/99-swoole.ini \
+    && apt-get purge -y --auto-remove $PHPIZE_DEPS \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . /var/www/html
 RUN composer install --no-dev --optimize-autoloader
@@ -350,7 +331,7 @@ RUN composer install --no-dev --optimize-autoloader
 ### API with gRPC + Protobuf
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 RUN apt-get update && apt-get install -y \
     libgrpc-dev libprotobuf-dev protobuf-compiler \

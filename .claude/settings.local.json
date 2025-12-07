@@ -60,7 +60,20 @@
       "mcp__serena__get_current_config",
       "mcp__serena__write_memory",
       "mcp__serena__read_memory",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:hub.docker.com)",
+      "Bash(grep:*)",
+      "mcp__serena__think_about_collected_information",
+      "Bash(for type in php-fpm php-cli php-fpm-nginx php-base)",
+      "Bash(do for v in 8.2 8.3 8.4)",
+      "Bash(do if [ -f \"$type/$v/debian/bookworm/Dockerfile\" ])",
+      "Bash(then echo \"✓ $type/$v/debian/bookworm/Dockerfile\")",
+      "Bash(else echo \"✗ MISSING: $type/$v/debian/bookworm/Dockerfile\")",
+      "Bash(while read file)",
+      "Bash(do sed -i '' -e 's/:8\\.4-alpine/:8.4-bookworm/g' -e 's/:8\\.3-alpine/:8.3-bookworm/g' -e 's/:8\\.2-alpine/:8.2-bookworm/g' -e 's/:8\\.4-alpine-slim/:8.4-bookworm-slim/g' -e 's/:8\\.3-alpine-slim/:8.3-bookworm-slim/g' -e 's/:8\\.2-alpine-slim/:8.2-bookworm-slim/g' -e 's/:8\\.4-alpine-full/:8.4-bookworm-full/g' -e 's/:8\\.3-alpine-full/:8.3-bookworm-full/g' -e 's/:8\\.2-alpine-full/:8.2-bookworm-full/g' -e 's/:8\\.4-alpine-rootless/:8.4-bookworm-rootless/g' -e 's/:8\\.3-alpine-rootless/:8.3-bookworm-rootless/g' -e 's/:8\\.2-alpine-rootless/:8.2-bookworm-rootless/g' -e 's/:8\\.4-alpine-slim-rootless/:8.4-bookworm-slim-rootless/g' -e 's/:8\\.3-alpine-slim-rootless/:8.3-bookworm-slim-rootless/g' -e 's/:8\\.2-alpine-slim-rootless/:8.2-bookworm-slim-rootless/g' -e 's/:8\\.4-alpine-full-rootless/:8.4-bookworm-full-rootless/g' -e 's/:8\\.3-alpine-full-rootless/:8.3-bookworm-full-rootless/g' -e 's/:8\\.2-alpine-full-rootless/:8.2-bookworm-full-rootless/g' -e 's/-alpine-dev/-bookworm-dev/g' -e 's/:8\\.4-trixie/:8.4-bookworm/g' -e 's/:8\\.3-trixie/:8.3-bookworm/g' -e 's/:8\\.2-trixie/:8.2-bookworm/g' \"$file\" done)",
+      "Bash({} ;)",
+      "Bash(printf:*)"
     ],
     "deny": [],
     "ask": []

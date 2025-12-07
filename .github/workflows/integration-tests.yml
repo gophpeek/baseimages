@@ -44,23 +44,10 @@ jobs:
 
       - name: Build image chain (php-base → php-fpm → php-fpm-nginx)
         run: |
-          # Alpine
-          echo "=== Building Alpine chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-alpine -f php-base/8.3/alpine/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine -f php-fpm/8.3/alpine/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-
-          # Bookworm
           echo "=== Building Bookworm chain ==="
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-bookworm -f php-base/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm -f php-fpm/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
-
-          # Trixie
-          echo "=== Building Trixie chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-trixie -f php-base/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-trixie -f php-fpm/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-trixie -f php-fpm-nginx/8.3/debian/trixie/Dockerfile .
 
       - name: Run Docker integration tests
         run: |
@@ -102,23 +89,10 @@ jobs:
 
       - name: Build benchmark image chain (php-base → php-fpm → php-fpm-nginx)
         run: |
-          # Alpine
-          echo "=== Building Alpine chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-alpine -f php-base/8.3/alpine/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine -f php-fpm/8.3/alpine/Dockerfile .
-          docker build --target root -t phpeek-alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-
-          # Bookworm
           echo "=== Building Bookworm chain ==="
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-bookworm -f php-base/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm -f php-fpm/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t phpeek-bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
-
-          # Trixie
-          echo "=== Building Trixie chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-trixie -f php-base/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-trixie -f php-fpm/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t phpeek-trixie -f php-fpm-nginx/8.3/debian/trixie/Dockerfile .
 
       - name: Run performance benchmarks
         run: |
@@ -159,33 +133,12 @@ jobs:
 
       - name: Build images for scanning (full chain)
         run: |
-          # Alpine chain
-          echo "=== Building Alpine chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-alpine -f php-base/8.3/alpine/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine -f php-fpm/8.3/alpine/Dockerfile .
-          docker build --target root -t phpeek-scan:alpine -f php-fpm-nginx/8.3/alpine/Dockerfile .
-
-          # Bookworm chain
           echo "=== Building Bookworm chain ==="
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-bookworm -f php-base/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm -f php-fpm/8.3/debian/bookworm/Dockerfile .
           docker build --target root -t phpeek-scan:bookworm -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile .
 
-          # Trixie chain
-          echo "=== Building Trixie chain ==="
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-base:8.3-trixie -f php-base/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t ghcr.io/gophpeek/baseimages/php-fpm:8.3-trixie -f php-fpm/8.3/debian/trixie/Dockerfile .
-          docker build --target root -t phpeek-scan:trixie -f php-fpm-nginx/8.3/debian/trixie/Dockerfile .
-
-      - name: Run Trivy vulnerability scanner (Alpine)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'phpeek-scan:alpine'
-          format: 'sarif'
-          output: 'trivy-alpine-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Run Trivy vulnerability scanner (Bookworm)
+      - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'phpeek-scan:bookworm'
@@ -193,45 +146,17 @@ jobs:
           output: 'trivy-bookworm-results.sarif'
           severity: 'CRITICAL,HIGH'
 
-      - name: Run Trivy vulnerability scanner (Trixie)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'phpeek-scan:trixie'
-          format: 'sarif'
-          output: 'trivy-trixie-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy results to GitHub Security tab (Alpine)
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: trivy-alpine-results.sarif
-          category: trivy-alpine
-
-      - name: Upload Trivy results to GitHub Security tab (Bookworm)
+      - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: trivy-bookworm-results.sarif
           category: trivy-bookworm
 
-      - name: Upload Trivy results to GitHub Security tab (Trixie)
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: trivy-trixie-results.sarif
-          category: trivy-trixie
-
       - name: Generate security report summary
         if: always()
         run: |
           echo "# Security Scan Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Alpine" >> $GITHUB_STEP_SUMMARY
-          docker run --rm aquasec/trivy image --severity CRITICAL,HIGH --format table phpeek-scan:alpine >> $GITHUB_STEP_SUMMARY || true
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Bookworm (Debian 12)" >> $GITHUB_STEP_SUMMARY
+          echo "## Debian 12 (Bookworm)" >> $GITHUB_STEP_SUMMARY
           docker run --rm aquasec/trivy image --severity CRITICAL,HIGH --format table phpeek-scan:bookworm >> $GITHUB_STEP_SUMMARY || true
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Trixie (Debian 13)" >> $GITHUB_STEP_SUMMARY
-          docker run --rm aquasec/trivy image --severity CRITICAL,HIGH --format table phpeek-scan:trixie >> $GITHUB_STEP_SUMMARY || true

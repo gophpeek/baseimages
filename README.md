@@ -1,6 +1,6 @@
 # PHPeek Base Images
 
-Clean, minimal, and production-ready PHP Docker base images for modern PHP applications. Built with comprehensive extensions, multiple OS variants, and no unnecessary complexity.
+Clean, minimal, and production-ready PHP Docker base images for modern PHP applications. Built with comprehensive extensions on Debian 12 (Bookworm) and no unnecessary complexity.
 
 [![Build Status](https://github.com/gophpeek/baseimages/workflows/Build/badge.svg)](https://github.com/gophpeek/baseimages/actions)
 [![Security Scan](https://github.com/gophpeek/baseimages/workflows/Security/badge.svg)](https://github.com/gophpeek/baseimages/security)
@@ -8,10 +8,10 @@ Clean, minimal, and production-ready PHP Docker base images for modern PHP appli
 
 ## 🎯 Philosophy
 
-- **Two Editions**: Minimal (Laravel-optimized, 17 extensions) OR Full (comprehensive, 32+ extensions)
+- **Three Tiers**: Slim (~120MB), Standard (~250MB), Full (~700MB) - choose your needs
 - **Flexible Process Management**: Choose simple bash OR production-grade [PHPeek PM](https://github.com/gophpeek/phpeek-pm)
 - **Flexible Architecture**: Choose single-process OR multi-service containers
-- **Multiple Variants**: Alpine 3.21, Debian 12 (Bookworm), Debian 13 (Trixie)
+- **Debian 12 (Bookworm)**: Stable, glibc-based images with excellent compatibility
 - **Framework Optimized**: Auto-detection for Laravel, Symfony, WordPress
 - **Production Ready**: Optimized configurations for real-world applications
 
@@ -39,7 +39,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -58,51 +58,58 @@ docker-compose up -d
 
 ## 🎨 Available Images
 
-### Base OS Versions
+### Base OS
 
-| Variant | Base Image | OS Version | Package Manager | libc |
-|---------|------------|------------|-----------------|------|
-| **Alpine** | `php:8.x-cli-alpine` | Alpine 3.21 | apk | musl |
-| **Bookworm** | `php:8.x-cli-bookworm` | Debian 12 (Bookworm) | apt | glibc |
-| **Trixie** | `php:8.x-cli-trixie` | Debian 13 (Trixie) | apt | glibc |
+All images are built on **Debian 12 (Bookworm)** with glibc for maximum compatibility.
+
+| Base Image | OS Version | Package Manager | libc |
+|------------|------------|-----------------|------|
+| `php:8.x-cli-bookworm` | Debian 12 (Bookworm) | apt | glibc |
 
 ### Image Matrix
 
-| Image Type | Alpine | Bookworm (Debian 12) | Trixie (Debian 13) |
-|------------|--------|----------------------|--------------------|
-| **php-fpm-nginx** | `8.2-alpine` `8.3-alpine` `8.4-alpine` | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` | `8.2-trixie` `8.3-trixie` `8.4-trixie` |
-| **php-fpm** | `8.2-alpine` `8.3-alpine` `8.4-alpine` | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` | `8.2-trixie` `8.3-trixie` `8.4-trixie` |
-| **php-cli** | `8.2-alpine` `8.3-alpine` `8.4-alpine` | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` | `8.2-trixie` `8.3-trixie` `8.4-trixie` |
-| **nginx** | `alpine` | `bookworm` | `trixie` |
+| Image Type | Available Tags |
+|------------|----------------|
+| **php-fpm-nginx** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
+| **php-fpm** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
+| **php-cli** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
+| **nginx** | `bookworm` |
 
 **Full image name:** `ghcr.io/gophpeek/baseimages/{type}:{tag}`
 
 ```bash
 # Examples
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
-ghcr.io/gophpeek/baseimages/php-cli:8.2-trixie
+ghcr.io/gophpeek/baseimages/php-cli:8.2-bookworm
 ```
 
-### Editions: Full vs Minimal
+### Image Tiers: Slim / Standard / Full
 
-| Edition | Extensions | Size | Best For |
-|---------|------------|------|----------|
-| **Full** (default) | 36+ | ~200MB Alpine | Enterprise, legacy, comprehensive coverage |
-| **Minimal** | 17 | ~130MB Alpine | Laravel, modern PHP, size-constrained |
+| Tier | Size | Extensions | Best For |
+|------|------|------------|----------|
+| **Slim** | ~120MB | 25+ core | API/microservices, minimal footprint |
+| **Standard** (default) | ~250MB | 30+ with ImageMagick, vips, Node.js | Most Laravel/PHP apps |
+| **Full** | ~700MB | Standard + Chromium | Browsershot, Dusk, PDF generation |
 
-**Minimal tags:** Add `-minimal` suffix (e.g., `8.4-alpine-minimal`)
+**Tag Suffixes:**
 
-| Full Edition | Minimal Edition |
-|--------------|-----------------|
-| `php-fpm-nginx:8.4-alpine` | `php-fpm-nginx:8.4-alpine-minimal` |
-| `php-fpm:8.3-bookworm` | `php-fpm:8.3-bookworm-minimal` |
-| `php-fpm:8.4-trixie` | `php-fpm:8.4-trixie-minimal` |
+| Tier | Tag Format | Example |
+|------|------------|---------|
+| Standard (default) | `{version}-bookworm` | `8.4-bookworm` |
+| Slim | `{version}-bookworm-slim` | `8.4-bookworm-slim` |
+| Full | `{version}-bookworm-full` | `8.4-bookworm-full` |
+| Rootless variants | Add `-rootless` | `8.4-bookworm-rootless`, `8.4-bookworm-slim-rootless` |
 
-**Full includes:** MongoDB, ImageMagick, libvips, SOAP, LDAP, IMAP, APCu
-**Minimal includes:** Redis, GD, EXIF, PCNTL, intl, bcmath, zip
+**What's included:**
 
-📖 **Detailed comparison:** [Minimal vs Full Editions →](docs/reference/editions-comparison.md)
+| Tier | Extensions |
+|------|------------|
+| **Slim** | Redis, APCu, MongoDB, gRPC, GD (WebP), intl, bcmath, zip, PCNTL, sockets |
+| **Standard** | Slim + ImageMagick, libvips, GD (AVIF), Node.js 22, exiftool |
+| **Full** | Standard + Chromium, Puppeteer support |
+
+📖 **Detailed comparison:** [Image Tiers Guide →](docs/reference/editions-comparison.md)
 
 ### Development Images
 
@@ -110,9 +117,9 @@ Add `-dev` suffix for development images with Xdebug:
 
 | Production | Development |
 |------------|-------------|
-| `php-fpm-nginx:8.4-alpine` | `php-fpm-nginx:8.4-alpine-dev` |
+| `php-fpm-nginx:8.4-bookworm` | `php-fpm-nginx:8.4-bookworm-dev` |
 | `php-fpm:8.3-bookworm` | `php-fpm:8.3-bookworm-dev` |
-| `php-fpm:8.4-trixie` | `php-fpm:8.4-trixie-dev` |
+| `php-fpm:8.2-bookworm` | `php-fpm:8.2-bookworm-dev` |
 
 **Dev images include:** Xdebug 3.x, PHP error display, OPcache timestamp validation, port 9003
 
@@ -141,7 +148,7 @@ Add `-dev` suffix for development images with Xdebug:
 - **[5-Minute Quickstart](docs/getting-started/quickstart.md)** - Get running in minutes
 - [Introduction](docs/getting-started/introduction.md) - Why PHPeek?
 - [Installation](docs/getting-started/installation.md) - All installation methods
-- [Choosing a Variant](docs/getting-started/choosing-variant.md) - Alpine vs Debian vs Ubuntu
+- [Choosing a Variant](docs/getting-started/choosing-variant.md) - Image tier selection guide
 - **[Choosing an Image](docs/getting-started/choosing-an-image.md)** - Decision matrix for image selection
 
 ### Framework Guides
@@ -188,13 +195,20 @@ Single container with both PHP-FPM and Nginx:
 - ✅ Graceful shutdown handling
 - ✅ Automated weekly security updates
 
-### Pre-Installed Extensions (40+)
+### Pre-Installed Extensions
 
-**Core:** opcache, apcu, redis, pdo_mysql, pdo_pgsql, mysqli, pgsql, zip, intl, bcmath, sockets, pcntl
+**All Tiers (Slim/Standard/Full):**
+- **Core:** opcache, apcu, redis, pdo_mysql, pdo_pgsql, mysqli, pgsql, zip, intl, bcmath, sockets, pcntl
+- **Data:** mongodb, igbinary, msgpack, grpc
+- **Images:** gd (WebP), exif
+- **Features:** soap, xsl, ldap, bz2, calendar, gettext, gmp
 
-**Images:** gd (WebP/AVIF), imagick, exif
+**Standard + Full Tiers add:**
+- **Images:** imagick, vips, gd (AVIF support)
+- **Tools:** Node.js 22, npm, exiftool
 
-**Features:** soap, xsl, ldap, imap, bz2, calendar, gettext
+**Full Tier adds:**
+- **Browser:** Chromium for Browsershot/Dusk/Puppeteer
 
 📖 **Complete list:** [Available Extensions →](docs/reference/available-extensions.md)
 
@@ -273,7 +287,7 @@ environment:
 **Schedule:** Every Monday at 03:00 UTC
 
 **What's Updated:**
-- Latest upstream base images (Alpine/Debian/Ubuntu)
+- Latest upstream Debian base images
 - Latest PHP patch versions (8.x.y → 8.x.z)
 - OS security patches
 - Automated CVE scanning with Trivy
@@ -281,7 +295,7 @@ environment:
 **Stay Secure:**
 ```bash
 # Pull latest security patches
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 docker-compose up -d
 ```
 
@@ -289,46 +303,57 @@ docker-compose up -d
 
 | Tag Type | Example | Use Case |
 |----------|---------|----------|
-| **Rolling** | `8.4-alpine` | Development, auto-updates (recommended for dev) |
-| **PHP Pinned** | `8.4.7-alpine` | Production version lock (recommended for prod) |
-| **SHA Pinned** | `8.4-alpine-abc123` | Debugging, 100% reproducibility |
-| **Rootless** | `8.4-alpine-rootless` | Security-restricted environments |
+| **Standard** | `8.4-bookworm` | Most apps (default tier) |
+| **Slim** | `8.4-bookworm-slim` | Minimal footprint, microservices |
+| **Full** | `8.4-bookworm-full` | Browsershot, Dusk, PDF generation |
+| **Rootless** | `8.4-bookworm-rootless` | Security-restricted environments |
+| **Slim + Rootless** | `8.4-bookworm-slim-rootless` | Minimal + non-root |
+| **Full + Rootless** | `8.4-bookworm-full-rootless` | Chromium + non-root |
+| **PHP Pinned** | `8.4.7-bookworm` | Production version lock |
 
-**Development: Rolling Tags** (automatic security patches)
+**Standard Tier** (most applications):
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
-    # ↑ Automatically gets weekly security patches
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+    # ImageMagick, vips, Node.js included
 ```
 
-**Production: PHP Version Pinned Tags** (lock to known PHP version)
+**Slim Tier** (microservices, APIs):
 ```yaml
 services:
-  app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4.7-alpine
-    # ↑ Locked to PHP 8.4.7 - upgrade consciously
+  api:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-slim
+    # Minimal size (~120MB), core extensions only
 ```
 
-**Debugging: SHA Tags** (100% reproducible builds)
+**Full Tier** (PDF generation, browser testing):
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-abc123
-    # ↑ Locked to exact build
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-full
+    # Includes Chromium for Browsershot/Dusk
+```
+
+**Rootless** (security-restricted environments):
+```yaml
+services:
+  app:
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-rootless
+    # Runs as www-data user, not root
 ```
 
 📖 **Security guide:** [Security Documentation →](docs/advanced/security-hardening.md)
 
-## 📊 Image Comparison
+## 📊 Image Sizes
 
-| Variant | OS Version | Size (FPM) | Build Time | Compatibility | Best For |
-|---------|------------|-----------|------------|---------------|----------|
-| **Alpine** | 3.21 | ~50MB | Fast | Good | Production, size-constrained |
-| **Bookworm** | Debian 12 | ~120MB | Moderate | Excellent | Production, glibc compatibility |
-| **Trixie** | Debian 13 | ~125MB | Moderate | Excellent | Latest packages, testing Debian 13 |
+| Tier | Size (FPM-Nginx) | Best For |
+|------|------------------|----------|
+| **Slim** | ~120MB | APIs, microservices |
+| **Standard** | ~250MB | Most PHP applications |
+| **Full** | ~700MB | PDF generation, browser testing |
 
-📖 **Detailed comparison:** [Choosing a Variant →](docs/getting-started/choosing-variant.md)
+📖 **Detailed comparison:** [Image Tiers Guide →](docs/reference/editions-comparison.md)
 
 ## 🏗️ Building Locally
 
@@ -337,13 +362,11 @@ services:
 git clone https://github.com/gophpeek/baseimages.git
 cd baseimages
 
-# Build multi-service images (Alpine, Bookworm, Trixie)
-docker build -f php-fpm-nginx/8.3/alpine/Dockerfile -t my-image:8.3-alpine .
+# Build multi-service image
 docker build -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile -t my-image:8.3-bookworm .
-docker build -f php-fpm-nginx/8.3/debian/trixie/Dockerfile -t my-image:8.3-trixie .
 
 # Test it
-docker run --rm -p 8000:80 my-image:8.3-alpine
+docker run --rm -p 8000:80 my-image:8.3-bookworm
 ```
 
 ## 🧪 Testing
@@ -368,7 +391,7 @@ docker run --rm -p 8000:80 my-image:8.3-alpine
 ./tests/e2e/run-all-tests.sh --specific security
 
 # Run extension tests
-./tests/test-extensions.sh ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine
+./tests/test-extensions.sh ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
 ```
 
 📖 **Test documentation:** [tests/README.md](tests/README.md)
@@ -401,7 +424,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -437,12 +460,12 @@ version: '3.8'
 
 services:
   php-fpm:
-    image: ghcr.io/gophpeek/baseimages/php-fpm:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm:8.3-bookworm
     volumes:
       - ./:/var/www/html
 
   nginx:
-    image: ghcr.io/gophpeek/baseimages/nginx:alpine
+    image: ghcr.io/gophpeek/baseimages/nginx:bookworm
     ports:
       - "80:80"
     volumes:
@@ -456,7 +479,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-dev
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-dev
     volumes:
       - ./:/var/www/html
     environment:

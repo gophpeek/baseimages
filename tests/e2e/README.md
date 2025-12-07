@@ -5,11 +5,11 @@ End-to-end tests for PHPeek base images ensuring stability across all code types
 ## Quick Start
 
 ```bash
-# Run all tests with default image (8.3-alpine)
+# Run all tests with default image (8.3-bookworm)
 ./run-e2e-tests.sh
 
 # Test specific image
-./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Test specific scenario
 ./run-e2e-tests.sh local-image:latest laravel
@@ -57,7 +57,7 @@ tests/e2e/
 
 ```bash
 # Build image
-docker build -f php-fpm-nginx/8.3/alpine/Dockerfile -t test-image:local .
+docker build -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile -t test-image:local .
 
 # Run tests
 ./tests/e2e/run-e2e-tests.sh test-image:local all
@@ -80,10 +80,10 @@ docker build -f php-fpm-nginx/8.3/alpine/Dockerfile -t test-image:local .
 
 ```bash
 # Test default versions
-PHP_VERSIONS="8.3" OS_VARIANTS="alpine debian ubuntu" ./tests/e2e/run-all-variants.sh
+PHP_VERSIONS="8.3" ./tests/e2e/run-all-variants.sh
 
-# Test all PHP versions on Alpine
-PHP_VERSIONS="8.2 8.3 8.4" OS_VARIANTS="alpine" ./tests/e2e/run-all-variants.sh all
+# Test all PHP versions
+PHP_VERSIONS="8.2 8.3 8.4" ./tests/e2e/run-all-variants.sh all
 ```
 
 ## CI Integration
@@ -91,8 +91,8 @@ PHP_VERSIONS="8.2 8.3 8.4" OS_VARIANTS="alpine" ./tests/e2e/run-all-variants.sh 
 The `.github/workflows/e2e-tests.yml` runs:
 
 1. **Smoke test** (every push): Plain PHP + health checks
-2. **Comprehensive** (main branch): Full suite on 8.3-alpine, 8.4-alpine
-3. **Manual trigger**: Any combination of version/variant/scenario
+2. **Comprehensive** (main branch): Full suite on 8.3-bookworm, 8.4-bookworm
+3. **Manual trigger**: Any combination of version/scenario
 
 ## Adding New Tests
 

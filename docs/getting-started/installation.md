@@ -14,10 +14,10 @@ PHPeek images are available from GitHub Container Registry (ghcr.io). No authent
 
 ```bash
 # Pull the recommended image
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Verify installation
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -v
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm php -v
 ```
 
 **Expected output**:
@@ -34,7 +34,7 @@ Zend Engine v4.4.x, Copyright (c) Zend Technologies
 # docker-compose.yml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -54,7 +54,7 @@ PHP-FPM + Nginx in one container. Best for most applications.
 
 ```bash
 # Alpine (smallest, ~50MB)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Debian (glibc, ~120MB)
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
@@ -65,7 +65,7 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian
 Include Xdebug and SPX profiler:
 
 ```bash
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-dev
 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-debian-dev
 ```
 
@@ -75,13 +75,13 @@ For Kubernetes or when you need separate scaling:
 
 ```bash
 # PHP-FPM only
-ghcr.io/gophpeek/baseimages/php-fpm:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-fpm:8.4-bookworm
 
 # PHP CLI only
-ghcr.io/gophpeek/baseimages/php-cli:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-cli:8.4-bookworm
 
 # Nginx only
-ghcr.io/gophpeek/baseimages/nginx:alpine
+ghcr.io/gophpeek/baseimages/nginx:bookworm
 ```
 
 ## PHP Version Support
@@ -94,13 +94,13 @@ ghcr.io/gophpeek/baseimages/nginx:alpine
 
 ```bash
 # PHP 8.4 (latest)
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # PHP 8.3
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # PHP 8.2
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 ```
 
 ## Tagging Strategy
@@ -110,7 +110,7 @@ ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
 Updated weekly with security patches:
 
 ```bash
-php-fpm-nginx:8.4-alpine    # Latest 8.4 on Alpine
+php-fpm-nginx:8.4-bookworm    # Latest 8.4 on Alpine
 php-fpm-nginx:8.4-debian    # Latest 8.4 on Debian
 ```
 
@@ -119,7 +119,7 @@ php-fpm-nginx:8.4-debian    # Latest 8.4 on Debian
 For reproducible builds:
 
 ```bash
-php-fpm-nginx:8.4-alpine-sha256:abc123...
+php-fpm-nginx:8.4-bookworm-sha256:abc123...
 ```
 
 ## Installation Methods
@@ -131,7 +131,7 @@ docker run -d \
   --name myapp \
   -p 8000:80 \
   -v $(pwd):/var/www/html \
-  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ### Method 2: Docker Compose (Recommended)
@@ -140,7 +140,7 @@ docker run -d \
 # docker-compose.yml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -152,10 +152,10 @@ services:
 ### Method 3: Custom Dockerfile
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Add custom extensions
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
     && pecl install swoole \
     && docker-php-ext-enable swoole \
     && apk del $PHPIZE_DEPS
@@ -184,7 +184,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+          image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
           ports:
             - containerPort: 80
           env:
@@ -232,20 +232,20 @@ build:
 
 ```bash
 # PHP version
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -v
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm php -v
 
 # Installed extensions
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -m
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm php -m
 
 # Specific extension
-docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine php -m | grep redis
+docker run --rm ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm php -m | grep redis
 ```
 
 ### Check Services
 
 ```bash
 # Start container
-docker run -d --name test ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker run -d --name test ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Check processes
 docker exec test ps aux
@@ -265,7 +265,7 @@ echo '<?php phpinfo();' > index.php
 
 # Run container
 docker run -d --name test -p 8000:80 -v $(pwd):/var/www/html/public \
-  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+  ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Test
 curl http://localhost:8000
@@ -281,7 +281,7 @@ rm index.php
 
 ```bash
 # Error: manifest unknown
-docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
 # Solution: Check image name spelling
 # Correct: php-fpm-nginx (with hyphens)
@@ -306,7 +306,7 @@ newgrp docker
 docker info | grep Architecture
 
 # Force platform if needed
-docker pull --platform linux/amd64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker pull --platform linux/amd64 ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 ## Next Steps

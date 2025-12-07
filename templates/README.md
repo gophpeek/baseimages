@@ -215,10 +215,10 @@ RUN composer global require pdepend/pdepend
 
 **Example: Add specific Node.js version:**
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 
-# Install specific Node.js version (e.g., 20.x)
-RUN apk add --no-cache nodejs=20.11.1-r0 npm
+# Install specific Node.js version
+RUN apt-get update && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
 ```
 
 ### Environment-Specific Configuration
@@ -231,14 +231,14 @@ FROM templates/Dockerfile.dev AS development
 
 **Staging:**
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine AS staging
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm AS staging
 # Production base + additional logging
-RUN apk add --no-cache curl  # For health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*  # For health checks
 ```
 
 **Production:**
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine AS production
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm AS production
 # Minimal, optimized for performance
 COPY --chown=www-data:www-data . /var/www/html
 ```
@@ -257,7 +257,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Production PHP runtime
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 WORKDIR /var/www/html
 
 # Copy built assets from frontend builder

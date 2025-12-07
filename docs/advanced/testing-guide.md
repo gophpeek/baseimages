@@ -33,13 +33,13 @@ cd tests/unit
 
 ```bash
 cd tests/e2e
-./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 ```
 
 ### Run Specific Scenario
 
 ```bash
-./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine laravel
+./run-e2e-tests.sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm laravel
 ```
 
 ---
@@ -106,7 +106,7 @@ Each fixture contains a `docker-compose.yml` that uses the `IMAGE` environment v
 ```yaml
 services:
   app:
-    image: ${IMAGE:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine}
+    image: ${IMAGE:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm}
     # ...
 ```
 
@@ -224,7 +224,7 @@ mkdir -p tests/e2e/fixtures/{name}/app
 ```yaml
 services:
   app:
-    image: ${IMAGE:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine}
+    image: ${IMAGE:-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm}
     container_name: e2e-{name}-app
     ports:
       - "{port}:80"
@@ -252,7 +252,7 @@ chmod +x tests/e2e/scenarios/test-{name}.sh
 
 ```bash
 # Build local image
-docker build -f php-fpm-nginx/8.3/alpine/Dockerfile -t my-test-image:local .
+docker build -f php-fpm-nginx/8.3/debian/bookworm/Dockerfile -t my-test-image:local .
 
 # Run E2E tests against local image
 IMAGE=my-test-image:local ./tests/e2e/run-e2e-tests.sh

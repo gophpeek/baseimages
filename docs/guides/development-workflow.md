@@ -26,9 +26,9 @@ Optimize your local development experience with PHPeek base images including Xde
 PHPeek provides **pre-built development images** with Xdebug already installed and configured. These are the easiest way to get started with debugging.
 
 **Available dev images:**
-- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev`
-- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine-dev`
-- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine-dev`
+- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-dev`
+- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm-dev`
+- `ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm-dev`
 - Also available: `-debian-dev` variant
 
 ### Development docker-compose.yml
@@ -39,7 +39,7 @@ version: '3.8'
 services:
   app:
     # Use the pre-built dev image with Xdebug included!
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine-dev
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm-dev
     ports:
       - "8000:80"
       - "9003:9003"  # Xdebug port
@@ -290,10 +290,10 @@ services:
 **Install Node.js in container (Dockerfile.dev):**
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install Node.js
-RUN apk add --no-cache nodejs npm
+RUN apt-get update && apt-get install -y nodejs npm
 
 USER root
 WORKDIR /var/www/html
@@ -503,7 +503,7 @@ doctrine:
 docker-compose exec app curl http://localhost/api/users
 
 # Or use HTTPie
-docker-compose exec app apk add httpie
+docker-compose exec app apt-get update && apt-get install -y httpie
 docker-compose exec app http GET http://localhost/api/users
 ```
 
@@ -689,7 +689,7 @@ docker-compose build
 
 ```dockerfile
 # Cache composer dependencies
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 COPY composer.json composer.lock ./
 RUN composer install --no-scripts --no-autoloader
@@ -703,24 +703,24 @@ RUN composer dump-autoload --optimize
 **Dockerfile.dev:**
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Install Xdebug
-RUN apk add --no-cache $PHPIZE_DEPS \
+RUN apt-get update && apt-get install -y $PHPIZE_DEPS \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
 
 # Install Node.js for asset compilation
-RUN apk add --no-cache nodejs npm
+RUN apt-get update && apt-get install -y nodejs npm
 
 # Development tools
-RUN apk add --no-cache git vim
+RUN apt-get update && apt-get install -y git vim
 ```
 
 **Dockerfile.prod:**
 
 ```dockerfile
-FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+FROM ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
 
 # Production optimizations only
 COPY --chown=www-data:www-data . /var/www/html

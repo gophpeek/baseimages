@@ -14,16 +14,16 @@ Just want to test the image? Run these docker commands:
 
 ```bash
 # Test PHP version and extensions
-docker run --rm --entrypoint php ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine -v
+docker run --rm --entrypoint php ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm -v
 
 # List all loaded extensions
-docker run --rm --entrypoint php ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine -m
+docker run --rm --entrypoint php ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm -m
 
 # See available tools
-docker run --rm --entrypoint sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine -c "php -v && composer -V && node -v"
+docker run --rm --entrypoint sh ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm -c "php -v && composer -V && node -v"
 
 # Start a web server with current directory mounted
-docker run --rm -p 8000:80 -v $(pwd):/var/www/html ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine
+docker run --rm -p 8000:80 -v $(pwd):/var/www/html ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
 ```
 
 For a proper project setup, continue below.
@@ -57,7 +57,7 @@ EOF
 ```yaml
 services:
   app:
-    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
+    image: ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
     ports:
       - "8000:80"
     volumes:
@@ -107,23 +107,22 @@ curl localhost:8000/health    # Health check
 
 ## Available Images
 
-Use Alpine (smallest), Debian for glibc compatibility:
+PHPeek Base Images use Debian 12 (Bookworm) for maximum compatibility:
 
 ```
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-alpine  # ~80MB
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-alpine
-ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm  # ~150MB (Debian)
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.4-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.3-bookworm
+ghcr.io/gophpeek/baseimages/php-fpm-nginx:8.2-bookworm
 ```
 
 ### Tag Formats
 
 | Tag Format | Example | Use Case |
 |------------|---------|----------|
-| Rolling | `8.4-alpine` | Development, auto-updates |
-| Pinned | `8.4.7-alpine` | Production, version lock |
-| SHA | `8.4-alpine-abc123` | Debugging, reproducibility |
-| Rootless | `8.4-alpine-rootless` | Security-restricted environments |
+| Rolling | `8.4-bookworm` | Development, auto-updates |
+| Pinned | `8.4.7-bookworm` | Production, version lock |
+| SHA | `8.4-bookworm-abc123` | Debugging, reproducibility |
+| Rootless | `8.4-bookworm-rootless` | Security-restricted environments |
 
 ## Troubleshooting
 

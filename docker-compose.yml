@@ -1,21 +1,21 @@
 services:
-  # PHP-FPM Service (Alpine)
-  php-fpm-alpine:
+  # PHP-FPM Service (Debian Bookworm)
+  php-fpm:
     build:
       context: .
-      dockerfile: ./php-fpm/8.3/alpine/Dockerfile
-    container_name: phpeek-fpm-alpine
+      dockerfile: ./php-fpm/8.3/debian/bookworm/Dockerfile
+    container_name: phpeek-fpm
     volumes:
       - ./test-app:/var/www/html
     networks:
       - phpeek-network
 
-  # PHP-FPM Dev Service (Alpine with Xdebug)
-  php-fpm-alpine-dev:
+  # PHP-FPM Dev Service (Debian Bookworm with Xdebug)
+  php-fpm-dev:
     build:
       context: .
-      dockerfile: ./php-fpm/8.3/alpine/Dockerfile.dev
-    container_name: phpeek-fpm-alpine-dev
+      dockerfile: ./php-fpm/8.3/debian/bookworm/Dockerfile.dev
+    container_name: phpeek-fpm-dev
     volumes:
       - ./test-app:/var/www/html
     networks:
@@ -26,24 +26,24 @@ services:
     profiles:
       - dev
 
-  # PHP-CLI Service (Alpine)
-  php-cli-alpine:
+  # PHP-CLI Service (Debian Bookworm)
+  php-cli:
     build:
       context: .
-      dockerfile: ./php-cli/8.3/alpine/Dockerfile
-    container_name: phpeek-cli-alpine
+      dockerfile: ./php-cli/8.3/debian/bookworm/Dockerfile
+    container_name: phpeek-cli
     volumes:
       - ./test-app:/var/www/html
     networks:
       - phpeek-network
     command: tail -f /dev/null
 
-  # Nginx Service (Alpine)
-  nginx-alpine:
+  # Nginx Service (Debian Bookworm)
+  nginx:
     build:
       context: .
-      dockerfile: ./nginx/alpine/Dockerfile
-    container_name: phpeek-nginx-alpine
+      dockerfile: ./nginx/debian/bookworm/Dockerfile
+    container_name: phpeek-nginx
     ports:
       - "8080:80"
     volumes:
@@ -51,14 +51,14 @@ services:
     networks:
       - phpeek-network
     depends_on:
-      - php-fpm-alpine
+      - php-fpm
 
-  # PHP-FPM + Nginx Multi-Service (Vanilla, no S6)
-  php-fpm-nginx-alpine:
+  # PHP-FPM + Nginx Multi-Service (Debian Bookworm)
+  php-fpm-nginx:
     build:
       context: .
-      dockerfile: ./php-fpm-nginx/8.3/alpine/Dockerfile
-    container_name: phpeek-fpm-nginx-alpine
+      dockerfile: ./php-fpm-nginx/8.3/debian/bookworm/Dockerfile
+    container_name: phpeek-fpm-nginx
     ports:
       - "8081:80"
     volumes:
@@ -68,34 +68,6 @@ services:
     environment:
       - LARAVEL_SCHEDULER=true
       - LARAVEL_AUTO_OPTIMIZE=false
-    profiles:
-      - multi
-
-  php-fpm-nginx-debian:
-    build:
-      context: .
-      dockerfile: ./php-fpm-nginx/8.3/debian/Dockerfile
-    container_name: phpeek-fpm-nginx-debian
-    ports:
-      - "8082:80"
-    volumes:
-      - ./test-app:/var/www/html
-    networks:
-      - phpeek-network
-    profiles:
-      - multi
-
-  php-fpm-nginx-ubuntu:
-    build:
-      context: .
-      dockerfile: ./php-fpm-nginx/8.3/ubuntu/Dockerfile
-    container_name: phpeek-fpm-nginx-ubuntu
-    ports:
-      - "8083:80"
-    volumes:
-      - ./test-app:/var/www/html
-    networks:
-      - phpeek-network
     profiles:
       - multi
 
