@@ -168,8 +168,11 @@ server {
 
     # ─────────────────────────────────────────────────────────────────────────
     # Static files with caching
+    # Falls back to PHP if file doesn't exist (for Livewire, Vite, etc.)
     # ─────────────────────────────────────────────────────────────────────────
     location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot|webp|avif)$ {
+        # If static file exists, serve it; otherwise fall back to PHP (Livewire, etc.)
+        try_files $uri ${NGINX_TRY_FILES};
         expires ${NGINX_STATIC_EXPIRES};
         add_header Cache-Control "${NGINX_STATIC_CACHE_CONTROL}";
         access_log ${NGINX_STATIC_ACCESS_LOG};
