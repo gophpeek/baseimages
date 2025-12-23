@@ -275,8 +275,8 @@ generate_runtime_configs() {
         : ${NGINX_CLIENT_HEADER_TIMEOUT:=60s}
         : ${NGINX_HEADER_X_FRAME_OPTIONS:=SAMEORIGIN}
         : ${NGINX_HEADER_X_CONTENT_TYPE_OPTIONS:=nosniff}
-        : ${NGINX_HEADER_X_XSS_PROTECTION:=1; mode=block}
-        : ${NGINX_HEADER_CSP:=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'}
+        : "${NGINX_HEADER_X_XSS_PROTECTION:=1; mode=block}"
+        : "${NGINX_HEADER_CSP:=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'}"
         : ${NGINX_HEADER_REFERRER_POLICY:=strict-origin-when-cross-origin}
         : ${NGINX_HEADER_COOP:=}
         : ${NGINX_HEADER_COEP:=}
