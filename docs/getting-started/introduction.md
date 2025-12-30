@@ -57,10 +57,10 @@ PHPeek images come in three tiers to match your exact needs:
 | Process Manager | PHPeek PM (Go binary) | S6 Overlay |
 | Image Tiers | 3 (Slim/Standard/Full) | 2 (Base/Full) |
 | Framework Support | Laravel/Symfony/WordPress | Laravel-focused |
-| PHP Versions | 8.2, 8.3, 8.4, 8.5 | 8.1, 8.2, 8.3, 8.4 |
+| PHP Versions | 8.2, 8.3, 8.4, 8.5 | 8.1, 8.2, 8.3, 8.4, 8.5 |
 | Community | Newer project | Established, active |
 
-**When to choose PHPeek**: You need PHP 8.5, Symfony/WordPress support, or built-in Prometheus metrics.
+**When to choose PHPeek**: You need Symfony/WordPress support, built-in Prometheus metrics, or prefer a single-binary process manager.
 
 **When to choose ServerSideUp**: You want established community support, proven S6 Overlay patterns, or Laravel-focused optimizations.
 

@@ -14,7 +14,7 @@ Both PHPeek and ServerSideUp provide production-ready PHP Docker images. This gu
 |--------|--------|--------------|
 | Process Manager | PHPeek PM (Go) | S6 Overlay |
 | Community | Newer project | Established, active community |
-| PHP Versions | 8.2, 8.3, 8.4, 8.5 | 8.1, 8.2, 8.3, 8.4 |
+| PHP Versions | 8.2, 8.3, 8.4, 8.5 | 8.1, 8.2, 8.3, 8.4, 8.5 |
 | Image Tiers | Slim, Standard, Full | Base, Full |
 | Framework Focus | Laravel, Symfony, WordPress | Laravel-focused |
 
@@ -31,10 +31,10 @@ ServerSideUp is an excellent choice when:
 
 PHPeek may be better when:
 
-- **You need PHP 8.5** - We support the latest PHP versions quickly
 - **You want built-in Prometheus metrics** - PHPeek PM includes observability features
 - **You need Symfony or WordPress** - We have framework-specific optimizations
 - **You prefer a single-binary approach** - PHPeek PM is a single Go binary
+- **You want three image tiers** - Slim, Standard, and Full for different use cases
 
 ## Process Management Comparison
 
@@ -59,10 +59,10 @@ PHPeek may be better when:
 - S6 Overlay is a known quantity in the Docker ecosystem
 
 **PHPeek advantages:**
-- Newer PHP versions (8.5 support)
-- Built-in metrics and health checks
-- Simpler process management for basic use cases
-- Multi-framework support out of the box
+- Built-in Prometheus metrics and health checks
+- Single Go binary for process management
+- Multi-framework support (Laravel, Symfony, WordPress)
+- Three image tiers (Slim, Standard, Full)
 
 ## Recommendation
 
@@ -72,9 +72,9 @@ PHPeek may be better when:
 - You're building a Laravel application
 
 **Consider PHPeek if:**
-- You need the latest PHP versions
-- You want built-in observability
+- You want built-in observability (Prometheus metrics)
 - You're using Symfony or WordPress
-- You prefer simpler tooling
+- You prefer a single-binary process manager
+- You need flexible image tiers (Slim/Standard/Full)
 
 Both are good choices. Pick based on your specific needs, not marketing claims.
