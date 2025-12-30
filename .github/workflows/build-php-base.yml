@@ -49,7 +49,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:
@@ -176,7 +176,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:
@@ -304,7 +304,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:
@@ -437,7 +437,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:
@@ -575,7 +575,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:
@@ -705,7 +705,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ['8.2', '8.3', '8.4']
+        php_version: ['8.2', '8.3', '8.4', '8.5']
         os_variant: ['bookworm']
 
     permissions:

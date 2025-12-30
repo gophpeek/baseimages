@@ -1,5 +1,5 @@
 # ============================================================================
-# PHPeek PHP Base Image - Debian 12 (Bookworm) PHP 8.5 - Release Candidate
+# PHPeek PHP Base Image - Debian 8.5 (Bookworm)
 # ============================================================================
 # LAYER 2: Single source of truth for all PHP extensions, Composer, Node, PHPeek PM
 # All other images (php-cli, php-fpm, php-fpm-nginx, php-swoole, etc.) extend this
@@ -8,9 +8,6 @@
 # - slim:     Minimal PHP + essential extensions (~200MB) - API/microservices
 # - standard: + ImageMagick, vips, Node.js (~400MB) - Most Laravel apps (DEFAULT)
 # - full:     + Chromium for Browsershot/Dusk (~800MB) - PDF generation, testing
-# ============================================================================
-# NOTE: PHP 8.5 is currently in Release Candidate stage - use for testing only
-# Alpine variant not available due to PHP 8.5 RC build issues on musl libc
 # ============================================================================
 
 # ============================================================================
@@ -30,11 +27,10 @@ FROM node:${NODE_VERSION}-bookworm-slim AS node
 
 # ============================================================================
 # SLIM BASE - Minimal dependencies, essential extensions only
-# NOTE: PHP 8.5 RC has issues with parallel extension builds, using -j1
 # ============================================================================
-FROM php:8.5-rc-cli-bookworm AS slim-base
+FROM php:8.5-cli-bookworm AS slim-base
 
-LABEL org.opencontainers.image.title="PHPeek PHP Base 8.5 Bookworm"
+LABEL org.opencontainers.image.title="PHPeek PHP Base 8.5 Debian"
 LABEL org.opencontainers.image.description="Base PHP image with extensions, Composer, and PHPeek PM"
 LABEL org.opencontainers.image.vendor="PHPeek"
 LABEL org.opencontainers.image.source="https://github.com/gophpeek/baseimages"
@@ -63,7 +59,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ============================================================================
 # SLIM: PHP Extensions (essential only)
-# NOTE: PHP 8.5 RC requires -j1 for stability
 # ============================================================================
 RUN apt-get update && apt-get install -y --no-install-recommends \
     $PHPIZE_DEPS \
@@ -79,14 +74,17 @@ RUN docker-php-ext-configure gd \
     --with-jpeg \
     --with-webp
 
-# Install core PHP extensions (one at a time for PHP 8.5 RC stability)
-RUN docker-php-ext-install -j1 pdo_mysql pdo_pgsql mysqli pgsql && \
-    docker-php-ext-install -j1 zip intl bcmath gd exif && \
-    docker-php-ext-install -j1 pcntl sockets soap xsl ldap bz2 && \
-    docker-php-ext-install -j1 calendar gettext shmop sysvmsg sysvsem sysvshm gmp
+# Install core PHP extensions
+# Note: opcache is already enabled by default in PHP 8.5
+RUN docker-php-ext-install -j$(nproc) \
+    pdo_mysql pdo_pgsql mysqli pgsql \
+    zip intl bcmath gd exif \
+    pcntl sockets soap xsl ldap bz2 \
+    calendar gettext shmop sysvmsg sysvsem sysvshm \
+    gmp
 
 # Install PECL extensions with PINNED versions (igbinary first for redis serialization)
-# NOTE: PHP 8.5 requires igbinary-beta (3.2.17RC1+) for compatibility
+# Note: PHP 8.5 requires igbinary-beta until stable release with PHP 8.5 support
 RUN pecl install igbinary-beta && \
     docker-php-ext-enable igbinary && \
     pecl install redis-${REDIS_VERSION} --configureoptions 'enable-igbinary-serializer="yes"' && \
@@ -154,13 +152,13 @@ COPY common/lib/lifecycle-check.sh /usr/local/lib/phpeek/
 RUN chmod +x /usr/local/lib/phpeek/*.sh
 
 # ============================================================================
-# Lifecycle State (set at build time via CI) - PHP 8.5 is PREVIEW
+# Lifecycle State (set at build time via CI)
 # ============================================================================
-ARG PHPEEK_LIFECYCLE=preview
+ARG PHPEEK_LIFECYCLE=stable
 ARG PHPEEK_PHP_VERSION=8.5
 ARG PHPEEK_PHP_EOL=
 ARG PHPEEK_REMOVAL_DATE=
-ARG PHPEEK_PREVIEW_STATUS=alpha
+ARG PHPEEK_PREVIEW_STATUS=
 
 ENV PHPEEK_LIFECYCLE=${PHPEEK_LIFECYCLE} \
     PHPEEK_PHP_VERSION=${PHPEEK_PHP_VERSION} \
@@ -228,7 +226,7 @@ RUN docker-php-ext-configure gd \
     --with-jpeg \
     --with-webp \
     --with-avif && \
-    docker-php-ext-install -j1 gd
+    docker-php-ext-install -j$(nproc) gd
 
 # Install ImageMagick and vips PECL extensions
 RUN pecl install imagick-${IMAGICK_VERSION} && \

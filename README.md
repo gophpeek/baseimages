@@ -70,9 +70,9 @@ All images are built on **Debian 12 (Bookworm)** with glibc for maximum compatib
 
 | Image Type | Available Tags |
 |------------|----------------|
-| **php-fpm-nginx** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
-| **php-fpm** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
-| **php-cli** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` |
+| **php-fpm-nginx** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` `8.5-bookworm` |
+| **php-fpm** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` `8.5-bookworm` |
+| **php-cli** | `8.2-bookworm` `8.3-bookworm` `8.4-bookworm` `8.5-bookworm` |
 | **nginx** | `bookworm` |
 
 **Full image name:** `ghcr.io/gophpeek/baseimages/{type}:{tag}`
