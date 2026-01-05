@@ -1,0 +1,85 @@
+[0;34m[INFO][0m Checking for version updates...
+
+[0;34m[INFO][0m Checking PECL extensions...
+[0;32m[OK][0m extensions.redis: 6.3.0 (up to date)
+[0;32m[OK][0m extensions.imagick: 3.8.1 (up to date)
+[1;33m[UPDATE][0m extensions.apcu: 5.1.27 -> 5.1.28
+[0;32m[OK][0m extensions.mongodb: 2.1.4 (up to date)
+[0;32m[OK][0m extensions.igbinary: 3.2.16 (up to date)
+[0;32m[OK][0m extensions.msgpack: 3.0.0 (up to date)
+[1;33m[UPDATE][0m extensions.xdebug: 3.4.0 -> 3.5.0
+[0;32m[OK][0m extensions.pcov: 1.0.12 (up to date)
+[1;33m[UPDATE][0m extensions.uuid: 1.2.1 -> 1.3.0
+[1;33m[UPDATE][0m extensions.excimer: 1.2.4 -> 1.2.5
+[0;32m[OK][0m extensions.vips: 1.0.13 (up to date)
+[1;33m[UPDATE][0m extensions.swoole: 6.0.0 -> 6.1.6
+[1;33m[UPDATE][0m extensions.openswoole: 22.1.2 -> 25.2.0
+
+[0;34m[INFO][0m Checking tools...
+[1;33m[UPDATE][0m tools.frankenphp: 1.3.6 -> 1.11.1
+[1;33m[UPDATE][0m tools.phpeek_pm: 1.2.0 -> 1.2.2
+
+[0;34m[INFO][0m Checking PHP patch versions...
+[1;33m[UPDATE][0m php.latest_patch.8.2: 8.2.27 -> 8.2.30
+[1;33m[UPDATE][0m php.latest_patch.8.3: 8.3.15 -> 8.3.29
+[1;33m[UPDATE][0m php.latest_patch.8.4: 8.4.2 -> 8.4.16
+
+[0;34m[INFO][0m Checking Node.js LTS...
+[1;33m[UPDATE][0m node.version: 22 -> 24
+
+========================================
+[0;34m[INFO][0m Found 12 update(s):
+  - extensions.apcu: 5.1.27 -> 5.1.28
+  - extensions.xdebug: 3.4.0 -> 3.5.0
+  - extensions.uuid: 1.2.1 -> 1.3.0
+  - extensions.excimer: 1.2.4 -> 1.2.5
+  - extensions.swoole: 6.0.0 -> 6.1.6
+  - extensions.openswoole: 22.1.2 -> 25.2.0
+  - tools.frankenphp: 1.3.6 -> 1.11.1
+  - tools.phpeek_pm: 1.2.0 -> 1.2.2
+  - php.latest_patch.8.2: 8.2.27 -> 8.2.30
+  - php.latest_patch.8.3: 8.3.15 -> 8.3.29
+  - php.latest_patch.8.4: 8.4.2 -> 8.4.16
+  - node.version: 22 -> 24
+
+========================================
+
+[0;34m[INFO][0m Run with --apply to update versions.json
+
+[0;34m[INFO][0m Diff preview:
+15,17c15,17
+<       "8.2": "8.2.27",
+<       "8.3": "8.3.15",
+<       "8.4": "8.4.2"
+---
+>       "8.2": "8.2.30",
+>       "8.3": "8.3.29",
+>       "8.4": "8.4.16"
+28c28
+<     "version": "22",
+---
+>     "version": "24",
+63c63
+<     "apcu": "5.1.27",
+---
+>     "apcu": "5.1.28",
+67,69c67,69
+<     "swoole": "6.0.0",
+<     "openswoole": "22.1.2",
+<     "xdebug": "3.4.0",
+---
+>     "swoole": "6.1.6",
+>     "openswoole": "25.2.0",
+>     "xdebug": "3.5.0",
+71,72c71,72
+<     "uuid": "1.2.1",
+<     "excimer": "1.2.4",
+---
+>     "uuid": "1.3.0",
+>     "excimer": "1.2.5",
+77,78c77,78
+<     "frankenphp": "1.3.6",
+<     "phpeek_pm": "1.2.0"
+---
+>     "frankenphp": "1.11.1",
+>     "phpeek_pm": "1.2.2"

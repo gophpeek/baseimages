@@ -1,0 +1,37 @@
+[0;34m═══════════════════════════════════════════════════════════════[0m
+[0;34m  PHPeek Base Images - EOL & Deprecation Report[0m
+[0;34m  Date: 2026-01-05[0m
+[0;34m═══════════════════════════════════════════════════════════════[0m
+
+[0;36mPHP Versions[0m
+
+[0;36mNode.js[0m
+
+[0;36mAlpine Linux[0m
+
+[0;36mDebian[0m
+
+[0;34m═══════════════════════════════════════════════════════════════[0m
+
+[1;33m⚠️  WARNINGS - Action Needed Soon:[0m
+   [1;33m![0m PHP 8.2: EOL PASSED (EOL: 2025-12-08, removal in 154 days: 2026-06-08)
+   [1;33m![0m Alpine 3.20: EOL in 86 days (2026-04-01), removal: 2026-07-01
+
+[0;36m📅 Upcoming EOL (within 1 year):[0m
+   [0;36m○[0m PHP 8.3: EOL in 322 days (2026-11-23)
+   [0;36m○[0m Alpine 3.21: EOL in 300 days (2026-11-01)
+
+[0;32m✅ OK:[0m
+   [0;32m✓[0m PHP 8.4: EOL 2027-11-23 (687 days)
+   [0;32m✓[0m Node.js 22: EOL 2027-04-30 (480 days)
+   [0;32m✓[0m Debian bookworm: EOL 2028-06-30 (907 days)
+   [0;32m✓[0m Debian trixie: EOL 2030-06-30 (1637 days)
+
+[0;34m═══════════════════════════════════════════════════════════════[0m
+Summary: [0;31m0 critical[0m, [1;33m2 warnings[0m, [0;36m2 upcoming[0m, [0;32m4 ok[0m
+
+[0;34mDeprecation Policy:[0m
+  • PHP: Removed 6 months after EOL
+  • OS:  Removed 3 months after EOL
+  • Node: Removed 6 months after EOL
+  • Warning period: 90 days before removal

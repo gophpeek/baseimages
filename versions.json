@@ -1,6 +1,10 @@
 {
   "php": {
-    "supported": ["8.2", "8.3", "8.4"],
+    "supported": [
+      "8.2",
+      "8.3",
+      "8.4"
+    ],
     "default": "8.4",
     "eol": {
       "8.2": "2025-12-08",
@@ -8,9 +12,9 @@
       "8.4": "2027-11-23"
     },
     "latest_patch": {
-      "8.2": "8.2.27",
-      "8.3": "8.3.15",
-      "8.4": "8.4.2"
+      "8.2": "8.2.30",
+      "8.3": "8.3.29",
+      "8.4": "8.4.16"
     },
     "preview": {
       "8.5": {
@@ -21,13 +25,16 @@
     }
   },
   "node": {
-    "version": "22",
+    "version": "24",
     "lts_name": "Jod",
     "eol": "2027-04-30"
   },
   "os": {
     "alpine": {
-      "supported": ["3.20", "3.21"],
+      "supported": [
+        "3.20",
+        "3.21"
+      ],
       "default": "3.21",
       "eol": {
         "3.20": "2026-04-01",
@@ -35,7 +42,10 @@
       }
     },
     "debian": {
-      "supported": ["bookworm", "trixie"],
+      "supported": [
+        "bookworm",
+        "trixie"
+      ],
       "default": "bookworm",
       "eol": {
         "bookworm": "2028-06-30",
@@ -50,22 +60,22 @@
   "extensions": {
     "redis": "6.3.0",
     "imagick": "3.8.1",
-    "apcu": "5.1.27",
+    "apcu": "5.1.28",
     "mongodb": "2.1.4",
     "igbinary": "3.2.16",
     "msgpack": "3.0.0",
-    "swoole": "6.0.0",
-    "openswoole": "22.1.2",
-    "xdebug": "3.4.0",
+    "swoole": "6.1.6",
+    "openswoole": "25.2.0",
+    "xdebug": "3.5.0",
     "pcov": "1.0.12",
-    "uuid": "1.2.1",
-    "excimer": "1.2.4",
+    "uuid": "1.3.0",
+    "excimer": "1.2.5",
     "vips": "1.0.13"
   },
   "tools": {
     "composer": "2",
-    "frankenphp": "1.3.6",
-    "phpeek_pm": "1.2.0"
+    "frankenphp": "1.11.1",
+    "phpeek_pm": "1.2.2"
   },
   "deprecation_policy": {
     "php_removal_after_eol_months": 6,
@@ -75,7 +85,7 @@
     "deprecated": []
   },
   "_meta": {
-    "last_updated": "2025-11-30",
+    "last_updated": "2026-01-05",
     "update_frequency": "weekly",
     "auto_pr_enabled": true
   }
